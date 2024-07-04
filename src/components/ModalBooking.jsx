@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,12 +18,25 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
-import { hhmmToISODate, ISODateToHHMM } from "@/utils/stringUtils";
+import {
+  formatDateForClient,
+  hhmmToISODate,
+  ISODateToHHMM,
+} from "@/utils/stringUtils";
 
-export default function ModalBooking({service, availabilities}) {
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+export default function ModalBooking({ service, availabilities }) {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -42,9 +54,7 @@ export default function ModalBooking({service, availabilities}) {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{service.name}</DialogTitle>
-            <DialogDescription>
-              {service.description}
-            </DialogDescription>
+            <DialogDescription>{service.description}</DialogDescription>
           </DialogHeader>
           <BookingForm />
         </DialogContent>
@@ -65,11 +75,9 @@ export default function ModalBooking({service, availabilities}) {
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>{service.name}</DrawerTitle>
-          <DrawerDescription>
-            {service.description}
-          </DrawerDescription>
+          <DrawerDescription>{service.description}</DrawerDescription>
         </DrawerHeader>
-        <BookingForm className="px-4" />
+        <BookingForm />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -80,18 +88,37 @@ export default function ModalBooking({service, availabilities}) {
   );
 }
 
-function BookingForm({ className }) {
+function BookingForm() {
+  const [date, setDate] = useState();
+
+  function OneYearFromNow() {
+    const currentDate = new Date();
+
+    const dateOneYearFromNow = new Date(currentDate);
+    dateOneYearFromNow.setFullYear(currentDate.getFullYear() + 1);
+
+    return dateOneYearFromNow;
+  }
+
   return (
-    <form className={cn("grid items-start gap-4", className)}>
-      <div className="grid gap-2">
-        <Label htmlFor="email">Email</Label>
-        <Input type="email" id="email" defaultValue="shadcn@example.com" />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" defaultValue="@shadcn" />
-      </div>
-      <Button type="submit">Save changes</Button>
-    </form>
+    <div cn className="px-4">
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="w-full">
+            {date ? formatDateForClient(date) : <span>Choisir une date</span>}
+            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={setDate}
+            disabled={(date) => date < new Date() || date > OneYearFromNow()}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }

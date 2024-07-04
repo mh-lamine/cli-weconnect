@@ -20,3 +20,22 @@ export function hhmmToISODate(hhmmString) {
   date.setMinutes(parseInt(minutes, 10));
   return date.toISOString();
 }
+
+export function formatDateForClient(date) {
+  const options = {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+
+  const formattedDate = date.toLocaleDateString("fr-FR", options);
+
+  const parts = formattedDate.split(" ");
+  const dayOfWeek = parts[0];
+  const dayOfMonth = parseInt(parts[1], 10);
+  const month = parts[2];
+  const year = parts[3];
+
+  return `${dayOfWeek} ${dayOfMonth} ${month} ${year}`;
+}
