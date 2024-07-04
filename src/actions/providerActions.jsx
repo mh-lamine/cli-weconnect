@@ -38,3 +38,16 @@ export async function getProviderCategories(providerId) {
     return { error: error.message };
   }
 }
+
+export async function getProviderAppointments(providerId) {
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/appointments/provider/${providerId}`
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return { error: error.message };
+  }
+}

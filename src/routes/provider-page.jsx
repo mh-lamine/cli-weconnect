@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useLoaderData } from "react-router-dom";
 
 export default function ProviderPage() {
-  const { provider, providerCategories } = useLoaderData();
+  const { provider, providerCategories, providerAppointments } = useLoaderData();
 
   return (
     <main className="w-full flex-1">
@@ -25,6 +25,7 @@ export default function ProviderPage() {
               index={index}
               category={category}
               availabilities={provider.availabilities}
+              appointments={providerAppointments}
             />
           </div>
         ))}
@@ -33,7 +34,7 @@ export default function ProviderPage() {
   );
 }
 
-function Services({ index, category, availabilities }) {
+function Services({ index, category, availabilities, appointments }) {
   return (
     <Accordion
       type="single"
@@ -60,7 +61,7 @@ function Services({ index, category, availabilities }) {
               <p>{service.description}</p>
             </div>
             <Button asChild className="bg-primary-500 text-light">
-              <ModalBooking service={service} availabilities={availabilities} />
+              <ModalBooking service={service} availabilities={availabilities} appointments={appointments} />
             </Button>
           </AccordionContent>
         ))}

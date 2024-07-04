@@ -6,6 +6,7 @@ import "./index.css";
 import ErrorPage from "./error-page";
 import ProviderPage from "./routes/provider-page";
 import {
+  getProviderAppointments,
   getProviderById,
   getProviderCategories,
   getProvidersByFilters,
@@ -31,7 +32,8 @@ const router = createBrowserRouter([
           const providerCategories = await getProviderCategories(
             params.providerId
           );
-          return { provider, providerCategories };
+          const providerAppointments = await getProviderAppointments(params.providerId);
+          return { provider, providerCategories, providerAppointments };
         },
       },
     ],
