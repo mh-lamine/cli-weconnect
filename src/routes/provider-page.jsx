@@ -1,5 +1,5 @@
 import ProviderHeader from "@/components/ProviderHeader";
-import ModalBooking from "@/components/ui/ModalBooking";
+import ModalBooking from "@/components/ModalBooking";
 import {
   Accordion,
   AccordionContent,
@@ -7,7 +7,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { hhmmToISODate, ISODateToHHMM } from "@/utils/stringUtils";
 import { useLoaderData } from "react-router-dom";
 
 export default function ProviderPage() {
@@ -61,7 +60,6 @@ function Services({ index, category, availabilities }) {
               <p>{service.description}</p>
             </div>
             <Button asChild className="bg-primary-500 text-light">
-              {/* <Link to={`${service.id}`}>Choisir</Link> */}
               <ModalBooking service={service} availabilities={availabilities} />
             </Button>
           </AccordionContent>

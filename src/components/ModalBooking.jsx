@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { hhmmToISODate, ISODateToHHMM } from "@/utils/stringUtils";
 
 export default function ModalBooking({service, availabilities}) {
   const [open, setOpen] = useState(false);
