@@ -1,6 +1,8 @@
+const baseUrl = "https://weconnect-server-kn0o.onrender.com";
+
 export async function getProvidersByFilters(filters = {}) {
   try {
-    const res = await fetch("http://localhost:3000/api/users/providers", {
+    const res = await fetch(`${baseUrl}/api/users/providers`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -17,7 +19,7 @@ export async function getProvidersByFilters(filters = {}) {
 
 export async function getProviderById(id) {
   try {
-    const res = await fetch(`http://localhost:3000/api/users/${id}`);
+    const res = await fetch(`${baseUrl}/api/users/${id}`);
     const data = await res.json();
     return data;
   } catch (error) {
@@ -28,9 +30,7 @@ export async function getProviderById(id) {
 
 export async function getProviderCategories(providerId) {
   try {
-    const res = await fetch(
-      `http://localhost:3000/api/providerCategory/${providerId}`
-    );
+    const res = await fetch(`${baseUrl}/api/providerCategory/${providerId}`);
     const data = await res.json();
     return data;
   } catch (error) {
@@ -42,7 +42,7 @@ export async function getProviderCategories(providerId) {
 export async function getProviderAppointments(providerId) {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/appointments/provider/${providerId}`
+      `${baseUrl}/api/appointments/provider/${providerId}`
     );
     const data = await res.json();
     return data;
