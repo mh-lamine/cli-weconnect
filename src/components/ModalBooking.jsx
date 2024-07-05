@@ -44,6 +44,10 @@ export default function ModalBooking({
   const [dailyEndTime, setDailyEndTime] = useState();
   const [fullDayName, setFullDayName] = useState();
   const [timeSlots, setTimeSlots] = useState();
+  const [timeSlotSelected, setTimeSlotSelected] = useState({
+    date: "",
+    startTime: "",
+  });
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const formattedAvailabilities =
@@ -51,7 +55,11 @@ export default function ModalBooking({
 
   function handleSelectDate(selectedDate) {
     setDate(selectedDate);
-    if (!selectedDate) return;
+    if (!selectedDate) {
+      setTimeSlots();
+      setTimeSlotSelected({ date: "", startTime: ""});
+      return;
+    }
     const dayOfWeek = moment(selectedDate, "ddd MMM DD YYYY HH:mm:ss ZZ")
       .format("dddd")
       .toUpperCase();
@@ -142,20 +150,24 @@ export default function ModalBooking({
                 initialFocus
               />
             </PopoverContent>
-            {date && (
+            {timeSlots && (
               <div className="flex flex-wrap gap-2">
-                <Button asChild>
-                  <Tag name="14h00" />
-                </Button>
-                <Button asChild>
-                  <Tag name="15h00" />
-                </Button>
-                <Button asChild>
-                  <Tag name="16h30" />
-                </Button>
-                <Button asChild>
-                  <Tag name="18h00" />
-                </Button>
+                {timeSlots.map((slot, index) => (
+                  <Button
+                    key={index}
+                    variant={
+                    timeSlotSelected.date == date &&  timeSlotSelected.startTime == slot.start ? "default" : "outline"
+                    }
+                    onClick={() => {
+                      timeSlotSelected.date == date &&
+                      timeSlotSelected.startTime == slot.start
+                        ? setTimeSlotSelected()
+                        : setTimeSlotSelected({ date, startTime: slot.start });
+                    }}
+                  >
+                    {slot.start}
+                  </Button>
+                ))}
               </div>
             )}
           </Popover>
@@ -179,8 +191,8 @@ export default function ModalBooking({
           <DrawerTitle>{service.name}</DrawerTitle>
           <DrawerDescription>{service.description}</DrawerDescription>
         </DrawerHeader>
-        <div className="px-4">
-          <Popover>
+        <Popover>
+          <div className="px-4 space-y-2">
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
                 {date ? (
@@ -195,16 +207,44 @@ export default function ModalBooking({
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={(selectedDate) => handleSelectDate(selectedDate)}
                 disabled={isDayOff}
                 initialFocus
               />
             </PopoverContent>
-          </Popover>
-        </div>
+            {date && timeSlots && (
+              <div className="flex flex-wrap gap-2">
+                {timeSlots.map((slot, index) => (
+                  <Button
+                    key={index}
+                    variant={
+                      timeSlotSelected.date == date &&
+                      timeSlotSelected.startTime == slot.start
+                        ? "default"
+                        : "outline"
+                    }
+                    onClick={() => {
+                      timeSlotSelected.date == date &&
+                      timeSlotSelected.startTime == slot.start
+                        ? setTimeSlotSelected()
+                        : setTimeSlotSelected({ date, startTime: slot.start });
+                    }}
+                  >
+                    {slot.start}
+                  </Button>
+                ))}
+              </div>
+            )}
+          </div>
+        </Popover>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <div className="space-y-2">
+              {(timeSlotSelected.date && timeSlotSelected.startTime) && <Button className="w-full">Réserver</Button>}
+              <Button className="w-full" variant="outline">
+                Cancel
+              </Button>
+            </div>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
