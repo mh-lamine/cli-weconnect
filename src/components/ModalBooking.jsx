@@ -57,7 +57,7 @@ export default function ModalBooking({
     setDate(selectedDate);
     if (!selectedDate) {
       setTimeSlots();
-      setTimeSlotSelected({ date: "", startTime: ""});
+      setTimeSlotSelected({ date: "", startTime: "" });
       return;
     }
     const dayOfWeek = moment(selectedDate, "ddd MMM DD YYYY HH:mm:ss ZZ")
@@ -79,6 +79,7 @@ export default function ModalBooking({
 
     const newTimeSlots = [];
 
+    //FIXME: should remove the time slots that is already booked only for the selected day instead of every week
     availableTimeRanges.forEach((range) => {
       let slotStartTime = moment(range.start, "HH:mm");
       const endRange = moment(range.end, "HH:mm");
@@ -156,7 +157,10 @@ export default function ModalBooking({
                   <Button
                     key={index}
                     variant={
-                    timeSlotSelected.date == date &&  timeSlotSelected.startTime == slot.start ? "default" : "outline"
+                      timeSlotSelected.date == date &&
+                      timeSlotSelected.startTime == slot.start
+                        ? "default"
+                        : "outline"
                     }
                     onClick={() => {
                       timeSlotSelected.date == date &&
@@ -240,7 +244,9 @@ export default function ModalBooking({
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <div className="space-y-2">
-              {(timeSlotSelected.date && timeSlotSelected.startTime) && <Button className="w-full">Réserver</Button>}
+              {timeSlotSelected.date && timeSlotSelected.startTime && (
+                <Button className="w-full">Réserver</Button>
+              )}
               <Button className="w-full" variant="outline">
                 Cancel
               </Button>
