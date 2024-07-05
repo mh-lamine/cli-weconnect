@@ -21,12 +21,13 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { useEffect, useState } from "react";
 import {
-  ISODateToHHMM,
-  addDurationToHHMM,
+
+
   formatAppointments,
   formatAvailabilitiesByDayOfWeek,
   formatDateForClient,
   getAvailableTimeRanges,
+
 } from "@/utils/formatting";
 import { CalendarIcon } from "lucide-react";
 import {
@@ -51,13 +52,31 @@ export default function ModalBooking({
   const formattedAvailabilities =
     formatAvailabilitiesByDayOfWeek(availabilities);
 
-  useEffect(() => {
-    if (!date) return;
-    const dayOfWeek = DateTime.fromJSDate(date).toFormat("EEEE").toUpperCase();
+  function handleSelectDate(selectedDate) {
+    setDate(selectedDate);
+    if (!selectedDate) return;
+    const dayOfWeek = DateTime.fromJSDate(selectedDate)
+      .toFormat("EEEE")
+      .toUpperCase();
+    setFullDayName(dayOfWeek);
     setDailyStartTime(formattedAvailabilities[dayOfWeek].startTime);
     setDailyEndTime(formattedAvailabilities[dayOfWeek].endTime);
-  console.log(availableTimeRanges);
+  }
 
+  useEffect(() => {
+    if (!date) return;
+    const availableTimeRanges = getAvailableTimeRanges(
+      fullDayName,
+      dailyStartTime,
+      dailyEndTime,
+      formattedAppointments
+    );
+    // availableTimeRanges.forEach((interval) => {
+    //   const startTime = convertToHhmm(interval.start.toISO());
+    //   const endTime = convertToHhmm(interval.end.toISO());
+    //   console.log(`Available time range: ${startTime} - ${endTime}`);
+    // });
+    console.log(convertToISOTime("09:00"));
   }, [date]);
 
   const isDayOff = (date) => {
@@ -71,16 +90,10 @@ export default function ModalBooking({
 
   const formattedAppointments = formatAppointments(appointments);
 
-  const availableTimeRanges = getAvailableTimeRanges(
-    fullDayName,
-    dailyStartTime,
-    dailyEndTime,
-    formattedAppointments
-  );
   // const timeSlots = (formattedAvailabilities) => {
   //   const timeSlots = [];
-  //   let startTime = ISODateToHHMM(formattedAvailabilities.MONDAY.startTime);
-  //   const endTime = ISODateToHHMM(formattedAvailabilities.MONDAY.endTime);
+  //   let startTime = convertToHhmm(formattedAvailabilities.MONDAY.startTime);
+  //   const endTime = convertToHhmm(formattedAvailabilities.MONDAY.endTime);
 
   //   while (startTime < endTime) {
   //     timeSlots.push(
@@ -132,7 +145,7 @@ export default function ModalBooking({
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={(selectedDate) => handleSelectDate(selectedDate)}
                 disabled={isDayOff}
                 initialFocus
               />
