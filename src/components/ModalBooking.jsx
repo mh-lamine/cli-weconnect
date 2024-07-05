@@ -27,7 +27,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Tag from "./Tag";
-import { formatAvailabilitiesByDayOfWeek, getAvailableTimeRanges } from "@/utils/formatting";
+import {
+  formatAvailabilitiesByDayOfWeek,
+  getAvailableTimeRanges,
+} from "@/utils/formatting";
 import moment from "moment";
 
 export default function ModalBooking({
@@ -40,6 +43,7 @@ export default function ModalBooking({
   const [dailyStartTime, setDailyStartTime] = useState();
   const [dailyEndTime, setDailyEndTime] = useState();
   const [fullDayName, setFullDayName] = useState();
+  const [timeSlots, setTimeSlots] = useState();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const formattedAvailabilities =
@@ -64,12 +68,22 @@ export default function ModalBooking({
       dailyEndTime,
       appointments
     );
-    console.log(availableTimeRanges);
-    // availableTimeRanges.forEach((interval) => {
-    //   const startTime = convertToHhmm(interval.start.toISO());
-    //   const endTime = convertToHhmm(interval.end.toISO());
-    //   console.log(`Available time range: ${startTime} - ${endTime}`);
-    // });
+
+    const newTimeSlots = [];
+
+    availableTimeRanges.forEach((range) => {
+      let slotStartTime = moment(range.start, "HH:mm");
+      const endRange = moment(range.end, "HH:mm");
+      const serviceDuration = moment.duration(service.duration, "minutes");
+      while (slotStartTime.isBefore(endRange)) {
+        newTimeSlots.push({
+          start: slotStartTime.format("HH:mm"),
+        });
+        slotStartTime.add(serviceDuration, "minutes");
+      }
+    });
+
+    setTimeSlots(newTimeSlots);
   }, [date]);
 
   const isDayOff = (date) => {
@@ -82,21 +96,6 @@ export default function ModalBooking({
       !formattedAvailabilities[dayOfWeek]
     );
   };
-
-  // const timeSlots = (formattedAvailabilities) => {
-  //   const timeSlots = [];
-  //   let startTime = convertToHhmm(formattedAvailabilities.MONDAY.startTime);
-  //   const endTime = convertToHhmm(formattedAvailabilities.MONDAY.endTime);
-
-  //   while (startTime < endTime) {
-  //     timeSlots.push(
-  //       `${startTime}-${addDurationToHHMM(startTime, service.duration)}`
-  //     );
-  //     startTime = addDurationToHHMM(startTime, service.duration);
-  //   }
-
-  //   return timeSlots;
-  // };
 
   function OneYearFromNow() {
     const currentDate = new Date();
@@ -126,7 +125,11 @@ export default function ModalBooking({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
-                <span>Choisir une date</span>
+                {date ? (
+                  <span>{moment(date).format("LL")}</span>
+                ) : (
+                  <span>Choisir une date</span>
+                )}
                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -180,7 +183,11 @@ export default function ModalBooking({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
-                <span>Choisir une date</span>
+                {date ? (
+                  <span>{moment(date).format("LL")}</span>
+                ) : (
+                  <span>Choisir une date</span>
+                )}
                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>

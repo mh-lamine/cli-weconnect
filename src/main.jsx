@@ -12,7 +12,6 @@ import {
   getProvidersByFilters,
 } from "./actions/providerActions";
 import HomePage from "./routes/home-page";
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,7 +31,9 @@ const router = createBrowserRouter([
           const providerCategories = await getProviderCategories(
             params.providerId
           );
-          const providerAppointments = await getProviderAppointments(params.providerId);
+          const providerAppointments = await getProviderAppointments(
+            params.providerId
+          );
           return { provider, providerCategories, providerAppointments };
         },
       },

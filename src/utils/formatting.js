@@ -36,19 +36,19 @@ export function getAvailableTimeRanges(
   });
 
   const availableTimeRanges = [];
-  let startTime = dailyStartTime;
-  let endTime = dailyEndTime;
+  let startTime = moment.unix(dailyStartTime).format("HH:mm");
+  let endTime = moment.unix(dailyEndTime).format("HH:mm");
 
   todaysAppointments.forEach((appointment) => {
-    const appointmentStartTime = moment(appointment.date).format("HH:mm");
-    const appointmentEndTime = moment(appointment.date)
-      .add(appointment.duration, "minutes")
+    const appointmentStartTime = moment.unix(appointment.date).format("HH:mm");
+    const appointmentEndTime = moment
+      .unix(appointment.date)
+      .add(appointment.service.duration, "minutes")
       .format("HH:mm");
 
     if (appointmentStartTime > startTime) {
       availableTimeRanges.push({ start: startTime, end: appointmentStartTime });
     }
-
     startTime = appointmentEndTime;
   });
 
