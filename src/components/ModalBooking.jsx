@@ -20,15 +20,6 @@ import {
 } from "@/components/ui/drawer";
 import { Calendar } from "@/components/ui/calendar";
 import { useEffect, useState } from "react";
-import {
-
-
-  formatAppointments,
-  formatAvailabilitiesByDayOfWeek,
-  formatDateForClient,
-  getAvailableTimeRanges,
-
-} from "@/utils/formatting";
 import { CalendarIcon } from "lucide-react";
 import {
   Popover,
@@ -36,7 +27,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Tag from "./Tag";
-import { DateTime } from "luxon";
+import { formatAvailabilitiesByDayOfWeek, getAvailableTimeRanges } from "@/utils/formatting";
+import moment from "moment";
 
 export default function ModalBooking({
   service,
@@ -49,14 +41,15 @@ export default function ModalBooking({
   const [dailyEndTime, setDailyEndTime] = useState();
   const [fullDayName, setFullDayName] = useState();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
   const formattedAvailabilities =
     formatAvailabilitiesByDayOfWeek(availabilities);
 
   function handleSelectDate(selectedDate) {
     setDate(selectedDate);
     if (!selectedDate) return;
-    const dayOfWeek = DateTime.fromJSDate(selectedDate)
-      .toFormat("EEEE")
+    const dayOfWeek = moment(selectedDate, "ddd MMM DD YYYY HH:mm:ss ZZ")
+      .format("dddd")
       .toUpperCase();
     setFullDayName(dayOfWeek);
     setDailyStartTime(formattedAvailabilities[dayOfWeek].startTime);
@@ -69,26 +62,26 @@ export default function ModalBooking({
       fullDayName,
       dailyStartTime,
       dailyEndTime,
-      formattedAppointments
+      appointments
     );
+    console.log(availableTimeRanges);
     // availableTimeRanges.forEach((interval) => {
     //   const startTime = convertToHhmm(interval.start.toISO());
     //   const endTime = convertToHhmm(interval.end.toISO());
     //   console.log(`Available time range: ${startTime} - ${endTime}`);
     // });
-    console.log(convertToISOTime("09:00"));
   }, [date]);
 
   const isDayOff = (date) => {
-    const dayOfWeek = DateTime.fromJSDate(date).toFormat("EEEE").toUpperCase();
+    const dayOfWeek = moment(date, "ddd MMM DD YYYY HH:mm:ss ZZ")
+      .format("dddd")
+      .toUpperCase();
     return (
       date < new Date() ||
       date > OneYearFromNow() ||
       !formattedAvailabilities[dayOfWeek]
     );
   };
-
-  const formattedAppointments = formatAppointments(appointments);
 
   // const timeSlots = (formattedAvailabilities) => {
   //   const timeSlots = [];
@@ -133,11 +126,7 @@ export default function ModalBooking({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
-                {date ? (
-                  formatDateForClient(date)
-                ) : (
-                  <span>Choisir une date</span>
-                )}
+                <span>Choisir une date</span>
                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -191,11 +180,7 @@ export default function ModalBooking({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
-                {date ? (
-                  formatDateForClient(date)
-                ) : (
-                  <span>Choisir une date</span>
-                )}
+                <span>Choisir une date</span>
                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
