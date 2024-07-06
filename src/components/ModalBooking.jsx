@@ -42,7 +42,7 @@ export default function ModalBooking({
   const [date, setDate] = useState();
   const [dailyStartTime, setDailyStartTime] = useState();
   const [dailyEndTime, setDailyEndTime] = useState();
-  const [fullDayName, setFullDayName] = useState();
+  const [unixDate, setUnixDate] = useState();
   const [timeSlots, setTimeSlots] = useState();
   const [timeSlotSelected, setTimeSlotSelected] = useState({
     date: "",
@@ -63,7 +63,12 @@ export default function ModalBooking({
     const dayOfWeek = moment(selectedDate, "ddd MMM DD YYYY HH:mm:ss ZZ")
       .format("dddd")
       .toUpperCase();
-    setFullDayName(dayOfWeek);
+    const momentDate = moment(
+      selectedDate,
+      "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (ZZZ)"
+    ).unix();
+
+    setUnixDate(momentDate);
     setDailyStartTime(formattedAvailabilities[dayOfWeek].startTime);
     setDailyEndTime(formattedAvailabilities[dayOfWeek].endTime);
   }
@@ -71,7 +76,7 @@ export default function ModalBooking({
   useEffect(() => {
     if (!date) return;
     const availableTimeRanges = getAvailableTimeRanges(
-      fullDayName,
+      unixDate,
       dailyStartTime,
       dailyEndTime,
       appointments
@@ -82,13 +87,21 @@ export default function ModalBooking({
     //FIXME: should remove the time slots that is already booked only for the selected day instead of every week
     availableTimeRanges.forEach((range) => {
       let slotStartTime = moment(range.start, "HH:mm");
+      let slotEndTime = moment(range.start, "HH:mm").add(
+        service.duration,
+        "minutes"
+      );
       const endRange = moment(range.end, "HH:mm");
       const serviceDuration = moment.duration(service.duration, "minutes");
-      while (slotStartTime.isBefore(endRange)) {
+      while (
+        slotStartTime.isBefore(endRange) &&
+        (slotEndTime.isSame(endRange) || slotEndTime.isBefore(endRange))
+      ) {
         newTimeSlots.push({
           start: slotStartTime.format("HH:mm"),
         });
         slotStartTime.add(serviceDuration, "minutes");
+        slotEndTime.add(serviceDuration, "minutes");
       }
     });
 

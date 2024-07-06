@@ -23,16 +23,13 @@ export function formatAvailabilitiesByDayOfWeek(data) {
 }
 
 export function getAvailableTimeRanges(
-  dayOfWeek,
+  unixDate,
   dailyStartTime,
   dailyEndTime,
   appointments
 ) {
   const todaysAppointments = appointments.filter((appointment) => {
-    const appointmentDayOfWeek = moment(appointment.date)
-      .format("dddd")
-      .toUpperCase();
-    return appointmentDayOfWeek === dayOfWeek;
+    return moment.unix(appointment.date).format("DMY") === moment.unix(unixDate).format("DMY");
   });
 
   const availableTimeRanges = [];
