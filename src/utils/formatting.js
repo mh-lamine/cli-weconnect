@@ -1,5 +1,3 @@
-import moment from "moment";
-
 export function getInitials(name) {
   return name
     .split(" ")
@@ -20,38 +18,4 @@ export function formatAvailabilitiesByDayOfWeek(data) {
   });
 
   return groupedData;
-}
-
-export function getAvailableTimeRanges(
-  unixDate,
-  dailyStartTime,
-  dailyEndTime,
-  appointments
-) {
-  const todaysAppointments = appointments.filter((appointment) => {
-    return moment.unix(appointment.date).format("DMY") === moment.unix(unixDate).format("DMY");
-  });
-
-  const availableTimeRanges = [];
-  let startTime = moment.unix(dailyStartTime).format("HH:mm");
-  let endTime = moment.unix(dailyEndTime).format("HH:mm");
-
-  todaysAppointments.forEach((appointment) => {
-    const appointmentStartTime = moment.unix(appointment.date).format("HH:mm");
-    const appointmentEndTime = moment
-      .unix(appointment.date)
-      .add(appointment.service.duration, "minutes")
-      .format("HH:mm");
-
-    if (appointmentStartTime > startTime) {
-      availableTimeRanges.push({ start: startTime, end: appointmentStartTime });
-    }
-    startTime = appointmentEndTime;
-  });
-
-  if (startTime < endTime) {
-    availableTimeRanges.push({ start: startTime, end: endTime });
-  }
-
-  return availableTimeRanges;
 }

@@ -2,8 +2,10 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -26,12 +28,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import Tag from "./Tag";
-import {
-  formatAvailabilitiesByDayOfWeek,
-  getAvailableTimeRanges,
-} from "@/utils/formatting";
+import { formatAvailabilitiesByDayOfWeek } from "@/utils/formatting";
 import moment from "moment";
+import {
+  OneYearFromNow,
+  getAvailableTimeRanges,
+  getAvailableTimeSlots,
+} from "@/utils/dateManagment";
 
 export default function ModalBooking({
   service,
@@ -73,8 +76,20 @@ export default function ModalBooking({
     setDailyEndTime(formattedAvailabilities[dayOfWeek].endTime);
   }
 
+   const isDayOff = (date) => {
+     const dayOfWeek = moment(date, "ddd MMM DD YYYY HH:mm:ss ZZ")
+       .format("dddd")
+       .toUpperCase();
+     return (
+       date < new Date() ||
+       date > OneYearFromNow() ||
+       !formattedAvailabilities[dayOfWeek]
+     );
+   };
+
   useEffect(() => {
     if (!date) return;
+
     const availableTimeRanges = getAvailableTimeRanges(
       unixDate,
       dailyStartTime,
@@ -82,50 +97,10 @@ export default function ModalBooking({
       appointments
     );
 
-    const newTimeSlots = [];
+    const availableTimeSlots = getAvailableTimeSlots(availableTimeRanges, service);
 
-    availableTimeRanges.forEach((range) => {
-      let slotStartTime = moment(range.start, "HH:mm");
-      let slotEndTime = moment(range.start, "HH:mm").add(
-        service.duration,
-        "minutes"
-      );
-      const endRange = moment(range.end, "HH:mm");
-      const serviceDuration = moment.duration(service.duration, "minutes");
-      while (
-        slotStartTime.isBefore(endRange) &&
-        (slotEndTime.isSame(endRange) || slotEndTime.isBefore(endRange))
-      ) {
-        newTimeSlots.push({
-          start: slotStartTime.format("HH:mm"),
-        });
-        slotStartTime.add(serviceDuration, "minutes");
-        slotEndTime.add(serviceDuration, "minutes");
-      }
-    });
-
-    setTimeSlots(newTimeSlots);
+    setTimeSlots(availableTimeSlots);
   }, [date]);
-
-  const isDayOff = (date) => {
-    const dayOfWeek = moment(date, "ddd MMM DD YYYY HH:mm:ss ZZ")
-      .format("dddd")
-      .toUpperCase();
-    return (
-      date < new Date() ||
-      date > OneYearFromNow() ||
-      !formattedAvailabilities[dayOfWeek]
-    );
-  };
-
-  function OneYearFromNow() {
-    const currentDate = new Date();
-
-    const dateOneYearFromNow = new Date(currentDate);
-    dateOneYearFromNow.setFullYear(currentDate.getFullYear() + 1);
-
-    return dateOneYearFromNow;
-  }
 
   if (isDesktop) {
     return (
@@ -177,7 +152,7 @@ export default function ModalBooking({
                     onClick={() => {
                       timeSlotSelected.date == date &&
                       timeSlotSelected.startTime == slot.start
-                        ? setTimeSlotSelected()
+                        ? setTimeSlotSelected({ date: "", startTime: "" })
                         : setTimeSlotSelected({ date, startTime: slot.start });
                     }}
                   >
@@ -187,6 +162,16 @@ export default function ModalBooking({
               </div>
             )}
           </Popover>
+          <DialogFooter className="sm:justify-start">
+            <DialogClose asChild>
+              <div className="w-full flex items-center justify-between">
+                <Button variant="outline">Annuler</Button>
+                {timeSlotSelected.date && timeSlotSelected.startTime && (
+                  <Button>Réserver</Button>
+                )}
+              </div>
+            </DialogClose>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     );
@@ -242,7 +227,7 @@ export default function ModalBooking({
                     onClick={() => {
                       timeSlotSelected.date == date &&
                       timeSlotSelected.startTime == slot.start
-                        ? setTimeSlotSelected()
+                        ? setTimeSlotSelected({ date: "", startTime: "" })
                         : setTimeSlotSelected({ date, startTime: slot.start });
                     }}
                   >
@@ -260,7 +245,7 @@ export default function ModalBooking({
                 <Button className="w-full">Réserver</Button>
               )}
               <Button className="w-full" variant="outline">
-                Cancel
+                Annuler
               </Button>
             </div>
           </DrawerClose>
