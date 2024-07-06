@@ -1,4 +1,10 @@
-const baseUrl = "https://weconnect-server-kn0o.onrender.com";
+const env = "prod";
+
+const baseUrl = `${
+  env == "prod"
+    ? "https://weconnect-server-kn0o.onrender.com"
+    : "http://localhost:3000"
+}`;
 
 export async function getProvidersByFilters(filters = {}) {
   try {

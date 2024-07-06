@@ -84,7 +84,6 @@ export default function ModalBooking({
 
     const newTimeSlots = [];
 
-    //FIXME: should remove the time slots that is already booked only for the selected day instead of every week
     availableTimeRanges.forEach((range) => {
       let slotStartTime = moment(range.start, "HH:mm");
       let slotEndTime = moment(range.start, "HH:mm").add(
