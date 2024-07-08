@@ -33,6 +33,7 @@ import {
   formatDate,
 } from "@/utils/formatting";
 import { DateTime } from "luxon";
+import { fr } from "date-fns/locale";
 import {
   OneYearFromNow,
   getAvailableTimeRanges,
@@ -142,6 +143,7 @@ export default function ModalBooking({
                 onSelect={setDate}
                 disabled={isDayOff}
                 initialFocus
+                locale={fr}
               />
             </PopoverContent>
             {timeSlots.length > 0 && (
@@ -220,6 +222,7 @@ export default function ModalBooking({
                 onSelect={setDate}
                 disabled={isDayOff}
                 initialFocus
+                locale={fr}
               />
             </PopoverContent>
             {date && timeSlots.length > 0 && (
