@@ -85,9 +85,6 @@ export default function ModalBooking({
 
     try {
       await createAppointment(appointment);
-      setTimeSlots((prevSlots) =>
-        prevSlots.filter((slot) => slot.start !== timeSlotSelected.startTime)
-      );
       toast({
         title: "Créneau réservé !",
         description: `Vous avez rendez-vous le ${formatDate(date)} à ${
@@ -98,12 +95,12 @@ export default function ModalBooking({
       toast({
         title: "Erreur de réservation",
         description:
+          error.message ||
           "Une erreur est survenue lors de la création de votre rendez-vous. Veuillez réessayer.",
         variant: "destructive",
       });
     }
   }
-
 
   useEffect(() => {
     if (!date) return;
@@ -159,7 +156,7 @@ export default function ModalBooking({
                 locale={fr}
               />
             </PopoverContent>
-            {timeSlots.length > 0 && (
+            {date && timeSlots.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {timeSlots.map((slot, index) => (
                   <Button
@@ -184,7 +181,7 @@ export default function ModalBooking({
                   </Button>
                 ))}
               </div>
-            )}
+            ) : date ? <span>Aucune disponibilité pour ce jour.</span> : null}
           </Popover>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>

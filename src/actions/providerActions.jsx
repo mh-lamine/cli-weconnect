@@ -58,7 +58,7 @@ export async function getProviderAppointments(providerId) {
   }
 }
 
-export async function createAppointment(appointment){
+export async function createAppointment(appointment) {
   try {
     const res = await fetch(`${baseUrl}/api/appointments`, {
       method: "POST",
@@ -67,10 +67,16 @@ export async function createAppointment(appointment){
       },
       body: JSON.stringify(appointment),
     });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message);
+    }
+
     const data = await res.json();
     return data;
   } catch (error) {
     console.error(error);
-    return { error: error.message };
+    throw error;
   }
 }
