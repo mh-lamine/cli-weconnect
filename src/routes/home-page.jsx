@@ -7,10 +7,10 @@ export default function HomePage() {
 
   return (
     <main className="w-full flex flex-1 flex-col p-4">
-      <ul className="space-y-2">
-        {providers.map((provider) => (
-          <li key={provider.id} className="rounded-xl shadow overflow-hidden">
-            <ProviderCard key={provider.id} provider={provider} />
+      <ul className="space-y-2 w-full max-w-screen-lg mx-auto">
+        {providers.map((provider, index) => (
+          <li key={index} className="rounded-xl shadow overflow-hidden">
+            <ProviderCard provider={provider} />
           </li>
         ))}
       </ul>

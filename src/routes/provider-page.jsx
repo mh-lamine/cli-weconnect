@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { useLoaderData } from "react-router-dom";
 
 export default function ProviderPage() {
-  const { provider, providerCategories, providerAppointments } = useLoaderData();
+  const { provider, providerCategories, providerAppointments } =
+    useLoaderData();
 
   return (
     <main className="w-full flex-1">
@@ -19,8 +20,10 @@ export default function ProviderPage() {
           name={provider.providerName}
           address={provider.address}
         />
+      </header>
+      <div className="p-6 pb-0 max-w-screen-lg mx-auto">
         {providerCategories.map((category, index) => (
-          <div key={index} className="p-6 pb-0">
+          <div key={index}>
             <Services
               index={index}
               category={category}
@@ -29,7 +32,7 @@ export default function ProviderPage() {
             />
           </div>
         ))}
-      </header>
+      </div>
     </main>
   );
 }
@@ -61,7 +64,11 @@ function Services({ index, category, availabilities, appointments }) {
               <p>{service.description}</p>
             </div>
             <Button asChild className="bg-primary-500 text-light">
-              <ModalBooking service={service} availabilities={availabilities} appointments={appointments} />
+              <ModalBooking
+                service={service}
+                availabilities={availabilities}
+                appointments={appointments}
+              />
             </Button>
           </AccordionContent>
         ))}

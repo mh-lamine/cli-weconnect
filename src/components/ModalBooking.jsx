@@ -28,13 +28,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { formatAvailabilitiesByDayOfWeek } from "@/utils/formatting";
-import moment from "moment";
+import {
+  formatAvailabilitiesByDayOfWeek,
+  formatDate,
+} from "@/utils/formatting";
+import { DateTime } from "luxon";
 import {
   OneYearFromNow,
   getAvailableTimeRanges,
   getAvailableTimeSlots,
-} from "@/utils/dateManagment";
+} from "@/utils/dateManagement";
+import { createAppointment } from "@/actions/providerActions";
+import { useToast } from "./ui/use-toast";
 
 export default function ModalBooking({
   service,
@@ -43,61 +48,62 @@ export default function ModalBooking({
 }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
-  const [dailyStartTime, setDailyStartTime] = useState();
-  const [dailyEndTime, setDailyEndTime] = useState();
-  const [unixDate, setUnixDate] = useState();
-  const [timeSlots, setTimeSlots] = useState();
+  const [timeSlots, setTimeSlots] = useState([]);
   const [timeSlotSelected, setTimeSlotSelected] = useState({
-    date: "",
+    date: null,
     startTime: "",
   });
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { toast } = useToast();
 
   const formattedAvailabilities =
     formatAvailabilitiesByDayOfWeek(availabilities);
 
-  function handleSelectDate(selectedDate) {
-    setDate(selectedDate);
-    if (!selectedDate) {
-      setTimeSlots();
-      setTimeSlotSelected({ date: "", startTime: "" });
-      return;
-    }
-    const dayOfWeek = moment(selectedDate, "ddd MMM DD YYYY HH:mm:ss ZZ")
-      .format("dddd")
-      .toUpperCase();
-    const momentDate = moment(
-      selectedDate,
-      "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (ZZZ)"
-    ).unix();
+  const isDayOff = (date) => {
+    const formattedDate = DateTime.fromJSDate(date).setLocale("en");
+    const dayOfWeek = formattedDate.weekdayLong.toUpperCase();
+    return (
+      formattedDate.toISODate() < DateTime.now().toISODate() ||
+      formattedDate > OneYearFromNow ||
+      !formattedAvailabilities[dayOfWeek]
+    );
+  };
 
-    setUnixDate(momentDate);
-    setDailyStartTime(formattedAvailabilities[dayOfWeek].startTime);
-    setDailyEndTime(formattedAvailabilities[dayOfWeek].endTime);
+  function handleCreateAppointment() {
+    const appointmentDate = `${DateTime.fromJSDate(
+      timeSlotSelected.date
+    ).toISODate()}T${timeSlotSelected.startTime}`;
+
+    const appointment = {
+      date: appointmentDate,
+      status: "PENDING",
+      serviceId: service.id,
+      providerId: service.providerId,
+      clientId: "0002",
+    };
+
+    createAppointment(appointment);
+    toast({
+      title: "Créneau réservé !",
+      description: `Vous avez rendez-vous le ${formatDate(date)} à ${
+        timeSlotSelected.startTime
+      }.`,
+    });
   }
-
-   const isDayOff = (date) => {
-     const dayOfWeek = moment(date, "ddd MMM DD YYYY HH:mm:ss ZZ")
-       .format("dddd")
-       .toUpperCase();
-     return (
-       date < new Date() ||
-       date > OneYearFromNow() ||
-       !formattedAvailabilities[dayOfWeek]
-     );
-   };
 
   useEffect(() => {
     if (!date) return;
 
     const availableTimeRanges = getAvailableTimeRanges(
-      unixDate,
-      dailyStartTime,
-      dailyEndTime,
+      date,
+      availabilities,
       appointments
     );
 
-    const availableTimeSlots = getAvailableTimeSlots(availableTimeRanges, service);
+    const availableTimeSlots = getAvailableTimeSlots(
+      availableTimeRanges,
+      service
+    );
 
     setTimeSlots(availableTimeSlots);
   }, [date]);
@@ -122,7 +128,7 @@ export default function ModalBooking({
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
                 {date ? (
-                  <span>{moment(date).format("LL")}</span>
+                  <span>{formatDate(date)}</span>
                 ) : (
                   <span>Choisir une date</span>
                 )}
@@ -133,27 +139,30 @@ export default function ModalBooking({
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={(selectedDate) => handleSelectDate(selectedDate)}
+                onSelect={setDate}
                 disabled={isDayOff}
                 initialFocus
               />
             </PopoverContent>
-            {timeSlots && (
+            {timeSlots.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {timeSlots.map((slot, index) => (
                   <Button
                     key={index}
                     variant={
-                      timeSlotSelected.date == date &&
-                      timeSlotSelected.startTime == slot.start
+                      timeSlotSelected.date === date &&
+                      timeSlotSelected.startTime === slot.start
                         ? "default"
                         : "outline"
                     }
                     onClick={() => {
-                      timeSlotSelected.date == date &&
-                      timeSlotSelected.startTime == slot.start
-                        ? setTimeSlotSelected({ date: "", startTime: "" })
-                        : setTimeSlotSelected({ date, startTime: slot.start });
+                      timeSlotSelected.date === date &&
+                      timeSlotSelected.startTime === slot.start
+                        ? setTimeSlotSelected({ date: null, startTime: "" })
+                        : setTimeSlotSelected({
+                            date,
+                            startTime: slot.start,
+                          });
                     }}
                   >
                     {slot.start}
@@ -167,7 +176,7 @@ export default function ModalBooking({
               <div className="w-full flex items-center justify-between">
                 <Button variant="outline">Annuler</Button>
                 {timeSlotSelected.date && timeSlotSelected.startTime && (
-                  <Button>Réserver</Button>
+                  <Button onClick={handleCreateAppointment}>Réserver</Button>
                 )}
               </div>
             </DialogClose>
@@ -197,7 +206,7 @@ export default function ModalBooking({
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
                 {date ? (
-                  <span>{moment(date).format("LL")}</span>
+                  <span>{formatDate(date)}</span>
                 ) : (
                   <span>Choisir une date</span>
                 )}
@@ -208,27 +217,30 @@ export default function ModalBooking({
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={(selectedDate) => handleSelectDate(selectedDate)}
+                onSelect={setDate}
                 disabled={isDayOff}
                 initialFocus
               />
             </PopoverContent>
-            {date && timeSlots && (
+            {date && timeSlots.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {timeSlots.map((slot, index) => (
                   <Button
                     key={index}
                     variant={
-                      timeSlotSelected.date == date &&
-                      timeSlotSelected.startTime == slot.start
+                      timeSlotSelected.date === date &&
+                      timeSlotSelected.startTime === slot.start
                         ? "default"
                         : "outline"
                     }
                     onClick={() => {
-                      timeSlotSelected.date == date &&
-                      timeSlotSelected.startTime == slot.start
-                        ? setTimeSlotSelected({ date: "", startTime: "" })
-                        : setTimeSlotSelected({ date, startTime: slot.start });
+                      timeSlotSelected.date === date &&
+                      timeSlotSelected.startTime === slot.start
+                        ? setTimeSlotSelected({ date: null, startTime: "" })
+                        : setTimeSlotSelected({
+                            date,
+                            startTime: slot.start,
+                          });
                     }}
                   >
                     {slot.start}
@@ -242,7 +254,9 @@ export default function ModalBooking({
           <DrawerClose asChild>
             <div className="space-y-2">
               {timeSlotSelected.date && timeSlotSelected.startTime && (
-                <Button className="w-full">Réserver</Button>
+                <Button onClick={handleCreateAppointment} className="w-full">
+                  Réserver
+                </Button>
               )}
               <Button className="w-full" variant="outline">
                 Annuler
