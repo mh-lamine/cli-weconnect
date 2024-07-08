@@ -70,7 +70,7 @@ export default function ModalBooking({
     );
   };
 
-  function handleCreateAppointment() {
+  async function handleCreateAppointment() {
     const appointmentDate = `${DateTime.fromJSDate(
       timeSlotSelected.date
     ).toISODate()}T${timeSlotSelected.startTime}`;
@@ -83,14 +83,27 @@ export default function ModalBooking({
       clientId: "0002",
     };
 
-    createAppointment(appointment);
-    toast({
-      title: "Créneau réservé !",
-      description: `Vous avez rendez-vous le ${formatDate(date)} à ${
-        timeSlotSelected.startTime
-      }.`,
-    });
+    try {
+      await createAppointment(appointment);
+      setTimeSlots((prevSlots) =>
+        prevSlots.filter((slot) => slot.start !== timeSlotSelected.startTime)
+      );
+      toast({
+        title: "Créneau réservé !",
+        description: `Vous avez rendez-vous le ${formatDate(date)} à ${
+          timeSlotSelected.startTime
+        }.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur de réservation",
+        description:
+          "Une erreur est survenue lors de la création de votre rendez-vous. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    }
   }
+
 
   useEffect(() => {
     if (!date) return;
