@@ -85,6 +85,9 @@ export default function ModalBooking({
 
     try {
       await createAppointment(appointment);
+      setTimeSlots((prevSlots) =>
+        prevSlots.filter((slot) => slot.start !== timeSlotSelected.startTime)
+      );
       toast({
         title: "Créneau réservé !",
         description: `Vous avez rendez-vous le ${formatDate(date)} à ${
@@ -181,7 +184,9 @@ export default function ModalBooking({
                   </Button>
                 ))}
               </div>
-            ) : date ? <span>Aucune disponibilité pour ce jour.</span> : null}
+            ) : date ? (
+              <span>Aucune disponibilité pour ce jour.</span>
+            ) : null}
           </Popover>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
