@@ -7,11 +7,52 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { useLoaderData } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  getProviderAppointments,
+  getProviderById,
+  getProviderCategories,
+} from "@/actions/providerActions";
+import { useParams } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 export default function ProviderPage() {
-  const { provider, providerCategories, providerAppointments } =
-    useLoaderData();
+  const { providerId } = useParams();
+  const [provider, setProvider] = useState();
+  const [providerCategories, setProviderCategories] = useState();
+  const [providerAppointments, setProviderAppointments] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const [provider, providerCategories, providerAppointments] =
+          await Promise.all([
+            getProviderById(providerId),
+            getProviderCategories(providerId),
+            getProviderAppointments(providerId),
+          ]);
+
+        setProvider(provider);
+        setProviderCategories(providerCategories);
+        setProviderAppointments(providerAppointments);
+      } catch (error) {
+        setError(error.message || "An error occurred while fetching data.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
+
+  if (error) return <div className="flex-1">Error: {error}</div>;
 
   return (
     <main className="w-full flex-1">

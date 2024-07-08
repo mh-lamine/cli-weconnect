@@ -21,7 +21,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
-        loader: getProvidersByFilters,
       },
       {
         path: "providers/:providerId",
