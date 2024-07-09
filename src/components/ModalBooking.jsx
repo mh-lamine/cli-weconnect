@@ -34,22 +34,18 @@ import {
 } from "@/utils/formatting";
 import { DateTime } from "luxon";
 import { fr } from "date-fns/locale";
+import { OneYearFromNow } from "@/utils/dateManagement";
 import {
-  OneYearFromNow,
-  getAvailableTimeRanges,
-  getAvailableTimeSlots,
-} from "@/utils/dateManagement";
-import { createAppointment } from "@/actions/providerActions";
+  createAppointment,
+  getProviderAvailableTimeSlots,
+} from "@/actions/providerActions";
 import { useToast } from "./ui/use-toast";
 
-export default function ModalBooking({
-  service,
-  availabilities,
-  appointments,
-}) {
+export default function ModalBooking({ service, availabilities }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
-  const [timeSlots, setTimeSlots] = useState([]);
+  const [error, setError] = useState();
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [timeSlotSelected, setTimeSlotSelected] = useState({
     date: null,
     startTime: "",
@@ -77,6 +73,7 @@ export default function ModalBooking({
 
     const appointment = {
       date: appointmentDate,
+      duration: service.duration,
       status: "PENDING",
       serviceId: service.id,
       providerId: service.providerId,
@@ -85,9 +82,6 @@ export default function ModalBooking({
 
     try {
       await createAppointment(appointment);
-      setTimeSlots((prevSlots) =>
-        prevSlots.filter((slot) => slot.start !== timeSlotSelected.startTime)
-      );
       toast({
         title: "Créneau réservé !",
         description: `Vous avez rendez-vous le ${formatDate(date)} à ${
@@ -103,23 +97,28 @@ export default function ModalBooking({
         variant: "destructive",
       });
     }
+    setDate(null);
+    setTimeSlotSelected({ date: null, startTime: "" });
   }
 
   useEffect(() => {
     if (!date) return;
-
-    const availableTimeRanges = getAvailableTimeRanges(
-      date,
-      availabilities,
-      appointments
-    );
-
-    const availableTimeSlots = getAvailableTimeSlots(
-      availableTimeRanges,
-      service
-    );
-
-    setTimeSlots(availableTimeSlots);
+    async function fetchAvailableTimeSlots() {
+      const providerId = service.providerId;
+      const formattedDate = DateTime.fromJSDate(date).toISODate();
+      const serviceDuration = service.duration;
+      try {
+        const data = await getProviderAvailableTimeSlots(
+          providerId,
+          formattedDate,
+          serviceDuration
+        );
+        setAvailableTimeSlots(data);
+      } catch {
+        setError(error);
+      }
+    }
+    fetchAvailableTimeSlots();
   }, [date]);
 
   if (isDesktop) {
@@ -159,9 +158,9 @@ export default function ModalBooking({
                 locale={fr}
               />
             </PopoverContent>
-            {date && timeSlots.length > 0 ? (
+            {date && availableTimeSlots.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {timeSlots.map((slot, index) => (
+                {availableTimeSlots.map((slot, index) => (
                   <Button
                     key={index}
                     variant={
@@ -184,8 +183,10 @@ export default function ModalBooking({
                   </Button>
                 ))}
               </div>
-            ) : date ? (
+            ) : date && !availableTimeSlots ? (
               <span>Aucune disponibilité pour ce jour.</span>
+            ) : error ? (
+              <div>{error.message}</div>
             ) : null}
           </Popover>
           <DialogFooter className="sm:justify-start">
@@ -240,9 +241,9 @@ export default function ModalBooking({
                 locale={fr}
               />
             </PopoverContent>
-            {date && timeSlots.length > 0 && (
+            {date && availableTimeSlots.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {timeSlots.map((slot, index) => (
+                {availableTimeSlots.map((slot, index) => (
                   <Button
                     key={index}
                     variant={
@@ -265,7 +266,11 @@ export default function ModalBooking({
                   </Button>
                 ))}
               </div>
-            )}
+            ) : date && !availableTimeSlots ? (
+              <span>Aucune disponibilité pour ce jour.</span>
+            ) : error ? (
+              <div>{error.message}</div>
+            ) : null}
           </div>
         </Popover>
         <DrawerFooter className="pt-2">

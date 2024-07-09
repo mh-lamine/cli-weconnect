@@ -6,18 +6,17 @@ import { useEffect, useState } from "react";
 export default function HomePage() {
   const [providers, setProviders] = useState();
   const [error, setError] = useState();
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchProviders() {
-      setLoading(true);
-      const data = await getProvidersByFilters();
-      if (data.error) {
-        setError(data.error);
-      } else {
+      try {
+        const data = await getProvidersByFilters();
         setProviders(data);
+      } catch {
+        setError(data.error);
       }
       setLoading(false);
-    };
+    }
     fetchProviders();
   }, []);
 
