@@ -1,0 +1,21 @@
+{
+  "name": "WeConnect",
+  "short_name": "WeConnect",
+  "description": "Retrouvez vos prestataires préférés en un clic.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#E9E7EA",
+  "theme_color": "#b361d4",
+  "icons": [
+    {
+      "src": "/weconnect_tinified.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+        "src": "/weconnect_tinified.png",
+        "sizes": "512x512",
+        "type": "image/png"
+    }
+  ]
+}
