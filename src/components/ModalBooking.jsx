@@ -83,9 +83,6 @@ export default function ModalBooking({ service, availabilities }) {
 
     try {
       await createAppointment(appointment);
-      setTimeSlots((prevSlots) =>
-        prevSlots.filter((slot) => slot.start !== timeSlotSelected.startTime)
-      );
       toast({
         title: "Créneau réservé !",
         description: `Vous avez rendez-vous le ${formatDate(date)} à ${
@@ -101,6 +98,8 @@ export default function ModalBooking({ service, availabilities }) {
         variant: "destructive",
       });
     }
+    setDate(null);
+    setTimeSlotSelected({ date: null, startTime: "" });
   }
 
   useEffect(() => {
