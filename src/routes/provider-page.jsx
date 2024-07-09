@@ -18,37 +18,49 @@ import { Loader2 } from "lucide-react";
 
 export default function ProviderPage() {
   const { providerId } = useParams();
-  const [provider, setProvider] = useState();
-  const [providerCategories, setProviderCategories] = useState();
-  const [providerAppointments, setProviderAppointments] = useState();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState();
+  const [providerData, setProviderData] = useState({
+    provider: null,
+    categories: [],
+    appointments: null,
+    loading: true,
+    error: null,
+  });
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true);
-      setError(null);
+      setProviderData((prevState) => ({
+        ...prevState,
+        loading: true,
+        error: null,
+      }));
 
       try {
-        const [provider, providerCategories, providerAppointments] =
-          await Promise.all([
-            getProviderById(providerId),
-            getProviderCategories(providerId),
-            getProviderAppointments(providerId),
-          ]);
+        const [provider, categories, appointments] = await Promise.all([
+          getProviderById(providerId),
+          getProviderCategories(providerId),
+          getProviderAppointments(providerId),
+        ]);
 
-        setProvider(provider);
-        setProviderCategories(providerCategories);
-        setProviderAppointments(providerAppointments);
+        setProviderData({
+          provider,
+          categories,
+          appointments,
+          loading: false,
+          error: null,
+        });
       } catch (error) {
-        setError(error.message || "An error occurred while fetching data.");
-      } finally {
-        setLoading(false);
+        setProviderData((prevState) => ({
+          ...prevState,
+          loading: false,
+          error: error.message || "An error occurred while fetching data.",
+        }));
       }
     }
 
     fetchData();
-  }, []);
+  }, [providerId]);
+
+  const { provider, categories, appointments, loading, error } = providerData;
 
   if (loading) return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
 
@@ -63,13 +75,13 @@ export default function ProviderPage() {
         />
       </header>
       <div className="p-6 pb-0 max-w-screen-lg mx-auto">
-        {providerCategories.map((category, index) => (
+        {categories.map((category, index) => (
           <div key={index}>
             <Services
               index={index}
               category={category}
-              availabilities={provider.availabilities}
-              appointments={providerAppointments}
+              availabilities={provider?.availabilities}
+              appointments={appointments}
             />
           </div>
         ))}

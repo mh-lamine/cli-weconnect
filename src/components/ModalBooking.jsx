@@ -44,7 +44,6 @@ import { useToast } from "./ui/use-toast";
 export default function ModalBooking({ service, availabilities }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
-  const [timeSlots, setTimeSlots] = useState([]);
   const [error, setError] = useState();
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [timeSlotSelected, setTimeSlotSelected] = useState({
@@ -116,7 +115,7 @@ export default function ModalBooking({ service, availabilities }) {
         );
         setAvailableTimeSlots(data);
       } catch {
-        setError(data.error);
+        setError(error);
       }
     }
     fetchAvailableTimeSlots();
