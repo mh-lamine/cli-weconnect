@@ -1,4 +1,4 @@
-const env = "prod";
+const env = "dev";
 
 const baseUrl = `${
   env == "prod"
@@ -50,6 +50,28 @@ export async function getProviderAppointments(providerId) {
     const res = await fetch(
       `${baseUrl}/api/appointments/provider/${providerId}`
     );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return { error: error.message };
+  }
+}
+
+export async function getProviderAvailableTimeSlots(
+  providerId,
+  date,
+  serviceDuration
+) {
+  try {
+    const res = await fetch(`${baseUrl}/api/availabilities/${providerId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({date, serviceDuration}),
+    });
+
     const data = await res.json();
     return data;
   } catch (error) {
