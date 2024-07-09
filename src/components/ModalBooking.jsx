@@ -183,7 +183,7 @@ export default function ModalBooking({ service, availabilities }) {
                   </Button>
                 ))}
               </div>
-            ) : date && !availableTimeSlots ? (
+            ) : date && availableTimeSlots.length == 0 ? (
               <span>Aucune disponibilité pour ce jour.</span>
             ) : error ? (
               <div>{error.message}</div>
