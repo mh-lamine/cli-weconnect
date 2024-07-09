@@ -5,7 +5,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#E9E7EA",
-  "theme_color": "#b361d4",
+  "theme_color": "#E9E7EA",
   "icons": [
     {
       "src": "/weconnect_tinified.png",
