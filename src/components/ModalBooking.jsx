@@ -54,7 +54,7 @@ export default function ModalBooking({ service, availabilities }) {
   const { toast } = useToast();
 
   const formattedAvailabilities =
-    formatAvailabilitiesByDayOfWeek(availabilities);
+    availabilities && formatAvailabilitiesByDayOfWeek(availabilities);
 
   const isDayOff = (date) => {
     const formattedDate = DateTime.fromJSDate(date).setLocale("en");
@@ -183,7 +183,7 @@ export default function ModalBooking({ service, availabilities }) {
                   </Button>
                 ))}
               </div>
-            ) : date && availableTimeSlots.length == 0 ? (
+            ) : date ? (
               <span>Aucune disponibilité pour ce jour.</span>
             ) : error ? (
               <div>{error.message}</div>
