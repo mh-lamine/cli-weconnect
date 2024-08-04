@@ -1,4 +1,6 @@
-const env = "prod";
+import axios from "@/api/axios";
+
+const env = "dev";
 
 const baseUrl = `${
   env == "prod"
@@ -7,20 +9,7 @@ const baseUrl = `${
 }`;
 
 export async function getProvidersByFilters(filters = {}) {
-  try {
-    const res = await fetch(`${baseUrl}/api/users/providers`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ filters }),
-    });
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    return { error: error.message };
-  }
+  return axios.post("/users/providers", filters);
 }
 
 export async function getProviderById(id) {
@@ -69,7 +58,7 @@ export async function getProviderAvailableTimeSlots(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({date, serviceDuration}),
+      body: JSON.stringify({ date, serviceDuration }),
     });
 
     const data = await res.json();

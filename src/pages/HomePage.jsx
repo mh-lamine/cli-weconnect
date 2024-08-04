@@ -7,15 +7,14 @@ export default function HomePage() {
   const [providers, setProviders] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
+
+
   useEffect(() => {
     async function fetchProviders() {
-      try {
-        const data = await getProvidersByFilters();
-        setProviders(data);
-      } catch {
-        setError(data.error);
-      }
-      setLoading(false);
+      const response = await getProvidersByFilters();
+      response && setLoading(false);
+      response.error && setError(response.error);
+      response.data && setProviders(response.data);
     }
     fetchProviders();
   }, []);
@@ -30,9 +29,12 @@ export default function HomePage() {
 
   return (
     <main className="w-full flex flex-1 flex-col p-4">
-      <ul className="space-y-2 w-full max-w-screen-lg mx-auto">
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-screen-lg mx-auto">
         {providers?.map((provider, index) => (
-          <li key={index} className="rounded-xl shadow overflow-hidden">
+          <li
+            key={index}
+            className="rounded-xl bg-dark/5 shadow  overflow-hidden"
+          >
             <ProviderCard provider={provider} />
           </li>
         ))}

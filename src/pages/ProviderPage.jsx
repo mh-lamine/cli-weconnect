@@ -9,9 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import {
-  getProviderAppointments,
-  getProviderById,
   getProviderCategories,
+  getProvidersByFilters,
 } from "@/actions/providerActions";
 import { useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -21,7 +20,6 @@ export default function ProviderPage() {
   const [providerData, setProviderData] = useState({
     provider: null,
     categories: [],
-    appointments: null,
     loading: true,
     error: null,
   });
@@ -35,16 +33,14 @@ export default function ProviderPage() {
       }));
 
       try {
-        const [provider, categories, appointments] = await Promise.all([
-          getProviderById(providerId),
+        const [provider, categories] = await Promise.all([
+          getProvidersByFilters({ id: providerId }),
           getProviderCategories(providerId),
-          getProviderAppointments(providerId),
         ]);
 
         setProviderData({
           provider,
           categories,
-          appointments,
           loading: false,
           error: null,
         });
@@ -60,7 +56,7 @@ export default function ProviderPage() {
     fetchData();
   }, [providerId]);
 
-  const { provider, categories, appointments, loading, error } = providerData;
+  const { provider, categories, loading, error } = providerData;
 
   if (loading) return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
 
@@ -81,7 +77,6 @@ export default function ProviderPage() {
               index={index}
               category={category}
               availabilities={provider?.availabilities}
-              appointments={appointments}
             />
           </div>
         ))}
@@ -90,7 +85,7 @@ export default function ProviderPage() {
   );
 }
 
-function Services({ index, category, availabilities, appointments }) {
+function Services({ index, category, availabilities }) {
   return (
     <Accordion
       type="single"
@@ -120,7 +115,6 @@ function Services({ index, category, availabilities, appointments }) {
               <ModalBooking
                 service={service}
                 availabilities={availabilities}
-                appointments={appointments}
               />
             </Button>
           </AccordionContent>

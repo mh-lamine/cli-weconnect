@@ -25,7 +25,7 @@ export default function ProviderHeader({ name, address }) {
           <Avatar className="w-14 h-14">
             <AvatarImage src="" />
             <AvatarFallback className="text-xl">
-              {getInitials(name)}
+              {name && getInitials(name)}
             </AvatarFallback>
           </Avatar>
           <div className="ml-4">
