@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const [provider, setProvider] = useState();
@@ -11,6 +11,8 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
 
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     async function getProvider() {
@@ -19,6 +21,7 @@ export default function Profile() {
         setProvider(response.data);
       } catch (error) {
         setError(error);
+        navigate("/login", { state: { from: location }, replace: true });
       }
       setLoading(false);
     }
