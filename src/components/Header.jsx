@@ -15,7 +15,7 @@ export default function Header() {
             <span className="px-2">Connexion</span><User />
           </Link>
         </Button>
-          <Link to="salon">Tableau de bord</Link>
+          <Link to="dashboard">Tableau de bord</Link>
       </div>
     </div>
   );

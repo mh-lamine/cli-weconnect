@@ -7,11 +7,11 @@ import LoginPage from "./pages/LoginPage";
 import Profile from "./pages/Profile";
 import ProviderPage from "./pages/ProviderPage";
 import RegisterPage from "./pages/RegisterPage";
-import Salon from "./pages/Salon";
 import ErrorPage from "./pages/ErrorPage";
 import Unauthorized from "./pages/Unauthorized";
 import AuthLayout from "./layouts/AuthLayout";
 import useAuth from "./hooks/useAuth";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   const {auth} = useAuth();
@@ -33,7 +33,7 @@ export default function App() {
       {/* protected routes */}
       <Route element={<RequireAuth />}>
         <Route element={<ProviderLayout />}>
-          <Route path="salon" element={<Salon />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="profile" element={<Profile />} />
         </Route>
       </Route>

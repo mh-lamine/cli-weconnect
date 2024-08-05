@@ -1,29 +1,47 @@
+import Error from "@/components/Error";
 import { Button } from "@/components/ui/button";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Profile() {
   const [provider, setProvider] = useState();
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(true);
+
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    const getProvider = async () => {
+    async function getProvider() {
       try {
         const response = await axiosPrivate.get("/users");
         setProvider(response.data);
       } catch (error) {
-        console.error(error);
+        setError(error);
       }
-    };
+      setLoading(false);
+    }
     getProvider();
   }, []);
 
+  if (loading) {
+    return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
+  }
+
+  if (error) {
+    return <Error />;
+  }
+
   return (
-    <div>
-      {provider && JSON.stringify(provider)}
+    <div className="flex flex-col items-center space-y-2">
+      <div>
+        <p>{provider.phoneNumber}</p>
+        <p>{provider.address}</p>
+      </div>
+
       <Button asChild>
-        <Link to="/salon">Tableau de bord</Link>
+        <Link to="/dashboard">Tableau de bord</Link>
       </Button>
       <Button asChild>
         <Link to="/">accueil</Link>

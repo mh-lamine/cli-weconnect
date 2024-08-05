@@ -1,20 +1,20 @@
 import { getProvidersByFilters } from "@/actions/providerActions";
+import Error from "@/components/Error";
 import ProviderCard from "@/components/ProviderCard";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const [providers, setProviders] = useState();
-  const [error, setError] = useState();
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     async function fetchProviders() {
       const response = await getProvidersByFilters();
-      response && setLoading(false);
-      response.error && setError(response.error);
-      response.data && setProviders(response.data);
+      setError(response.error);
+      setProviders(response.data);
+      setLoading(false);
     }
     fetchProviders();
   }, []);
@@ -24,7 +24,7 @@ export default function HomePage() {
   }
 
   if (error) {
-    return <div className="flex-1">Error: {error}</div>;
+    return <Error />;
   }
 
   return (
