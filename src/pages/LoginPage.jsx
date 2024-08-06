@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { handleLogin } from "@/actions/authActions";
 import { Loader2 } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function LoginPage() {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
   const [credentials, setCredentials] = useState({
     phoneNumber: "",
     password: "",
@@ -21,6 +22,10 @@ export default function LoginPage() {
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
+
+  const togglePersist = () => {
+    setPersist(!persist);
   };
 
   const handleSubmit = async (e) => {
@@ -42,6 +47,11 @@ export default function LoginPage() {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    localStorage.setItem("persist", persist);
+  }, [persist]);
+
   return (
     <div className="text-center space-y-2 w-4/5 max-w-[500px]">
       <h1 className="text-3xl font-semibold">Se connecter</h1>
@@ -60,6 +70,17 @@ export default function LoginPage() {
           onChange={handleChange}
           onClick={() => setError("")}
         />
+        <div className="items-top flex items-center pt-2 space-x-2">
+          <Checkbox id="terms1" onClick={togglePersist} checked={persist} />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="terms1"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Rester connecté
+            </label>
+          </div>
+        </div>
       </form>
       {error && <p className="text-destructive text-sm">{error}</p>}
       <Button onClick={handleSubmit} disabled={loading && true}>

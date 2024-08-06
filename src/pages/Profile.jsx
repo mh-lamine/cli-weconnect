@@ -33,7 +33,7 @@ export default function Profile() {
   }
 
   if (error) {
-    return <Error />;
+    return <Error errMsg={error} />;
   }
 
   return (

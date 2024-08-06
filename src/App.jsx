@@ -12,10 +12,9 @@ import Unauthorized from "./pages/Unauthorized";
 import AuthLayout from "./layouts/AuthLayout";
 import useAuth from "./hooks/useAuth";
 import Dashboard from "./pages/Dashboard";
+import PersistLogin from "./components/PersistLogin";
 
 export default function App() {
-  const {auth} = useAuth();
-  console.log(auth);
   return (
     <Routes>
       {/* public routes */}
@@ -31,10 +30,12 @@ export default function App() {
       </Route>
 
       {/* protected routes */}
-      <Route element={<RequireAuth />}>
-        <Route element={<ProviderLayout />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="profile" element={<Profile />} />
+      <Route element={<PersistLogin />}>
+        <Route element={<RequireAuth />}>
+          <Route element={<ProviderLayout />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
         </Route>
       </Route>
 
