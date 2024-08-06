@@ -1,6 +1,6 @@
 import axios from "@/api/axios";
 
-const env = "dev";
+const env = "prod";
 
 const baseUrl = `${
   env == "prod"
