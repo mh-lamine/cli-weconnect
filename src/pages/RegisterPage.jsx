@@ -26,11 +26,15 @@ export default function RegisterPage() {
     setLoading(true);
     if (!PHONE_NUMBER_REGEX.test(credentials.phoneNumber)) {
       setError("Le numéro de téléphone n'est pas valide");
+      setLoading(false);
+      return;
     }
     if (!PASSWORD_REGEX.test(credentials.password)) {
       setError(
         "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre"
       );
+      setLoading(false);
+      return;
     }
     try {
       await handleRegister(credentials, "register");
@@ -67,7 +71,7 @@ export default function RegisterPage() {
         />
       </form>
       {error && <p className="text-destructive text-sm">{error}</p>}
-      <Button onClick={handleSubmit} disabled={loading && "true"}>
+      <Button onClick={handleSubmit} disabled={loading && true}>
         {loading ? <Loader2 className="animate-spin" /> : "Créer un compte"}
       </Button>
       <p className="text-muted text-xs font-light ">
