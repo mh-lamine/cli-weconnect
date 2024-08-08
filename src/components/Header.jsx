@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
@@ -60,14 +59,13 @@ export default function Header() {
             <div className="flex items-center gap-2">
               {loading ? null : user ? (
                 <>
-                  <Button asChild>
-                    <Link
-                      to={"account"}
-                      className="w-full flex items-center gap-4"
-                    >
-                      <span>Mon compte</span>
-                      <User />
-                    </Link>
+                  {user?.isProvider && (
+                    <Button asChild>
+                      <Link to={"dashboard"}>Mon tableau de bord</Link>
+                    </Button>
+                  )}
+                  <Button asChild variant="outline">
+                    <Link to={"account"}>Mon compte</Link>
                   </Button>
                 </>
               ) : (
@@ -102,13 +100,16 @@ export default function Header() {
           <div className="w-full flex flex-col items-center gap-2 mt-auto">
             {loading ? null : user ? (
               <>
-                <Button asChild>
-                  <Link
-                    to={"account"}
-                    className="w-full flex items-center gap-4"
-                  >
-                    <span>Mon compte</span>
-                    <User />
+                {user?.isProvider && (
+                  <Button asChild>
+                    <Link to={"dashboard"} className="w-full">
+                      Mon tableau de bord
+                    </Link>
+                  </Button>
+                )}
+                <Button asChild variant="outline">
+                  <Link to={"account"} className="w-full">
+                    Mon compte
                   </Link>
                 </Button>
               </>
