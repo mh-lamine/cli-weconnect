@@ -1,24 +1,31 @@
 import Error from "@/components/Error";
 import { Button } from "@/components/ui/button";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import useLogout from "@/hooks/useLogout";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-export default function Profile() {
-  const [provider, setProvider] = useState();
+const Account = () => {
+  const [user, setUser] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
 
   const axiosPrivate = useAxiosPrivate();
+  const logout = useLogout();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
 
   useEffect(() => {
     async function getProvider() {
       try {
         const response = await axiosPrivate.get("/users");
-        setProvider(response.data);
+        setUser(response.data);
       } catch (error) {
         setError(error);
         navigate("/login", { state: { from: location }, replace: true });
@@ -33,22 +40,17 @@ export default function Profile() {
   }
 
   if (error) {
-    return <Error errMsg={error} />;
+    return <Error />;
   }
-
   return (
-    <div className="flex flex-col items-center space-y-2">
-      <div>
-        <p>{provider.phoneNumber}</p>
-        <p>{provider.address}</p>
-      </div>
-
-      <Button asChild>
-        <Link to="/dashboard">Tableau de bord</Link>
+    <main className="flex flex-1 flex-col w-full max-w-screen-md mx-auto">
+      <div>Account</div>
+      <Link to="/dashboard">Tableau de bord</Link>
+      <Button variant="destructive" onClick={handleLogout}>
+        Se déconnecter
       </Button>
-      <Button asChild>
-        <Link to="/">accueil</Link>
-      </Button>
-    </div>
+    </main>
   );
-}
+};
+
+export default Account;

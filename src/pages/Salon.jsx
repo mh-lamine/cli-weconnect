@@ -5,8 +5,8 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-export default function Dashboard() {
-  const [appointments, setAppointments] = useState();
+export default function Salon() {
+  const [provider, setProvider] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +18,7 @@ export default function Dashboard() {
     async function getProvider() {
       try {
         const response = await axiosPrivate.get("/users");
-        setAppointments(response.data);
+        setProvider(response.data);
       } catch (error) {
         setError(error);
         navigate("/login", { state: { from: location }, replace: true });
@@ -33,14 +33,18 @@ export default function Dashboard() {
   }
 
   if (error) {
-    return <Error />;
+    return <Error errMsg={error} />;
   }
+
   return (
     <div className="flex flex-1 flex-col items-center space-y-2">
-      <h1>Mes prochains rendez-vous</h1>
+      <div>
+        <p>{provider.phoneNumber}</p>
+        <p>{provider.address}</p>
+      </div>
 
       <Button asChild>
-        <Link to="/salon">Mon salon</Link>
+        <Link to="/dashboard">Tableau de bord</Link>
       </Button>
       <Button asChild>
         <Link to="/">accueil</Link>

@@ -4,15 +4,16 @@ import ClientLayout from "./layouts/ClientLayout";
 import ProviderLayout from "./layouts/ProviderLayout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import Profile from "./pages/Profile";
+import Salon from "./pages/Salon";
 import ProviderPage from "./pages/ProviderPage";
 import RegisterPage from "./pages/RegisterPage";
 import ErrorPage from "./pages/ErrorPage";
 import Unauthorized from "./pages/Unauthorized";
 import AuthLayout from "./layouts/AuthLayout";
-import useAuth from "./hooks/useAuth";
 import Dashboard from "./pages/Dashboard";
 import PersistLogin from "./components/PersistLogin";
+import SalonPreferences from "./pages/SalonPreferences";
+import Account from "./pages/Account";
 
 export default function App() {
   return (
@@ -32,9 +33,13 @@ export default function App() {
       {/* protected routes */}
       <Route element={<PersistLogin />}>
         <Route element={<RequireAuth />}>
+          <Route element={<ClientLayout />}>
+            <Route path="account" element={<Account />} />
+          </Route>
           <Route element={<ProviderLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="salon" element={<Salon />} />
+            <Route path="salon/preferences" element={<SalonPreferences />} />
           </Route>
         </Route>
       </Route>
