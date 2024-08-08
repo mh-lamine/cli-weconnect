@@ -36,7 +36,7 @@ export default function LoginPage() {
         credentials,
         "login"
       );
-      setAuth({ ...credentials, accessToken, isProvider });
+      setAuth({ accessToken, isProvider });
       navigate(from, { replace: true });
     } catch (error) {
       if (error.response.status === 401) {

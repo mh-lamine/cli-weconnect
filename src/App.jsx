@@ -8,7 +8,6 @@ import Salon from "./pages/Salon";
 import ProviderPage from "./pages/ProviderPage";
 import RegisterPage from "./pages/RegisterPage";
 import ErrorPage from "./pages/ErrorPage";
-import Unauthorized from "./pages/Unauthorized";
 import AuthLayout from "./layouts/AuthLayout";
 import Dashboard from "./pages/Dashboard";
 import PersistLogin from "./components/PersistLogin";
@@ -45,7 +44,6 @@ export default function App() {
       </Route>
 
       {/* error routes */}
-      <Route path="unauthorized" element={<Unauthorized />} />
       <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
