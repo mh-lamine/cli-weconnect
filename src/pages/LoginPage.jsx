@@ -53,7 +53,7 @@ export default function LoginPage() {
   }, [persist]);
 
   return (
-    <div className="text-center space-y-2 w-4/5 max-w-[500px]">
+    <div className="text-center flex flex-col gap-4 w-4/5 max-w-[500px]">
       <h1 className="text-3xl font-semibold">Se connecter</h1>
       <form className="space-y-2 py-2">
         <Input
@@ -86,6 +86,18 @@ export default function LoginPage() {
       <Button onClick={handleSubmit} disabled={loading && true}>
         {loading ? <Loader2 className="animate-spin" /> : "Se connecter"}
       </Button>
+      <p className="text-muted text-xs font-light ">
+        En créant un compte, vous acceptez les{" "}
+        <Button asChild variant="link" className="p-0 text-xs h-min">
+          <Link>termes et conditions d'utilisation</Link>
+        </Button>{" "}
+        et la{" "}
+        <Button asChild variant="link" className="p-0 text-xs h-min">
+          <Link>politique de confidentialité</Link>
+        </Button>
+        .
+      </p>
+      <div className="divider mb-0">Pas encore inscrit ?</div>
       <Button asChild variant="link" className="block">
         <Link to={"/register"}>Créer un compter</Link>
       </Button>

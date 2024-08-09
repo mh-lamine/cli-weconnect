@@ -49,7 +49,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="text-center space-y-2 w-4/5 max-w-[500px]">
+    <div className="text-center flex flex-col gap-4 w-4/5 max-w-[500px]">
       <h1 className="text-3xl font-semibold">Créer un compte</h1>
       <p>
         Entrez votre numéro de téléphone et créez un mot de passe pour démarrer
@@ -85,6 +85,7 @@ export default function RegisterPage() {
         </Button>
         .
       </p>
+      <div className="divider mb-0">Déjà inscrit ?</div>
       <Button asChild variant="link">
         <Link to={"/login"}>Se connecter</Link>
       </Button>

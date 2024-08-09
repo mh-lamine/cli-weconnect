@@ -54,7 +54,7 @@ export default function Header() {
           </div>
           <div className="hidden lg:flex items-center justify-between w-full px-4">
             <Link to={"/"} className="text-xl font-semibold">
-              WeConnectlg
+              WeConnect
             </Link>
             <div className="flex items-center gap-2">
               {loading ? null : user ? (
