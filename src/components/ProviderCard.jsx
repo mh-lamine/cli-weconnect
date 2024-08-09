@@ -1,11 +1,9 @@
-import React from "react";
-import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import Tag from "./Tag";
 
 export default function ProviderCard({ provider }) {
   return (
-    <div>
+    <Link to={`provider/${provider.id}`}>
       {/* <img src="" alt="photo du salon" /> */}
       <div className="bg-muted grid place-items-center h-40 text-light text-xs">
         no photo
@@ -20,10 +18,7 @@ export default function ProviderCard({ provider }) {
             ))}
           </div>
         </div>
-        <Button asChild className="w-fit ml-auto">
-          <Link to={`provider/${provider.id}`}>Voir le salon</Link>
-        </Button>
       </div>
-    </div>
+    </Link>
   );
 }
