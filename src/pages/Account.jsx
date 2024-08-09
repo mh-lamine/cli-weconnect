@@ -45,7 +45,11 @@ const Account = () => {
   return (
     <main className="flex flex-1 flex-col w-full max-w-screen-md mx-auto">
       <div>Account</div>
-      <Link to="/dashboard">Tableau de bord</Link>
+      {user.isProvider && (
+        <Button asChild>
+          <Link to="/dashboard">Tableau de bord</Link>
+        </Button>
+      )}
       <Button variant="destructive" onClick={handleLogout}>
         Se déconnecter
       </Button>
