@@ -98,7 +98,7 @@ export default function LoginPage() {
         .
       </p>
       <div className="divider mb-0">Pas encore inscrit ?</div>
-      <Button asChild variant="link" className="block">
+      <Button asChild variant="outline">
         <Link to={"/register"}>Créer un compter</Link>
       </Button>
     </div>

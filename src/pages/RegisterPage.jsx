@@ -86,7 +86,7 @@ export default function RegisterPage() {
         .
       </p>
       <div className="divider mb-0">Déjà inscrit ?</div>
-      <Button asChild variant="link">
+      <Button asChild variant="outline">
         <Link to={"/login"}>Se connecter</Link>
       </Button>
     </div>
