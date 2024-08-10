@@ -16,9 +16,9 @@ const AuthLayout = () => {
         <div className="w-3/4 h-fit py-8 grid place-items-center bg-white rounded-xl shadow -mt-28 lg:mt-0 lg:bg-light lg:w-full lg:shadow-none">
           <Outlet />
         </div>
-      </div>
-      <div className="absolute bottom-10 py-4 text-center lg:w-1/2 w-full lg:right-0">
-        &copy; 2024 WeConnect Inc. Tous droits réservés.
+        <div className="bottom-0 py-4 text-center lg:w-1/2 w-full lg:right-0 lg:absolute">
+          &copy; 2024 WeConnect Inc. Tous droits réservés.
+        </div>
       </div>
     </main>
   );
