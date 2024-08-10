@@ -13,8 +13,26 @@ import Dashboard from "./pages/Dashboard";
 import PersistLogin from "./components/PersistLogin";
 import SalonPreferences from "./pages/SalonPreferences";
 import Account from "./pages/Account";
+import { useEffect } from "react";
+import useAxiosPrivate from "./hooks/useAxiosPrivate";
+import useAuth from "./hooks/useAuth";
 
 export default function App() {
+  const { setAuth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const response = await axiosPrivate.get("/users");
+        setAuth({ ...prev, isProvider: response.data.isProvider });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getUser();
+  }, []);
+
   return (
     <Routes>
       {/* public routes */}

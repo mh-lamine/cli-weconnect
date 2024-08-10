@@ -1,26 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useEffect, useState } from "react";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import useAuth from "@/hooks/useAuth";
 
 export default function Header() {
-  const [user, setUser] = useState();
-  const [loading, setLoading] = useState(true);
-
-  const axiosPrivate = useAxiosPrivate();
-
-  useEffect(() => {
-    async function getUser() {
-      try {
-        const response = await axiosPrivate.get("/users");
-        setUser(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    }
-    getUser();
-  }, []);
+  const { auth } = useAuth();
 
   return (
     <div className="drawer">
@@ -57,9 +40,9 @@ export default function Header() {
               WeConnect
             </Link>
             <div className="flex items-center gap-2">
-              {loading ? null : user ? (
+              {auth ? (
                 <>
-                  {user?.isProvider && (
+                  {auth?.isProvider && (
                     <Button asChild>
                       <Link to={"dashboard"}>Mon tableau de bord</Link>
                     </Button>
@@ -98,32 +81,24 @@ export default function Header() {
             <li>Estheticienne</li>
           </ul>
           <div className="w-full flex flex-col items-center gap-2 mt-auto">
-            {loading ? null : user ? (
+            {auth ? (
               <>
-                {user?.isProvider && (
+                {auth?.isProvider && (
                   <Button asChild>
-                    <Link to={"dashboard"} className="w-full">
-                      Mon tableau de bord
-                    </Link>
+                    <Link to={"dashboard"}>Mon tableau de bord</Link>
                   </Button>
                 )}
                 <Button asChild variant="outline">
-                  <Link to={"account"} className="w-full">
-                    Mon compte
-                  </Link>
+                  <Link to={"account"}>Mon compte</Link>
                 </Button>
               </>
             ) : (
               <>
                 <Button asChild variant={"outline"}>
-                  <Link to={"register"} className="w-full">
-                    Créer un compte
-                  </Link>
+                  <Link to={"register"}>Créer un compte</Link>
                 </Button>
                 <Button asChild>
-                  <Link to={"login"} className="w-full">
-                    Se connecter
-                  </Link>
+                  <Link to={"login"}>Se connecter</Link>
                 </Button>
               </>
             )}
