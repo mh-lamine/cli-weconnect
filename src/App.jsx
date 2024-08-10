@@ -25,7 +25,7 @@ export default function App() {
     async function getUser() {
       try {
         const response = await axiosPrivate.get("/users");
-        setAuth({ ...prev, isProvider: response.data.isProvider });
+        setAuth({ isProvider: response.data.isProvider });
       } catch (error) {
         console.error(error);
       }

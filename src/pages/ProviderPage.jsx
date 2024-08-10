@@ -70,7 +70,7 @@ export default function ProviderPage() {
           address={provider.address}
         />
       </header>
-      <div className="p-6 pb-0 max-w-screen-lg mx-auto">
+      <div className="p-6 pb-0 max-w-screen-md mx-auto">
         {categories.map((category, index) => (
           <div key={index}>
             <Services
@@ -102,7 +102,7 @@ function Services({ index, category, availabilities }) {
             key={index}
             className="flex items-center justify-between"
           >
-            <div className="pt-4 space-y-2">
+            <div className="w-3/4 pt-4 space-y-2">
               <h3 className="text-lg text-left">{service.name}</h3>
               <div className="flex text-sm">
                 <p className="text-muted">{service.price}€</p>

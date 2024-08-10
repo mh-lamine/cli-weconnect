@@ -28,7 +28,9 @@ const Account = () => {
         setUser(response.data);
       } catch (error) {
         setError(error);
-        navigate("/login", { state: { from: location }, replace: true });
+        if (error.response?.status === 401) {
+          navigate("/login", { state: { from: location }, replace: true });
+        }
       }
       setLoading(false);
     }

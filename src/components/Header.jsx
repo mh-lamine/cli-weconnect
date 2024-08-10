@@ -84,20 +84,20 @@ export default function Header() {
             {auth ? (
               <>
                 {auth?.isProvider && (
-                  <Button asChild>
+                  <Button asChild className="w-full">
                     <Link to={"dashboard"}>Mon tableau de bord</Link>
                   </Button>
                 )}
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="w-full">
                   <Link to={"account"}>Mon compte</Link>
                 </Button>
               </>
             ) : (
               <>
-                <Button asChild variant={"outline"}>
+                <Button asChild variant={"outline"} className="w-full">
                   <Link to={"register"}>Créer un compte</Link>
                 </Button>
-                <Button asChild>
+                <Button asChild className="w-full">
                   <Link to={"login"}>Se connecter</Link>
                 </Button>
               </>
