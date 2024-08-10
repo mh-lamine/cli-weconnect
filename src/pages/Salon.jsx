@@ -11,6 +11,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 const PHONE_NUMBER_REGEX =
   /^(?:(?:\+|00)33\s?[1-9](?:[\s.-]?\d{2}){4}|0[1-9](?:[\s.-]?\d{2}){4})$/;
 
+const EMAIL_REGEX =
+  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 export default function Salon() {
   const [provider, setProvider] = useState();
   const [error, setError] = useState();
@@ -57,8 +59,17 @@ export default function Salon() {
       setEditLoading(false);
       return;
     }
-    if (!providerInfos) {
-      setEditError("Aucune modification n'a été effectuée");
+    if (providerInfos.email && !EMAIL_REGEX.test(providerInfos.email)) {
+      setEditError("L'adresse email n'est pas valide");
+      setEditLoading(false);
+      return;
+    }
+    const hasChanges = Object.keys(providerInfos).some(
+      (key) => providerInfos[key] !== provider[key]
+    );
+
+    if (!hasChanges) {
+      setEdit(false);
       setEditLoading(false);
       return;
     }
@@ -72,8 +83,8 @@ export default function Salon() {
         setEditError(error.response.data.message);
       }
     }
-    setEditLoading(false);
     setEdit(false);
+    setEditLoading(false);
   };
 
   const clearInfos = () => {
@@ -101,11 +112,7 @@ export default function Salon() {
   return (
     <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col space-y-4">
       <h1 className="text-3xl font-semibold">Mon salon</h1>
-      <section
-        id="provider-infos-section"
-        className="space-y-2"
-        onClick={() => setEditError(null)}
-      >
+      <section id="provider-infos-section" className="space-y-2">
         <h2 className="text-2xl font-medium">Mes informations</h2>
         <div>
           <Label htmlFor="phoneNumber">Numero de telephone</Label>
@@ -136,6 +143,17 @@ export default function Salon() {
             name="address"
             type="text"
             value={!edit ? provider.address : undefined}
+            onChange={handleChange}
+            className="text-lg"
+          />
+        </div>
+        <div>
+          <Label htmlFor="ProviderName">Nom du salon</Label>
+          <Input
+            disabled={!edit}
+            name="ProviderName"
+            type="text"
+            value={!edit ? provider.providerName : undefined}
             onChange={handleChange}
             className="text-lg"
           />
@@ -174,7 +192,45 @@ export default function Salon() {
             </p>
           </div>
         </div>
-        {editError && <p className="text-destructive text-sm">{editError}</p>}
+        <div>
+          <Label htmlFor="vacancyMode" className="text-destructive">
+            Mode vacances
+          </Label>
+          <div
+            className={`${
+              edit ? "bg-white" : "bg-white/50"
+            } rounded-md px-3 py-2 space-y-4`}
+          >
+            <div className="flex items-center justify-between">
+              <p className={!edit ? "text-muted" : "text-destructive"}>
+                Passez en mode vacances pour ne plus recevoir de demandes de
+                rendez-vous.
+              </p>
+              <Switch
+                id="vacancyMode"
+                disabled={!edit}
+                checked={
+                  providerInfos.isInVacancyMode || provider.isInVacancyMode
+                }
+                onCheckedChange={(checked) =>
+                  setProviderInfos({
+                    ...providerInfos,
+                    isInVacancyMode: checked,
+                  })
+                }
+                className="data-[state=checked]:bg-destructive"
+              />
+            </div>
+            <p className={`text-muted ${!edit && "hidden"}`}>
+              En cas de fermerture temporaire de votre salon, vous pouvez
+              activer le mode vacances pour ne plus recevoir de demandes de
+              rendez-vous pendant un certain temps.
+            </p>
+          </div>
+        </div>
+        {editError && setTimeout(() => setEditError(null), 3000) && (
+          <p className="text-destructive text-sm">{editError}</p>
+        )}
         {edit ? (
           <>
             <Button onClick={handleSubmit} disabled={editLoading && true}>
