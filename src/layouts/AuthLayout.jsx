@@ -2,19 +2,23 @@ import { Link, Outlet } from "react-router-dom";
 import logo from "/weconnect.png";
 const AuthLayout = () => {
   return (
-    <main className="w-screen h-screen flex flex-col lg:flex-row bg-light text-dark">
-      <div className="w-full h-1/2 lg:w-1/2 lg:h-screen grid place-items-center bg-primary-500">
+    <main className="w-screen min-h-screen flex flex-col lg:flex-row bg-light text-dark">
+      <div className="w-full h-[50vh] lg:w-1/2 lg:h-screen bg-primary-500 grid place-items-center">
         <Link to={"/"}>
-          <img src={logo} alt="logo weconnect" className="w-80 -mt-20" />
+          <img
+            src={logo}
+            alt="logo weconnect"
+            className="w-60 -mt-20 lg:mt-0"
+          />
         </Link>
-        <span className="absolute bottom-10">
-          &copy; 2024 WeConnect Inc. Tous droits réservés.
-        </span>
       </div>
-      <div className="w-full h-1/2 lg:h-full lg:w-1/2 grid place-items-center">
-        <div className="w-3/4 h-fit py-8 grid place-items-center bg-white -mt-60 rounded-xl shadow lg:mt-0 lg:bg-light lg:w-full lg:shadow-none">
+      <div className="w-full lg:w-1/2 grid place-items-center">
+        <div className="w-3/4 h-fit py-8 grid place-items-center bg-white rounded-xl shadow -mt-28 lg:mt-0 lg:bg-light lg:w-full lg:shadow-none">
           <Outlet />
         </div>
+      </div>
+      <div className="absolute bottom-10 py-4 text-center lg:w-1/2 w-full lg:right-0">
+        &copy; 2024 WeConnect Inc. Tous droits réservés.
       </div>
     </main>
   );
