@@ -115,7 +115,7 @@ export default function Salon() {
       <section id="provider-infos-section" className="space-y-2">
         <h2 className="text-2xl font-medium">Mes informations</h2>
         <div>
-          <Label htmlFor="phoneNumber">Numero de telephone</Label>
+          <Label htmlFor="phoneNumber">Numéro de telephone</Label>
           <Input
             disabled={!edit}
             name="phoneNumber"
@@ -159,13 +159,13 @@ export default function Salon() {
           />
         </div>
         <div>
-          <Label htmlFor="autoAccept">Confirmation directe</Label>
+          <Label htmlFor="autoAccept">Confirmation automatique</Label>
           <div
             className={`${
               edit ? "bg-white" : "bg-white/50"
             } rounded-md px-3 py-2 space-y-4`}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <p className={!edit ? "text-muted" : ""}>
                 Choisissez ou non d'accepter automatiquement les demandes de
                 rendez-vous.
@@ -201,7 +201,7 @@ export default function Salon() {
               edit ? "bg-white" : "bg-white/50"
             } rounded-md px-3 py-2 space-y-4`}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <p className={!edit ? "text-muted" : "text-destructive"}>
                 Passez en mode vacances pour ne plus recevoir de demandes de
                 rendez-vous.
