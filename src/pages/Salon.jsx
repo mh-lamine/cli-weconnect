@@ -148,10 +148,10 @@ export default function Salon() {
           />
         </div>
         <div>
-          <Label htmlFor="ProviderName">Nom du salon</Label>
+          <Label htmlFor="providerName">Nom du salon</Label>
           <Input
             disabled={!edit}
-            name="ProviderName"
+            name="providerName"
             type="text"
             value={!edit ? provider.providerName : undefined}
             onChange={handleChange}
