@@ -17,46 +17,22 @@ import { Loader2 } from "lucide-react";
 
 export default function ProviderPage() {
   const { providerId } = useParams();
-  const [providerData, setProviderData] = useState({
-    provider: null,
-    categories: [],
-    loading: true,
-    error: null,
-  });
+  const [provider, setProvider] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      setProviderData((prevState) => ({
-        ...prevState,
-        loading: true,
-        error: null,
-      }));
-
       try {
-        const [provider, categories] = await Promise.all([
-          getProvidersByFilters({ id: providerId }),
-          getProviderCategories(providerId),
-        ]);
-
-        setProviderData({
-          provider,
-          categories,
-          loading: false,
-          error: null,
-        });
+        const response = await getProvidersByFilters({ id: providerId });
+        setProvider(response.data[0]);
       } catch (error) {
-        setProviderData((prevState) => ({
-          ...prevState,
-          loading: false,
-          error: error.message || "An error occurred while fetching data.",
-        }));
+        setError(error);
       }
+      setLoading(false);
     }
-
     fetchData();
-  }, [providerId]);
-
-  const { provider, categories, loading, error } = providerData;
+  }, []);
 
   if (loading) return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
 
@@ -71,11 +47,12 @@ export default function ProviderPage() {
         />
       </header>
       <div className="p-6 pb-0 max-w-screen-md mx-auto">
-        {categories.map((category, index) => (
+        {provider.providerCategories.map((category, index) => (
           <div key={index}>
             <Services
               index={index}
               category={category}
+              services={provider.providerServices}
               availabilities={provider?.availabilities}
             />
           </div>
@@ -85,7 +62,7 @@ export default function ProviderPage() {
   );
 }
 
-function Services({ index, category, availabilities }) {
+function Services({ index, category, services, availabilities }) {
   return (
     <Accordion
       type="single"
@@ -97,7 +74,7 @@ function Services({ index, category, availabilities }) {
         <AccordionTrigger>
           <h2 className="text-2xl font-medium">{category.name}</h2>
         </AccordionTrigger>
-        {category.services.map((service, index) => (
+        {services.map((service, index) => (
           <AccordionContent
             key={index}
             className="flex items-center justify-between"
@@ -112,10 +89,7 @@ function Services({ index, category, availabilities }) {
               <p>{service.description}</p>
             </div>
             <Button asChild className="bg-primary-500 text-light">
-              <ModalBooking
-                service={service}
-                availabilities={availabilities}
-              />
+              <ModalBooking service={service} availabilities={availabilities} />
             </Button>
           </AccordionContent>
         ))}

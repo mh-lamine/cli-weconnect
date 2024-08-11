@@ -11,7 +11,7 @@ const baseUrl = `${
 export async function getProvidersByFilters(filters = {}) {
   try {
     const response = await axios.post("users/providers", filters);
-    return response.data[0];
+    return response;
   } catch (error) {
     if (error.response) {
       // Server responded with a status other than 2xx
