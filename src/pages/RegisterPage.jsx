@@ -1,21 +1,27 @@
 import { handleRegister } from "@/actions/authActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import useAuth from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const PHONE_NUMBER_REGEX =
   /^(?:(?:\+|00)33\s?[1-9](?:[\s.-]?\d{2}){4}|0[1-9](?:[\s.-]?\d{2}){4})$/;
 const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
 export default function RegisterPage() {
+  const { setAuth } = useAuth();
   const [credentials, setCredentials] = useState({
     phoneNumber: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || { pathname: "/" };
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -37,12 +43,17 @@ export default function RegisterPage() {
       return;
     }
     try {
-      await handleRegister(credentials, "register");
+      const { accessToken, isProvider } = await handleRegister(
+        credentials,
+        "register"
+      );
+      setAuth({ accessToken, isProvider });
+      navigate(from, { replace: true });
     } catch (error) {
-      if (!error.response) {
-        setError("Une erreur est survenue, veuillez réessayer plus tard");
-      } else if (error.response.status === 409) {
+      if (error.response.status === 409) {
         setError("Ce numéro de téléphone est déjà utilisé");
+      } else {
+        setError("Une erreur est survenue, veuillez réessayer plus tard");
       }
     }
     setLoading(false);
