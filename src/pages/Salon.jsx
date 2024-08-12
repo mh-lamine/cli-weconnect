@@ -31,6 +31,11 @@ export default function Salon() {
     try {
       const response = await axiosPrivate.get("/users");
       setProvider(response.data);
+      setProviderInfos((prev) => ({
+        ...prev,
+        isInVacancyMode: response.data.isInVacancyMode,
+        autoAcceptAppointments: response.data.autoAcceptAppointments,
+      }));
     } catch (error) {
       setError(error);
       if (error.response?.status === 401) {
@@ -45,7 +50,7 @@ export default function Salon() {
   }, []);
 
   const handleChange = (e) => {
-    setProviderInfos({ ...providerInfos, [e.target.name]: e.target.value });
+    setProviderInfos({ ...providerInfos, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -93,7 +98,7 @@ export default function Salon() {
       .querySelector("#provider-infos-section")
       .querySelectorAll("input")
       .forEach((input) => {
-        if (providerInfos[input.name]) {
+        if (providerInfos[input.id]) {
           input.value = provider.phoneNumber;
           return;
         }
@@ -114,50 +119,38 @@ export default function Salon() {
       <h1 className="text-3xl font-semibold">Mon salon</h1>
       <section id="provider-infos-section" className="space-y-2">
         <h2 className="text-2xl font-medium">Mes informations</h2>
-        <div>
-          <Label htmlFor="phoneNumber">Numéro de telephone</Label>
-          <Input
-            disabled={!edit}
-            name="phoneNumber"
-            type="tel"
-            value={!edit ? provider.phoneNumber : undefined}
-            onChange={handleChange}
-            className="text-lg"
-          />
-        </div>
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            disabled={!edit}
-            name="email"
-            type="email"
-            value={!edit ? provider.email : undefined}
-            onChange={handleChange}
-            className="text-lg"
-          />
-        </div>
-        <div>
-          <Label htmlFor="address">Adresse</Label>
-          <Input
-            disabled={!edit}
-            name="address"
-            type="text"
-            value={!edit ? provider.address : undefined}
-            onChange={handleChange}
-            className="text-lg"
-          />
-        </div>
-        <div>
-          <Label htmlFor="providerName">Nom du salon</Label>
-          <Input
-            disabled={!edit}
-            name="providerName"
-            type="text"
-            value={!edit ? provider.providerName : undefined}
-            onChange={handleChange}
-            className="text-lg"
-          />
-        </div>
+        <EditableInput
+          id="phoneNumber"
+          label="Téléphone"
+          type="tel"
+          value={provider.phoneNumber}
+          edit={edit}
+          handleChange={handleChange}
+        />
+        <EditableInput
+          id="email"
+          label="Email"
+          type="email"
+          value={provider.email}
+          edit={edit}
+          handleChange={handleChange}
+        />
+        <EditableInput
+          id="address"
+          label="Adresse"
+          type="text"
+          value={provider.address}
+          edit={edit}
+          handleChange={handleChange}
+        />
+        <EditableInput
+          id="providerName"
+          label="Nom du salon"
+          type="text"
+          value={provider.providerName}
+          edit={edit}
+          handleChange={handleChange}
+        />
         <div>
           <Label htmlFor="autoAccept">Confirmation automatique</Label>
           <div
@@ -173,16 +166,13 @@ export default function Salon() {
               <Switch
                 id="autoAccept"
                 disabled={!edit}
-                checked={
-                  providerInfos.autoAcceptAppointments ||
-                  provider.autoAcceptAppointments
-                }
-                onCheckedChange={(checked) =>
+                checked={providerInfos.autoAcceptAppointments}
+                onCheckedChange={(checked) => {
                   setProviderInfos({
                     ...providerInfos,
                     autoAcceptAppointments: checked,
-                  })
-                }
+                  });
+                }}
               />
             </div>
             <p className={`text-muted ${!edit && "hidden"}`}>
@@ -209,15 +199,13 @@ export default function Salon() {
               <Switch
                 id="vacancyMode"
                 disabled={!edit}
-                checked={
-                  providerInfos.isInVacancyMode || provider.isInVacancyMode
-                }
-                onCheckedChange={(checked) =>
+                checked={providerInfos.isInVacancyMode}
+                onCheckedChange={(checked) => {
                   setProviderInfos({
                     ...providerInfos,
                     isInVacancyMode: checked,
-                  })
-                }
+                  });
+                }}
                 className="data-[state=checked]:bg-destructive"
               />
             </div>
@@ -260,3 +248,19 @@ export default function Salon() {
     </main>
   );
 }
+
+const EditableInput = ({ id, label, type, value, edit, handleChange }) => {
+  return (
+    <div>
+      <Label htmlFor={id}>{label}</Label>
+      <Input
+        disabled={!edit}
+        id={id}
+        type={type}
+        value={!edit ? value : null}
+        onChange={handleChange}
+        className="text-lg"
+      />
+    </div>
+  );
+};
