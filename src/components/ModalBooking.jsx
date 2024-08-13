@@ -35,11 +35,10 @@ import {
 import { DateTime } from "luxon";
 import { fr } from "date-fns/locale";
 import { OneYearFromNow } from "@/utils/dateManagement";
-import {
-  createAppointment,
-  getProviderAvailableTimeSlots,
-} from "@/actions/providerActions";
+import { getProviderAvailableTimeSlots } from "@/actions/providerActions";
 import { useToast } from "./ui/use-toast";
+import axiosPrivate from "@/api/axiosPrivate";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ModalBooking({ service, availabilities }) {
   const [open, setOpen] = useState(false);
@@ -52,6 +51,8 @@ export default function ModalBooking({ service, availabilities }) {
   });
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const formattedAvailabilities =
     availabilities && formatAvailabilitiesByDayOfWeek(availabilities);
@@ -77,23 +78,33 @@ export default function ModalBooking({ service, availabilities }) {
       status: "PENDING",
       serviceId: service.id,
       providerId: service.providerId,
-      clientId: "0002",
     };
 
     try {
-      await createAppointment(appointment);
+      await axiosPrivate.post("/api/appointments", appointment);
       toast({
         title: "Créneau réservé !",
         description: `Vous avez rendez-vous le ${formatDate(date)} à ${
           timeSlotSelected.startTime
         }.`,
+        variant: "success",
       });
     } catch (error) {
+      if (error.response?.status === 401) {
+        // navigate("/login", { state: { from: location }, replace: true });
+        toast({
+          title: "Erreur de réservation",
+          description:
+            "Vous devez être connecté pour réservder un rendez-vous.",
+          variant: "destructive",
+        });
+        return;
+      }
       toast({
         title: "Erreur de réservation",
         description:
           error.message ||
-          "Une erreur est survenue lors de la création de votre rendez-vous. Veuillez réessayer.",
+          "Une erreur est survenue lors de la création de votre rendez-vous. Veuillez réessayer plus tard.",
         variant: "destructive",
       });
     }

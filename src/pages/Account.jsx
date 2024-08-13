@@ -24,7 +24,7 @@ const Account = () => {
   useEffect(() => {
     async function getProvider() {
       try {
-        const response = await axiosPrivate.get("/users");
+        const response = await axiosPrivate.get("/api/users");
         setUser(response.data);
       } catch (error) {
         setError(error);

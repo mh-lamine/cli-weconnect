@@ -29,7 +29,7 @@ export default function Salon() {
 
   async function getProvider() {
     try {
-      const response = await axiosPrivate.get("/users");
+      const response = await axiosPrivate.get("/api/users");
       setProvider(response.data);
       setProviderInfos((prev) => ({
         ...prev,
@@ -79,7 +79,7 @@ export default function Salon() {
       return;
     }
     try {
-      await axiosPrivate.patch("/users", providerInfos);
+      await axiosPrivate.patch("/api/users", providerInfos);
       await getProvider();
     } catch (error) {
       if (!error.response) {
@@ -93,7 +93,10 @@ export default function Salon() {
   };
 
   const clearInfos = () => {
-    setProviderInfos({});
+    setProviderInfos({
+      isInVacancyMode: response.data.isInVacancyMode,
+      autoAcceptAppointments: response.data.autoAcceptAppointments,
+    });
     document
       .querySelector("#provider-infos-section")
       .querySelectorAll("input")

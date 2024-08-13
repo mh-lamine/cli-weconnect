@@ -17,7 +17,7 @@ export default function Dashboard() {
   useEffect(() => {
     async function getProvider() {
       try {
-        const response = await axiosPrivate.get("/users");
+        const response = await axiosPrivate.get("/api/users");
         setAppointments(response.data);
       } catch (error) {
         setError(error);

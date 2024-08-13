@@ -1,7 +1,7 @@
-import axios from "@/api/axios";
+import axios from "axios";
 
-const REGISTER_URL = "/auth/register";
-const LOGIN_URL = "/auth/login";
+const REGISTER_URL = "/api/auth/register";
+const LOGIN_URL = "/api/auth/login";
 
 export async function handleRegister(credentials) {
   return await axios.post(REGISTER_URL, JSON.stringify(credentials), {

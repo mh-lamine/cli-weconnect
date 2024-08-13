@@ -24,7 +24,7 @@ export default function App() {
   useEffect(() => {
     async function getUser() {
       try {
-        const response = await axiosPrivate.get("/users");
+        const response = await axiosPrivate.get("/api/users");
         setAuth({ isProvider: response.data.isProvider });
       } catch (error) {
         console.error(error);

@@ -8,10 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import {
-  getProviderCategories,
-  getProvidersByFilters,
-} from "@/actions/providerActions";
+import { getProvidersByFilters } from "@/actions/providerActions";
 import { useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
