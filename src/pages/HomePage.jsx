@@ -10,13 +10,14 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchProviders() {
-      const response = await getProvidersByFilters();
-      setError(response.error);
-      setProviders(response.data);
-      setLoading(false);
-    }
-    fetchProviders();
+    // async function fetchProviders() {
+    //   const response = await getProvidersByFilters();
+    //   setError(response.error);
+    //   setProviders(response.data);
+    //   setLoading(false);
+    // }
+    // fetchProviders();
+    console.log("fetching providers");
   }, []);
 
   if (loading) {

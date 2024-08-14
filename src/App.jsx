@@ -22,15 +22,16 @@ export default function App() {
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    async function getUser() {
-      try {
-        const response = await axiosPrivate.get("/api/users");
-        setAuth({ isProvider: response.data.isProvider });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getUser();
+    // async function getUser() {
+    //   try {
+    //     const response = await axiosPrivate.get("/api/users");
+    //     setAuth({ isProvider: response.data.isProvider });
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
+    // getUser();
+    console.log("fetching user");
   }, []);
 
   return (
