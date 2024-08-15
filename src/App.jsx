@@ -11,27 +11,28 @@ import ErrorPage from "./pages/ErrorPage";
 import AuthLayout from "./layouts/AuthLayout";
 import Dashboard from "./pages/Dashboard";
 import PersistLogin from "./components/PersistLogin";
-import SalonPreferences from "./pages/SalonPreferences";
 import Account from "./pages/Account";
 import { useEffect } from "react";
 import useAxiosPrivate from "./hooks/useAxiosPrivate";
 import useAuth from "./hooks/useAuth";
+import SalonInformations from "./pages/SalonInformations";
+import SalonAvailabilities from "./pages/SalonAvailabilities";
+import SalonServices from "./pages/SalonServices";
 
 export default function App() {
   const { setAuth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    // async function getUser() {
-    //   try {
-    //     const response = await axiosPrivate.get("/api/users");
-    //     setAuth({ isProvider: response.data.isProvider });
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
-    // getUser();
-    console.log("fetching user");
+    async function getUser() {
+      try {
+        const response = await axiosPrivate.get("/api/users");
+        setAuth({ isProvider: response.data.isProvider });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getUser();
   }, []);
 
   return (
@@ -57,7 +58,9 @@ export default function App() {
           <Route element={<ProviderLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="salon" element={<Salon />} />
-            <Route path="salon/preferences" element={<SalonPreferences />} />
+            <Route path="salon/informations" element={<SalonInformations />} />
+            <Route path="salon/availabilities" element={<SalonAvailabilities />} />
+            <Route path="salon/services" element={<SalonServices />} />
           </Route>
         </Route>
       </Route>
