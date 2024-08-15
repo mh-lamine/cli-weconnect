@@ -1,8 +1,9 @@
 import Error from "@/components/Error";
+import ModalAddAvailability from "@/components/ModalAddAvailability";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { Loader2, MinusCircle, PlusCircle } from "lucide-react";
+import { Loader2, MinusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -77,16 +78,16 @@ const SalonAvailabilities = () => {
       </Button>
       <h1 className="text-3xl font-semibold">Mes disponibilités</h1>
       {Object.entries(daysOfWeek).map(([dayFR, dayEN], i) => (
-        <>
+        <div key={i}>
           <DailyAvailability
-            key={i}
-            day={dayFR}
+            dayFR={dayFR}
+            dayEN={dayEN}
             availabilities={availabilities[dayEN]}
           />
           {i !== Object.entries(daysOfWeek).length - 1 && (
             <div className="divider w-1/2 mx-auto" />
           )}
-        </>
+        </div>
       ))}
     </main>
   );
@@ -95,7 +96,8 @@ const SalonAvailabilities = () => {
 export default SalonAvailabilities;
 
 const DailyAvailability = ({
-  day,
+  dayFR,
+  dayEN,
   availabilities,
   addAvailability,
   setNewAvailabilities,
@@ -103,7 +105,7 @@ const DailyAvailability = ({
 }) => {
   return (
     <section className={`flex ${!availabilities && "text-muted items-center"}`}>
-      <span className="text-xl font-medium flex-1">{day}</span>
+      <span className="text-xl font-medium flex-1">{dayFR}</span>
       {availabilities ? (
         <div className="space-y-2 flex-2">
           {availabilities?.map(({ start, end }, i) => (
@@ -131,9 +133,7 @@ const DailyAvailability = ({
         <div className="flex-2">Fermé</div>
       )}
       <div className="flex flex-1 justify-end">
-        <Button>
-          <PlusCircle />
-        </Button>
+          <ModalAddAvailability day={dayEN} />
       </div>
     </section>
   );

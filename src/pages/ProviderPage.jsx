@@ -85,9 +85,7 @@ function Services({ index, category, services, availabilities }) {
               </div>
               <p>{service.description}</p>
             </div>
-            <Button asChild className="bg-primary-500 text-light">
-              <ModalBooking service={service} availabilities={availabilities} />
-            </Button>
+            <ModalBooking service={service} availabilities={availabilities} />
           </AccordionContent>
         ))}
       </AccordionItem>
