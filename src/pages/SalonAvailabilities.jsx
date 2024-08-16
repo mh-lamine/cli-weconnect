@@ -4,7 +4,7 @@ import ModalRemoveAvailability from "@/components/ModalRemoveAvailability";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { Loader2, MinusCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 

@@ -16,17 +16,23 @@ const Salon = () => {
       <h1 className="text-3xl font-semibold">Mon salon</h1>
       <Link to="informations" className="flex items-center justify-between ">
         <h2 className="text-xl font-medium">Informations du salon</h2>
-        <LeftArrow size={36} />
+        <div className="rotate-180">
+          <LeftArrow size={36} />
+        </div>
       </Link>
       <div className="divider"></div>
       <Link to="availabilities" className="flex items-center justify-between ">
         <h2 className="text-xl font-medium">Disponibilités</h2>
-        <LeftArrow size={36} />
+        <div className="rotate-180">
+          <LeftArrow size={36} />
+        </div>
       </Link>
       <div className="divider"></div>
       <Link to="services" className="flex items-center justify-between ">
         <h2 className="text-xl font-medium">Prestations</h2>
-        <LeftArrow size={36} />
+        <div className="rotate-180">
+          <LeftArrow size={36} />
+        </div>
       </Link>
     </main>
   );

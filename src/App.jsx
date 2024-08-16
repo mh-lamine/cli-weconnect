@@ -1,23 +1,28 @@
+import { useEffect, lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+
 import RequireAuth from "./components/RequireAuth";
+import PersistLogin from "./components/PersistLogin";
+
+import AuthLayout from "./layouts/AuthLayout";
 import ClientLayout from "./layouts/ClientLayout";
 import ProviderLayout from "./layouts/ProviderLayout";
+
+import useAuth from "./hooks/useAuth";
+import useAxiosPrivate from "./hooks/useAxiosPrivate";
+
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import Salon from "./pages/Salon";
-import ProviderPage from "./pages/ProviderPage";
 import RegisterPage from "./pages/RegisterPage";
-import ErrorPage from "./pages/ErrorPage";
-import AuthLayout from "./layouts/AuthLayout";
-import Dashboard from "./pages/Dashboard";
-import PersistLogin from "./components/PersistLogin";
 import Account from "./pages/Account";
-import { useEffect } from "react";
-import useAxiosPrivate from "./hooks/useAxiosPrivate";
-import useAuth from "./hooks/useAuth";
-import SalonInformations from "./pages/SalonInformations";
-import SalonAvailabilities from "./pages/SalonAvailabilities";
-import SalonServices from "./pages/SalonServices";
+import ProviderPage from "./pages/ProviderPage";
+import ErrorPage from "./pages/ErrorPage";
+
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Salon = lazy(() => import("./pages/Salon"));
+const SalonInformations = lazy(() => import("./pages/SalonInformations"));
+const SalonAvailabilities = lazy(() => import("./pages/SalonAvailabilities"));
+const SalonServices = lazy(() => import("./pages/SalonServices"));
 
 export default function App() {
   const { setAuth } = useAuth();
@@ -56,11 +61,46 @@ export default function App() {
             <Route path="account" element={<Account />} />
           </Route>
           <Route element={<ProviderLayout />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="salon" element={<Salon />} />
-            <Route path="salon/informations" element={<SalonInformations />} />
-            <Route path="salon/availabilities" element={<SalonAvailabilities />} />
-            <Route path="salon/services" element={<SalonServices />} />
+            <Route
+              path="dashboard"
+              element={
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <Dashboard />
+                </Suspense>
+              }
+            />
+            <Route
+              path="salon"
+              element={
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <Salon />
+                </Suspense>
+              }
+            />
+            <Route
+              path="salon/informations"
+              element={
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <SalonInformations />
+                </Suspense>
+              }
+            />
+            <Route
+              path="salon/availabilities"
+              element={
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <SalonAvailabilities />
+                </Suspense>
+              }
+            />
+            <Route
+              path="salon/services"
+              element={
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <SalonServices />
+                </Suspense>
+              }
+            />
           </Route>
         </Route>
       </Route>
