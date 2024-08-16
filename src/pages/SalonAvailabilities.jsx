@@ -27,20 +27,26 @@ const SalonAvailabilities = () => {
   const location = useLocation();
 
   useEffect(() => {
-    async function getAvailabilities() {
-      try {
-        const response = await axiosPrivate.get("/api/availabilities");
-        setAvailabilities(formatAvailabilities(response.data));
-      } catch (error) {
-        setError(error);
-        if (error.response?.status === 401) {
-          navigate("/login", { state: { from: location }, replace: true });
-        }
-      }
-      setLoading(false);
-    }
     getAvailabilities();
   }, []);
+
+  async function getAvailabilities() {
+    try {
+      const response = await axiosPrivate.get("/api/availabilities");
+      setAvailabilities(formatAvailabilities(response.data));
+    } catch (error) {
+      setError(error);
+      if (error.response?.status === 401) {
+        navigate("/login", { state: { from: location }, replace: true });
+      }
+    }
+    setLoading(false);
+  }
+
+  async function createAvailability(availability) {
+    await axiosPrivate.post("/api/availabilities", availability);
+    getAvailabilities();
+  }
 
   function formatAvailabilities(availabilities) {
     const formatted = {};
@@ -83,6 +89,7 @@ const SalonAvailabilities = () => {
             dayFR={dayFR}
             dayEN={dayEN}
             availabilities={availabilities[dayEN]}
+            createAvailability={createAvailability}
           />
           {i !== Object.entries(daysOfWeek).length - 1 && (
             <div className="divider w-1/2 mx-auto" />
@@ -99,8 +106,7 @@ const DailyAvailability = ({
   dayFR,
   dayEN,
   availabilities,
-  addAvailability,
-  setNewAvailabilities,
+  createAvailability,
   removeAvailability,
 }) => {
   return (
@@ -133,7 +139,10 @@ const DailyAvailability = ({
         <div className="flex-2">Fermé</div>
       )}
       <div className="flex flex-1 justify-end">
-          <ModalAddAvailability day={dayEN} />
+        <ModalAddAvailability
+          dayOfWeek={dayEN}
+          createAvailability={createAvailability}
+        />
       </div>
     </section>
   );
