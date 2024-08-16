@@ -35,6 +35,7 @@ export default function ProviderPage() {
 
   if (error) return <div className="flex-1">Error: {error}</div>;
 
+  console.log(provider);
   return (
     <main className="w-full flex-1">
       <header>
@@ -49,7 +50,7 @@ export default function ProviderPage() {
             <Services
               index={index}
               category={category}
-              services={provider.providerServices}
+              services={category.services}
               availabilities={provider?.availabilities}
             />
           </div>

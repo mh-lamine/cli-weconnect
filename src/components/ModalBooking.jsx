@@ -136,12 +136,7 @@ export default function ModalBooking({ service, availabilities }) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            className="border-primary-500 bg-light text-dark shadow-sm"
-          >
-            Réserver
-          </Button>
+          <Button variant="outline">Réserver</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -218,12 +213,7 @@ export default function ModalBooking({ service, availabilities }) {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button
-          variant="outline"
-          className="border-primary-500 bg-light text-dark shadow-sm"
-        >
-          Réserver
-        </Button>
+        <Button variant="outline">Réserver</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
