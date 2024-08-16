@@ -118,28 +118,35 @@ const DailyAvailability = ({
   removeAvailability,
 }) => {
   return (
-    <section className={`flex ${!availabilities && "text-muted items-center"}`}>
+    <section
+      className={`flex ${!availabilities?.length && "text-muted items-center"}`}
+    >
       <span className="text-xl font-medium flex-1">{dayFR}</span>
-      {availabilities ? (
+      {availabilities?.length ? (
         <div className="space-y-2 flex-2">
-          {availabilities?.map(({ id, start, end }, i) => (
-            <div key={i} className="flex gap-4">
-              <Input
-                disabled
-                type="time"
-                defaultValue={start}
-                className="!opacity-100"
-              />
-              <div className="divider divider-horizontal m-0"></div>
-              <Input
-                disabled
-                type="time"
-                defaultValue={end}
-                className="!opacity-100"
-              />
-              <ModalRemoveAvailability id={id} removeAvailability={removeAvailability} />
-            </div>
-          ))}
+          {availabilities?.map(({ id, start, end }, i) => {
+            return (
+              <div key={i} className="flex gap-4">
+                <Input
+                  disabled
+                  type="time"
+                  defaultValue={start}
+                  className="!opacity-100"
+                />
+                <div className="divider divider-horizontal m-0"></div>
+                <Input
+                  disabled
+                  type="time"
+                  defaultValue={end}
+                  className="!opacity-100"
+                />
+                <ModalRemoveAvailability
+                  id={id}
+                  removeAvailability={removeAvailability}
+                />
+              </div>
+            );
+          })}
         </div>
       ) : (
         <div className="flex-2">Fermé</div>
