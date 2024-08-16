@@ -1,5 +1,6 @@
 import Error from "@/components/Error";
 import ModalAddAvailability from "@/components/ModalAddAvailability";
+import ModalRemoveAvailability from "@/components/ModalRemoveAvailability";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -48,15 +49,21 @@ const SalonAvailabilities = () => {
     getAvailabilities();
   }
 
+  async function removeAvailability(id) {
+    await axiosPrivate.delete(`/api/availabilities/${id}`);
+    getAvailabilities();
+  }
+
   function formatAvailabilities(availabilities) {
     const formatted = {};
 
-    availabilities?.forEach(({ dayOfWeek, startTime, endTime }) => {
+    availabilities?.forEach(({ id, dayOfWeek, startTime, endTime }) => {
       if (!formatted[dayOfWeek]) {
         formatted[dayOfWeek] = [];
       }
 
       formatted[dayOfWeek].push({
+        id,
         start: startTime,
         end: endTime,
       });
@@ -90,6 +97,7 @@ const SalonAvailabilities = () => {
             dayEN={dayEN}
             availabilities={availabilities[dayEN]}
             createAvailability={createAvailability}
+            removeAvailability={removeAvailability}
           />
           {i !== Object.entries(daysOfWeek).length - 1 && (
             <div className="divider w-1/2 mx-auto" />
@@ -114,7 +122,7 @@ const DailyAvailability = ({
       <span className="text-xl font-medium flex-1">{dayFR}</span>
       {availabilities ? (
         <div className="space-y-2 flex-2">
-          {availabilities?.map(({ start, end }, i) => (
+          {availabilities?.map(({ id, start, end }, i) => (
             <div key={i} className="flex gap-4">
               <Input
                 disabled
@@ -129,9 +137,7 @@ const DailyAvailability = ({
                 defaultValue={end}
                 className="!opacity-100"
               />
-              <Button variant="outline">
-                <MinusCircle className="text-destructive" />
-              </Button>
+              <ModalRemoveAvailability id={id} removeAvailability={removeAvailability} />
             </div>
           ))}
         </div>
