@@ -75,14 +75,25 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
               créneau de disponibilité.
             </DialogDescription>
           </DialogHeader>
-          <div className="flex gap-4">
-            <Input name="startTime" type="time" onChange={handleChange} />
-            <div className="divider divider-horizontal m-0" />
-            <Input name="endTime" type="time" onChange={handleChange} />
+          <div className="flex items-center justify-center gap-4">
+            De
+            <Input
+              className="w-fit"
+              name="startTime"
+              type="time"
+              onChange={handleChange}
+            />
+            à
+            <Input
+              className="w-fit"
+              name="endTime"
+              type="time"
+              onChange={handleChange}
+            />
           </div>
-            {error && setTimeout(() => setError(null), 3000) && (
-              <p className="text-destructive text-sm">{error}</p>
-            )}
+          {error && setTimeout(() => setError(null), 3000) && (
+            <p className="text-destructive text-sm">{error}</p>
+          )}
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <div className="w-full flex items-center justify-between">
@@ -115,10 +126,21 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
             créneau de disponibilité.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="flex gap-4 px-4">
-          <Input name="startTime" type="time" onChange={handleChange} />
-          <div className="divider divider-horizontal m-0" />
-          <Input name="endTime" type="time" onChange={handleChange} />
+        <div className="flex items-center justify-center gap-4 px-4">
+          De
+          <Input
+            className="w-fit"
+            name="startTime"
+            type="time"
+            onChange={handleChange}
+          />
+          à
+          <Input
+            className="w-fit"
+            name="endTime"
+            type="time"
+            onChange={handleChange}
+          />
         </div>
         <DrawerFooter className="pt-2">
           {error && setTimeout(() => setError(null), 3000) && (
