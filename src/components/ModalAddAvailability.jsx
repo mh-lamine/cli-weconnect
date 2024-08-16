@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -14,20 +13,19 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2, PlusCircle } from "lucide-react";
 import { Input } from "./ui/input";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 const ModalAddAvailability = ({ day }) => {
   const [open, setOpen] = useState(false);
-  const [availability, setAvailability] = useState({});
+  const [availability, setAvailability] = useState();
   const [loading, setLoading] = useState(false);
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -54,14 +52,17 @@ const ModalAddAvailability = ({ day }) => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    if (!open) {
+      setAvailability();
+    }
+  }, [open]);
+
   if (isDesktop) {
     return (
       <Dialog
         open={open}
-        onOpenChange={() => {
-          setAvailability({});
-          setOpen(!open);
-        }}
+        onOpenChange={setOpen}
       >
         <DialogTrigger asChild>
           <Button>
@@ -80,7 +81,7 @@ const ModalAddAvailability = ({ day }) => {
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <div className="w-full flex items-center justify-between">
-                <Button variant="outline" onClick={() => setAvailability({})}>
+                <Button variant="outline" onClick={() => setAvailability()}>
                   Annuler
                 </Button>
                 <Button onClick={handleSubmit} disabled={loading && true}>
@@ -101,10 +102,7 @@ const ModalAddAvailability = ({ day }) => {
   return (
     <Drawer
       open={open}
-      onOpenChange={() => {
-        setAvailability({});
-        setOpen(!open);
-      }}
+      onOpenChange={setOpen}
     >
       <DrawerTrigger asChild>
         <Button>
@@ -133,7 +131,7 @@ const ModalAddAvailability = ({ day }) => {
               <Button
                 className="w-full"
                 variant="outline"
-                onClick={() => setAvailability({})}
+                onClick={() => setAvailability()}
               >
                 Annuler
               </Button>
