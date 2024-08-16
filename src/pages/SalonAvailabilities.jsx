@@ -128,7 +128,7 @@ const DailyAvailability = ({
         <div className="space-y-2 sm:flex-2">
           {availabilities?.map(({ id, start, end }, i) => {
             return (
-              <div key={i} className="flex gap-4">
+              <div key={id} className="flex gap-4">
                 <Input
                   disabled
                   type="time"
