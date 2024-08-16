@@ -65,7 +65,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <div className="drawer-side z-10">
+      <div className="drawer-side z-20">
         <label
           htmlFor="my-drawer-3"
           aria-label="close sidebar"

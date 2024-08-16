@@ -119,11 +119,13 @@ const DailyAvailability = ({
 }) => {
   return (
     <section
-      className={`flex ${!availabilities?.length && "text-muted items-center"}`}
+      className={`flex flex-col sm:flex-row gap-4 ${
+        !availabilities?.length && "text-muted sm:items-center"
+      }`}
     >
-      <span className="text-xl font-medium flex-1">{dayFR}</span>
+      <span className="text-xl font-medium sm:flex-1">{dayFR}</span>
       {availabilities?.length ? (
-        <div className="space-y-2 flex-2">
+        <div className="space-y-2 sm:flex-2">
           {availabilities?.map(({ id, start, end }, i) => {
             return (
               <div key={i} className="flex gap-4">
@@ -149,9 +151,9 @@ const DailyAvailability = ({
           })}
         </div>
       ) : (
-        <div className="flex-2">Fermé</div>
+        <div className="sm:flex-2">Fermé</div>
       )}
-      <div className="flex flex-1 justify-end">
+      <div className="flex sm:flex-1 justify-end">
         <ModalAddAvailability
           dayOfWeek={dayEN}
           createAvailability={createAvailability}
