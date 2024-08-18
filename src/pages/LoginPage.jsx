@@ -32,11 +32,8 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { accessToken, isProvider } = await handleLogin(
-        credentials,
-        "login"
-      );
-      setAuth({ accessToken, isProvider });
+      const response = await handleLogin(credentials, "login");
+      setAuth(response.data);
       navigate(from, { replace: true });
     } catch (error) {
       if (error.response.status === 401) {

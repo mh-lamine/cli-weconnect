@@ -11,9 +11,8 @@ export async function handleRegister(credentials) {
 }
 
 export async function handleLogin(credentials) {
-  const response = await axios.post(LOGIN_URL, credentials, {
+  return await axios.post(LOGIN_URL, credentials, {
     headers: { "Content-Type": "application/json" },
     withCredentials: true,
   });
-  return response?.data;
 }

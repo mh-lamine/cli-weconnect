@@ -21,13 +21,11 @@ const SalonServices = () => {
 
   useEffect(() => {
     getCategories();
-  }, [auth.id]);
+  }, []);
 
   async function getCategories() {
     try {
-      const response = await axiosPrivate.get(
-        `/api/providerCategory/${auth.id}`
-      );
+      const response = await axiosPrivate.get("/api/providerCategory/me");
       setCategories(response.data);
     } catch (error) {
       setError(error);
