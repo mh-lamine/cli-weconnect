@@ -5,8 +5,7 @@ import RequireAuth from "./components/RequireAuth";
 import PersistLogin from "./components/PersistLogin";
 
 import AuthLayout from "./layouts/AuthLayout";
-import ClientLayout from "./layouts/ClientLayout";
-import ProviderLayout from "./layouts/ProviderLayout";
+import Layout from "./layouts/Layout";
 
 import useAuth from "./hooks/useAuth";
 import useAxiosPrivate from "./hooks/useAxiosPrivate";
@@ -43,7 +42,7 @@ export default function App() {
   return (
     <Routes>
       {/* public routes */}
-      <Route path="/" element={<ClientLayout />}>
+      <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="provider/:providerId" element={<ProviderPage />} />
       </Route>
@@ -57,10 +56,8 @@ export default function App() {
       {/* protected routes */}
       <Route element={<PersistLogin />}>
         <Route element={<RequireAuth />}>
-          <Route element={<ClientLayout />}>
+          <Route element={<Layout />}>
             <Route path="account" element={<Account />} />
-          </Route>
-          <Route element={<ProviderLayout />}>
             <Route
               path="dashboard"
               element={
