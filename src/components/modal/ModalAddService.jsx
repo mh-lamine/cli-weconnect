@@ -22,30 +22,37 @@ import {
 } from "@/components/ui/drawer";
 import { useEffect, useState } from "react";
 import { Loader2, PlusCircle } from "lucide-react";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
-const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
+const ModalAddService = ({ providerCategoryId, createService }) => {
   const [open, setOpen] = useState(false);
-  const [availability, setAvailability] = useState();
+  const [service, setService] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const handleChange = (e) => {
-    setAvailability({ ...availability, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Convertir en nombre pour les champs 'price' et 'duration'
+    const parsedValue =
+      name === "price" || name === "duration" ? parseFloat(value) : value;
+
+    setService({ ...service, [name]: parsedValue });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!availability?.startTime || !availability?.endTime) {
-      setError("Veuillez renseigner une heure de début et une heure de fin.");
+    if (!service?.name || !service?.price || !service?.duration) {
+      setError("Veuillez renseigner tous les champs.");
       return;
     }
 
     setLoading(true);
     try {
-      await createAvailability({ dayOfWeek, ...availability });
+      await createService({ providerCategoryId, ...service });
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
@@ -55,7 +62,7 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
 
   useEffect(() => {
     if (!open) {
-      setAvailability();
+      setService();
     }
   }, [open]);
 
@@ -63,33 +70,46 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>
+          <Button variant="outline">
             <PlusCircle />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Ajouter un créneau</DialogTitle>
+            <DialogTitle>Ajouter une prestation</DialogTitle>
             <DialogDescription>
-              Selectionnez une heure de début et une heure de fin pour créer un
-              créneau de disponibilité.
+              Définissez un nom, un prix et une durée pour ajouter une
+              prestation.
             </DialogDescription>
           </DialogHeader>
-          <div className="flex items-center justify-center gap-4">
-            De
-            <Input
-              className="w-fit"
-              name="startTime"
-              type="time"
-              onChange={handleChange}
-            />
-            à
-            <Input
-              className="w-fit"
-              name="endTime"
-              type="time"
-              onChange={handleChange}
-            />
+          <div className="flex flex-col gap-2">
+            <div>
+              <Label htmlFor="name">Nom</Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Label htmlFor="price">Prix</Label>
+              <Input
+                id="price"
+                name="price"
+                type="number"
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Label htmlFor="duration">Durée</Label>
+              <Input
+                id="duration"
+                name="duration"
+                type="number"
+                onChange={handleChange}
+              />
+            </div>
           </div>
           {error && setTimeout(() => setError(null), 3000) && (
             <p className="text-destructive text-sm">{error}</p>
@@ -97,7 +117,7 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <div className="w-full flex items-center justify-between">
-                <Button variant="outline" onClick={() => setAvailability()}>
+                <Button variant="outline" onClick={() => setService()}>
                   Annuler
                 </Button>
                 <Button onClick={handleSubmit} disabled={loading && true}>
@@ -114,33 +134,40 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button>
+        <Button variant="outline">
           <PlusCircle />
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Ajouter un créneau</DrawerTitle>
+          <DrawerTitle>Ajouter une prestation</DrawerTitle>
           <DrawerDescription>
-            Selectionnez une heure de début et une heure de fin pour créer un
-            créneau de disponibilité.
+            Définissez un nom, un prix et une durée pour ajouter une prestation.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="flex items-center justify-center gap-4 px-4">
-          De
-          <Input
-            className="w-fit"
-            name="startTime"
-            type="time"
-            onChange={handleChange}
-          />
-          à
-          <Input
-            className="w-fit"
-            name="endTime"
-            type="time"
-            onChange={handleChange}
-          />
+        <div className="flex flex-col px-4 gap-2">
+          <div>
+            <Label htmlFor="name">Nom</Label>
+            <Input id="name" name="name" type="text" onChange={handleChange} />
+          </div>
+          <div>
+            <Label htmlFor="price">Prix</Label>
+            <Input
+              id="price"
+              name="price"
+              type="number"
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <Label htmlFor="duration">Durée</Label>
+            <Input
+              id="duration"
+              name="duration"
+              type="number"
+              onChange={handleChange}
+            />
+          </div>
         </div>
         <DrawerFooter className="pt-2">
           {error && setTimeout(() => setError(null), 3000) && (
@@ -158,7 +185,7 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
               <Button
                 className="w-full"
                 variant="outline"
-                onClick={() => setAvailability()}
+                onClick={() => setService()}
               >
                 Annuler
               </Button>
@@ -170,4 +197,4 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
   );
 };
 
-export default ModalAddAvailability;
+export default ModalAddService;

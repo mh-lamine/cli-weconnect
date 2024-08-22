@@ -1,6 +1,7 @@
 import Error from "@/components/Error";
-import ModalAddService from "@/components/ModalAddService";
-import ModalRemoveService from "@/components/ModalRemoveService";
+import ModalAddCategory from "@/components/modal/ModalAddCategory";
+import ModalAddService from "@/components/modal/ModalAddService";
+import ModalRemoveService from "@/components/modal/ModalRemoveService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useAuth from "@/hooks/useAuth";
@@ -14,7 +15,6 @@ const SalonServices = () => {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
 
-  const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,6 +41,11 @@ const SalonServices = () => {
     getCategories();
   }
 
+  async function createCategory(category) {
+    await axiosPrivate.post("/api/providerCategory", category);
+    getCategories();
+  }
+
   async function removeService(id) {
     await axiosPrivate.delete(`/api/providerService/${id}`);
     getCategories();
@@ -63,7 +68,10 @@ const SalonServices = () => {
       >
         Retour
       </Button>
-      <h1 className="text-3xl font-semibold">Mes prestations</h1>
+      <div>
+        <h1 className="text-3xl font-semibold">Mes prestations</h1>
+        <ModalAddCategory createCategory={createCategory} />
+      </div>
       {categories?.map((category, i) => (
         <div key={i} className="space-y-2">
           <div className="flex items-center justify-between">
@@ -79,21 +87,21 @@ const SalonServices = () => {
                 key={service.id}
                 className="flex items-center justify-between gap-4"
               >
-                <div className="w-full rounded-md p-4 bg-gray-100">
+                <div className="w-full rounded-md p-4 pr-0 bg-gray-100">
                   <div className="flex items-center justify-between">
                     <p>{service.name}</p>
                     <div className="flex items-center">
                       <p>{service.duration}mn</p>
                       <div className="divider divider-horizontal" />
                       <p>{service.price}€</p>
+                      <ModalRemoveService
+                        id={service.id}
+                        removeService={removeService}
+                      />
                     </div>
                   </div>
                   <p>{service.description}</p>
                 </div>
-                <ModalRemoveService
-                  id={service.id}
-                  removeService={removeService}
-                />
               </li>
             ))}
           </ul>

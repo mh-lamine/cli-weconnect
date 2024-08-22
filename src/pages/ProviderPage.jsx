@@ -1,5 +1,5 @@
 import ProviderHeader from "@/components/ProviderHeader";
-import ModalBooking from "@/components/ModalBooking";
+import ModalBooking from "@/components/modal/ModalBooking";
 import {
   Accordion,
   AccordionContent,

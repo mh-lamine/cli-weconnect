@@ -20,22 +20,32 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useState } from "react";
-import { Loader2, MinusCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Loader2, PlusCircle } from "lucide-react";
+import { Input } from "../ui/input";
 
-const ModalRemoveService = ({ id, removeService }) => {
+const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
   const [open, setOpen] = useState(false);
+  const [availability, setAvailability] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
+  const handleChange = (e) => {
+    setAvailability({ ...availability, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!availability?.startTime || !availability?.endTime) {
+      setError("Veuillez renseigner une heure de début et une heure de fin.");
+      return;
+    }
 
     setLoading(true);
     try {
-      await removeService(id);
+      await createAvailability({ dayOfWeek, ...availability });
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
@@ -43,36 +53,55 @@ const ModalRemoveService = ({ id, removeService }) => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    if (!open) {
+      setAvailability();
+    }
+  }, [open]);
+
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">
-            <MinusCircle className="text-destructive" />
+          <Button>
+            <PlusCircle />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle className="text-destructive">
-              Supprimer une prestation
-            </DialogTitle>
+            <DialogTitle>Ajouter un créneau</DialogTitle>
             <DialogDescription>
-              Êtes-vous sûr de vouloir supprimer cette prestation ?
+              Selectionnez une heure de début et une heure de fin pour créer un
+              créneau de disponibilité.
             </DialogDescription>
           </DialogHeader>
+          <div className="flex items-center justify-center gap-4">
+            De
+            <Input
+              className="w-fit"
+              name="startTime"
+              type="time"
+              onChange={handleChange}
+            />
+            à
+            <Input
+              className="w-fit"
+              name="endTime"
+              type="time"
+              onChange={handleChange}
+            />
+          </div>
           {error && setTimeout(() => setError(null), 3000) && (
             <p className="text-destructive text-sm">{error}</p>
           )}
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <div className="w-full flex items-center justify-between">
-                <Button variant="outline">Annuler</Button>
-                <Button
-                  onClick={handleSubmit}
-                  variant="destructive"
-                  disabled={loading && true}
-                >
-                  {loading ? <Loader2 className="animate-spin" /> : "Supprimer"}
+                <Button variant="outline" onClick={() => setAvailability()}>
+                  Annuler
+                </Button>
+                <Button onClick={handleSubmit} disabled={loading && true}>
+                  {loading ? <Loader2 className="animate-spin" /> : "Ajouter"}
                 </Button>
               </div>
             </DialogClose>
@@ -85,19 +114,34 @@ const ModalRemoveService = ({ id, removeService }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">
-          <MinusCircle className="text-destructive" />
+        <Button>
+          <PlusCircle />
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle className="text-destructive">
-            Supprimer une prestation
-          </DrawerTitle>
+          <DrawerTitle>Ajouter un créneau</DrawerTitle>
           <DrawerDescription>
-            Êtes-vous sûr de vouloir supprimer cette prestation ?
+            Selectionnez une heure de début et une heure de fin pour créer un
+            créneau de disponibilité.
           </DrawerDescription>
         </DrawerHeader>
+        <div className="flex items-center justify-center gap-4 px-4">
+          De
+          <Input
+            className="w-fit"
+            name="startTime"
+            type="time"
+            onChange={handleChange}
+          />
+          à
+          <Input
+            className="w-fit"
+            name="endTime"
+            type="time"
+            onChange={handleChange}
+          />
+        </div>
         <DrawerFooter className="pt-2">
           {error && setTimeout(() => setError(null), 3000) && (
             <p className="text-destructive text-sm">{error}</p>
@@ -107,12 +151,15 @@ const ModalRemoveService = ({ id, removeService }) => {
               <Button
                 className="w-full"
                 onClick={handleSubmit}
-                variant="destructive"
                 disabled={loading && true}
               >
-                {loading ? <Loader2 className="animate-spin" /> : "Supprimer"}
+                {loading ? <Loader2 className="animate-spin" /> : "Ajouter"}
               </Button>
-              <Button className="w-full" variant="outline">
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={() => setAvailability()}
+              >
                 Annuler
               </Button>
             </div>
@@ -123,4 +170,4 @@ const ModalRemoveService = ({ id, removeService }) => {
   );
 };
 
-export default ModalRemoveService;
+export default ModalAddAvailability;

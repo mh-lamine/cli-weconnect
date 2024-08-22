@@ -36,7 +36,7 @@ import { DateTime } from "luxon";
 import { fr } from "date-fns/locale";
 import { OneYearFromNow } from "@/utils/dateManagement";
 import { getProviderAvailableTimeSlots } from "@/actions/providerActions";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "../ui/use-toast";
 import axiosPrivate from "@/api/axiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
 

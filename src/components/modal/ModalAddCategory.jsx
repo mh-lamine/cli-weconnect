@@ -22,12 +22,12 @@ import {
 } from "@/components/ui/drawer";
 import { useEffect, useState } from "react";
 import { Loader2, PlusCircle } from "lucide-react";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
-const ModalAddService = ({ providerCategoryId, createService }) => {
+const ModalAddCategory = ({ createCategory }) => {
   const [open, setOpen] = useState(false);
-  const [service, setService] = useState();
+  const [category, setCategory] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
@@ -35,25 +35,19 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Convertir en nombre pour les champs 'price' et 'duration'
-    const parsedValue =
-      name === "price" || name === "duration" ? parseFloat(value) : value;
-
-    setService({ ...service, [name]: parsedValue });
+    setCategory({ [name]: value });
   };
 
   const handleSubmit = async (e) => {
-    console.log("submitting");
     e.preventDefault();
-    if (!service?.name || !service?.price || !service?.duration) {
-      setError("Veuillez renseigner tous les champs.");
+    if (!category?.name) {
+      setError("Veuillez renseigner le nom de la catégorie.");
       return;
     }
 
     setLoading(true);
     try {
-      await createService({ providerCategoryId, ...service });
+      await createCategory(category);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
@@ -63,7 +57,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
 
   useEffect(() => {
     if (!open) {
-      setService();
+      setCategory();
     }
   }, [open]);
 
@@ -71,16 +65,15 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>
-            <PlusCircle />
+          <Button variant="link" className="p-0 h-min">
+            Ajouter une catégorie
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Ajouter une prestation</DialogTitle>
+            <DialogTitle>Ajouter une catégorie</DialogTitle>
             <DialogDescription>
-              Définissez un nom, un prix et une durée pour ajouter une
-              prestation.
+              Définissez un nom pour ajouter une catégorie.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
@@ -93,24 +86,6 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
                 onChange={handleChange}
               />
             </div>
-            <div>
-              <Label htmlFor="price">Prix</Label>
-              <Input
-                id="price"
-                name="price"
-                type="number"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label htmlFor="duration">Durée</Label>
-              <Input
-                id="duration"
-                name="duration"
-                type="number"
-                onChange={handleChange}
-              />
-            </div>
           </div>
           {error && setTimeout(() => setError(null), 3000) && (
             <p className="text-destructive text-sm">{error}</p>
@@ -118,7 +93,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <div className="w-full flex items-center justify-between">
-                <Button variant="outline" onClick={() => setService()}>
+                <Button variant="outline" onClick={() => setCategory()}>
                   Annuler
                 </Button>
                 <Button onClick={handleSubmit} disabled={loading && true}>
@@ -135,39 +110,21 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button>
-          <PlusCircle />
+        <Button variant="link" className="p-0 h-min">
+          Ajouter une catégorie
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Ajouter une prestation</DrawerTitle>
+          <DrawerTitle>Ajouter une categorie</DrawerTitle>
           <DrawerDescription>
-            Définissez un nom, un prix et une durée pour ajouter une prestation.
+            Définissez un nom pour ajouter une categorie.
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col px-4 gap-2">
           <div>
             <Label htmlFor="name">Nom</Label>
             <Input id="name" name="name" type="text" onChange={handleChange} />
-          </div>
-          <div>
-            <Label htmlFor="price">Prix</Label>
-            <Input
-              id="price"
-              name="price"
-              type="number"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <Label htmlFor="duration">Durée</Label>
-            <Input
-              id="duration"
-              name="duration"
-              type="number"
-              onChange={handleChange}
-            />
           </div>
         </div>
         <DrawerFooter className="pt-2">
@@ -186,7 +143,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
               <Button
                 className="w-full"
                 variant="outline"
-                onClick={() => setService()}
+                onClick={() => setCategory()}
               >
                 Annuler
               </Button>
@@ -198,4 +155,4 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
   );
 };
 
-export default ModalAddService;
+export default ModalAddCategory;

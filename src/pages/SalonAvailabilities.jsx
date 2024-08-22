@@ -1,6 +1,6 @@
 import Error from "@/components/Error";
-import ModalAddAvailability from "@/components/ModalAddAvailability";
-import ModalRemoveAvailability from "@/components/ModalRemoveAvailability";
+import ModalAddAvailability from "@/components/modal/ModalAddAvailability";
+import ModalRemoveAvailability from "@/components/modal/ModalRemoveAvailability";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
