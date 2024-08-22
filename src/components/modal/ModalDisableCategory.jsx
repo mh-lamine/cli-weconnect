@@ -21,9 +21,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useState } from "react";
-import { Loader2, MinusCircle } from "lucide-react";
+import { EyeOffIcon, Loader2, Trash2 } from "lucide-react";
 
-const ModalRemoveService = ({ id, removeService }) => {
+const ModalDisableCategory = ({ id, name, disableCategory }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
@@ -35,7 +35,7 @@ const ModalRemoveService = ({ id, removeService }) => {
 
     setLoading(true);
     try {
-      await removeService(id);
+      await disableCategory(id);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
@@ -47,17 +47,17 @@ const ModalRemoveService = ({ id, removeService }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="ghost" className="ml-4">
-            <MinusCircle className="text-destructive" />
+          <Button variant="ghost" className="ml-2">
+            <EyeOffIcon className="text-destructive" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="text-destructive">
-              Supprimer une prestation
+              Retirer la catégorie {name.toUpperCase()}
             </DialogTitle>
             <DialogDescription>
-              Êtes-vous sûr de vouloir supprimer cette prestation ?
+              Toutes les prestations associées seront retirées.
             </DialogDescription>
           </DialogHeader>
           {error && setTimeout(() => setError(null), 3000) && (
@@ -85,17 +85,17 @@ const ModalRemoveService = ({ id, removeService }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="ghost" className="ml-4">
-          <MinusCircle className="text-destructive" />
+        <Button variant="ghost" className="ml-2">
+          <EyeOffIcon className="text-destructive" />
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle className="text-destructive">
-            Supprimer une prestation
+            Retirer la catégorie {name.toUpperCase()}
           </DrawerTitle>
           <DrawerDescription>
-            Êtes-vous sûr de vouloir supprimer cette prestation ?
+            Toutes les prestations associées seront retirées.
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="pt-2">
@@ -123,4 +123,4 @@ const ModalRemoveService = ({ id, removeService }) => {
   );
 };
 
-export default ModalRemoveService;
+export default ModalDisableCategory;
