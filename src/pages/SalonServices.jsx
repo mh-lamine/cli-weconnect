@@ -168,6 +168,7 @@ const SalonServices = () => {
         const hasInactiveServices = category.services.some(
           (service) => !service.isActive
         );
+      console.log("hasInactiveServices",hasInactiveServices, category)
         return (
           hasInactiveServices && (
             <div key={category.id} className="space-y-2 text-muted">
