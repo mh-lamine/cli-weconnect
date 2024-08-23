@@ -11,7 +11,7 @@ export default function Header() {
       <div className="drawer-content flex flex-col ">
         {/* Navbar */}
         <div className="navbar text-primary-800 bg-light shadow-sm w-full">
-          <div className="flex-none lg:hidden">
+          <div className="flex-none md:hidden">
             <label
               htmlFor="my-drawer-3"
               aria-label="open sidebar"
@@ -35,7 +35,7 @@ export default function Header() {
               WeConnect
             </Link>
           </div>
-          <div className="hidden lg:flex items-center justify-between w-full px-4">
+          <div className="hidden md:flex items-center justify-between w-full px-4">
             <Link to={"/"} className="text-xl font-semibold">
               WeConnect
             </Link>
