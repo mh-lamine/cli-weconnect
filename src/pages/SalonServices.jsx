@@ -140,12 +140,23 @@ const SalonServices = () => {
                         className="flex items-center justify-between gap-4"
                       >
                         <div className="w-full rounded-md p-4 pr-0 bg-gray-100">
-                          <div className="flex items-center justify-between">
-                            <p>{service.name}</p>
-                            <div className="flex items-center">
-                              <p>{service.duration}mn</p>
-                              <div className="divider divider-horizontal" />
-                              <p>{service.price}€</p>
+                          <div className="flex items-start justify-between gap-10">
+                            <div>
+                              <h3 className="text-xl">{service.name}</h3>
+                              <p>{service.description}</p>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              <div className="flex items-center">
+                                <p>{service.duration}mn</p>
+                                <div className="divider divider-horizontal" />
+                                <p>{service.price}€</p>
+
+                                <ModalDisableService
+                                  id={service.id}
+                                  providerCategoryId={category.id}
+                                  disableService={disableService}
+                                />
+                              </div>
                               <ModalDisableService
                                 id={service.id}
                                 providerCategoryId={category.id}
@@ -153,7 +164,6 @@ const SalonServices = () => {
                               />
                             </div>
                           </div>
-                          <p>{service.description}</p>
                         </div>
                       </li>
                     )
