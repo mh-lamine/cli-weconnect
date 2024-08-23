@@ -54,7 +54,7 @@ const ModalDisableCategory = ({ id, name, disableCategory }) => {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="text-destructive">
-              Retirer la catégorie {name.toUpperCase()}
+              Retirer la catégorie
             </DialogTitle>
             <DialogDescription>
               Toutes les prestations associées seront retirées.
@@ -72,7 +72,7 @@ const ModalDisableCategory = ({ id, name, disableCategory }) => {
                   variant="destructive"
                   disabled={loading && true}
                 >
-                  {loading ? <Loader2 className="animate-spin" /> : "Supprimer"}
+                  {loading ? <Loader2 className="animate-spin" /> : "Retirer"}
                 </Button>
               </div>
             </DialogClose>
@@ -92,7 +92,7 @@ const ModalDisableCategory = ({ id, name, disableCategory }) => {
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle className="text-destructive">
-            Retirer la catégorie {name.toUpperCase()}
+            Retirer la catégorie
           </DrawerTitle>
           <DrawerDescription>
             Toutes les prestations associées seront retirées.
@@ -110,7 +110,7 @@ const ModalDisableCategory = ({ id, name, disableCategory }) => {
                 variant="destructive"
                 disabled={loading && true}
               >
-                {loading ? <Loader2 className="animate-spin" /> : "Supprimer"}
+                {loading ? <Loader2 className="animate-spin" /> : "Retirer"}
               </Button>
               <Button className="w-full" variant="outline">
                 Annuler

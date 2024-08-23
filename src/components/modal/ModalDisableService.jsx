@@ -52,10 +52,10 @@ const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="text-destructive">
-              Supprimer une prestation
+              Retirer la prestation
             </DialogTitle>
             <DialogDescription>
-              Êtes-vous sûr de vouloir supprimer cette prestation ?
+              Êtes-vous sûr de vouloir retirer cette prestation ?
             </DialogDescription>
           </DialogHeader>
           {error && setTimeout(() => setError(null), 3000) && (
@@ -70,7 +70,7 @@ const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
                   variant="destructive"
                   disabled={loading && true}
                 >
-                  {loading ? <Loader2 className="animate-spin" /> : "Supprimer"}
+                  {loading ? <Loader2 className="animate-spin" /> : "Retirer"}
                 </Button>
               </div>
             </DialogClose>
@@ -88,10 +88,10 @@ const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle className="text-destructive">
-            Supprimer une prestation
+            Retirer la prestation
           </DrawerTitle>
           <DrawerDescription>
-            Êtes-vous sûr de vouloir supprimer cette prestation ?
+            Êtes-vous sûr de vouloir retirer cette prestation ?
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="pt-2">
@@ -106,7 +106,7 @@ const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
                 variant="destructive"
                 disabled={loading && true}
               >
-                {loading ? <Loader2 className="animate-spin" /> : "Supprimer"}
+                {loading ? <Loader2 className="animate-spin" /> : "Retirer"}
               </Button>
               <Button className="w-full" variant="outline">
                 Annuler

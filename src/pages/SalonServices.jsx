@@ -78,7 +78,7 @@ const SalonServices = () => {
   }
 
   async function updateService(id, service) {
-    console.log(service)
+    console.log(service);
     try {
       await axiosPrivate.put(`/api/providerService/${id}`, service);
       getCategories();
@@ -250,6 +250,14 @@ const SalonServices = () => {
           )
         );
       })}
+      <p className="text-sm text-muted">
+        La suppression des catégories et services est restreinte afin
+        d'améliorer l'analyse de l'activité. <br /> Pour supprimer
+        définitivement une catégorie ou un service, veuillez{" "}
+        <Button variant="link" className="pl-0">
+          <a href="mailto:mlamins.ngom@gmail.com">contacter le support</a>.
+        </Button>
+      </p>
     </main>
   );
 };

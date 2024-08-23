@@ -80,9 +80,9 @@ const ModalUpdateService = ({ prevService, updateService }) => {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Modifier la prestation {prevService.name}</DialogTitle>
+            <DialogTitle>Modifier la prestation</DialogTitle>
             <DialogDescription>
-              Modifiez le nom, le prix ou la durée de la prestation.
+              Modifiez les détails de la prestation.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
@@ -154,9 +154,9 @@ const ModalUpdateService = ({ prevService, updateService }) => {
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle> Modifier la prestation {prevService.name} </DrawerTitle>
+          <DrawerTitle> Modifier la prestation</DrawerTitle>
           <DrawerDescription>
-            Modifiez le nom, le prix ou la durée de la prestation.
+            Modifiez les détails de la prestation.
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col px-4 gap-2">
