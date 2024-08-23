@@ -59,15 +59,6 @@ const SalonServices = () => {
     }
   }
 
-  async function enableCategory(id) {
-    try {
-      await axiosPrivate.put(`/api/providerCategory/${id}`, { isActive: true });
-      getCategories();
-    } catch (error) {
-      setApiError(error);
-    }
-  }
-
   async function enableService(id) {
     try {
       await axiosPrivate.put(`/api/providerService/${id}`, { isActive: true });
@@ -77,11 +68,19 @@ const SalonServices = () => {
     }
   }
 
-  async function disableCategory(id) {
+  async function enableCategory(id) {
     try {
-      await axiosPrivate.put(`/api/providerCategory/${id}`, {
-        isActive: false,
-      });
+      await axiosPrivate.put(`/api/providerCategory/${id}`, { isActive: true });
+      getCategories();
+    } catch (error) {
+      setApiError(error);
+    }
+  }
+
+  async function updateService(id, service) {
+    console.log(service)
+    try {
+      await axiosPrivate.put(`/api/providerService/${id}`, service);
       getCategories();
     } catch (error) {
       setApiError(error);
@@ -93,6 +92,17 @@ const SalonServices = () => {
       await axiosPrivate.put(`/api/providerService/${id}`, {
         isActive: false,
         providerCategoryId,
+      });
+      getCategories();
+    } catch (error) {
+      setApiError(error);
+    }
+  }
+
+  async function disableCategory(id) {
+    try {
+      await axiosPrivate.put(`/api/providerCategory/${id}`, {
+        isActive: false,
       });
       getCategories();
     } catch (error) {
@@ -163,9 +173,8 @@ const SalonServices = () => {
                                 </PopoverTrigger>
                                 <PopoverContent className="w-fit flex flex-col gap-2">
                                   <ModalUpdateService
-                                    id={service.id}
-                                    providerCategoryId={category.id}
-                                    disableService={disableService}
+                                    prevService={service}
+                                    updateService={updateService}
                                   />
                                   <ModalDisableService
                                     id={service.id}

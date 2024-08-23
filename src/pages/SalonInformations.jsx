@@ -1,12 +1,11 @@
 import EditableInput from "@/components/EditableInput";
 import Error from "@/components/Error";
-import LeftArrow from "@/components/svg/LeftArrow";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const PHONE_NUMBER_REGEX =
@@ -15,12 +14,11 @@ const PHONE_NUMBER_REGEX =
 const EMAIL_REGEX =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 export default function SalonInformations() {
-  const [provider, setProvider] = useState();
+  const [prevInfos, setPrevInfos] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
 
-  const [edit, setEdit] = useState(false);
-  const [providerInfos, setProviderInfos] = useState({});
+  const [providerInfos, setProviderInfos] = useState();
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState(false);
 
@@ -31,12 +29,7 @@ export default function SalonInformations() {
   async function getProvider() {
     try {
       const response = await axiosPrivate.get("/api/users");
-      setProvider(response.data);
-      setProviderInfos((prev) => ({
-        ...prev,
-        isInVacancyMode: response.data.isInVacancyMode,
-        autoAcceptAppointments: response.data.autoAcceptAppointments,
-      }));
+      setPrevInfos(response.data);
     } catch (error) {
       setError(error);
       if (error.response?.status === 401) {
@@ -57,6 +50,15 @@ export default function SalonInformations() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setEditLoading(true);
+    const hasChanges = Object.keys(providerInfos).some(
+      (key) => providerInfos[key] !== prevInfos[key]
+    );
+
+    if (!hasChanges) {
+      setProviderInfos();
+      setEditLoading(false);
+      return;
+    }
     if (
       providerInfos.phoneNumber &&
       !PHONE_NUMBER_REGEX.test(providerInfos.phoneNumber)
@@ -70,15 +72,7 @@ export default function SalonInformations() {
       setEditLoading(false);
       return;
     }
-    const hasChanges = Object.keys(providerInfos).some(
-      (key) => providerInfos[key] !== provider[key]
-    );
 
-    if (!hasChanges) {
-      setEdit(false);
-      setEditLoading(false);
-      return;
-    }
     try {
       await axiosPrivate.patch("/api/users", providerInfos);
       await getProvider();
@@ -89,25 +83,17 @@ export default function SalonInformations() {
         setEditError(error.response.data.message);
       }
     }
-    setEdit(false);
+    setProviderInfos();
     setEditLoading(false);
   };
 
-  const clearInfos = () => {
-    setProviderInfos({
-      isInVacancyMode: response.data.isInVacancyMode,
-      autoAcceptAppointments: response.data.autoAcceptAppointments,
-    });
-    document
-      .querySelector("#provider-infos-section")
-      .querySelectorAll("input")
-      .forEach((input) => {
-        if (providerInfos[input.id]) {
-          input.value = provider.phoneNumber;
-          return;
-        }
-        input.value = "";
-      });
+  const formRef = useRef(null);
+
+  const handleReset = () => {
+    if (formRef.current) {
+      formRef.current.reset();
+      setProviderInfos();
+    }
   };
 
   if (loading) {
@@ -128,55 +114,51 @@ export default function SalonInformations() {
         Retour
       </Button>
       <h1 className="text-3xl font-semibold">Mes informations</h1>
-      <section id="provider-infos-section" className="relative space-y-2">
-        <EditableInput
-          id="phoneNumber"
-          label="Téléphone"
-          type="tel"
-          value={provider.phoneNumber}
-          edit={edit}
-          handleChange={handleChange}
-        />
-        <EditableInput
-          id="email"
-          label="Email"
-          type="email"
-          value={provider.email}
-          edit={edit}
-          handleChange={handleChange}
-        />
-        <EditableInput
-          id="address"
-          label="Adresse"
-          type="text"
-          value={provider.address}
-          edit={edit}
-          handleChange={handleChange}
-        />
-        <EditableInput
-          id="providerName"
-          label="Nom du salon"
-          type="text"
-          value={provider.providerName}
-          edit={edit}
-          handleChange={handleChange}
-        />
+      <form className="space-y-2" ref={formRef}>
+        <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
+          <EditableInput
+            id="providerName"
+            label="Nom du salon"
+            type="text"
+            defaultValue={prevInfos.providerName}
+            handleChange={handleChange}
+          />
+          <EditableInput
+            id="phoneNumber"
+            label="Téléphone"
+            type="tel"
+            defaultValue={prevInfos.phoneNumber}
+            handleChange={handleChange}
+          />
+          <EditableInput
+            id="address"
+            label="Adresse"
+            type="text"
+            defaultValue={prevInfos.address}
+            handleChange={handleChange}
+          />
+          <EditableInput
+            id="email"
+            label="Email"
+            type="email"
+            defaultValue={prevInfos.email}
+            handleChange={handleChange}
+          />
+        </div>
         <div>
           <Label htmlFor="autoAccept">Confirmation automatique</Label>
-          <div
-            className={`${
-              edit ? "bg-white" : "bg-white/50"
-            } rounded-md px-3 py-2 space-y-4`}
-          >
+          <div className="bg-white rounded-md px-3 py-2 space-y-4">
             <div className="flex items-center justify-between gap-4">
-              <p className={!edit ? "text-muted" : ""}>
+              <p>
                 Choisissez ou non d'accepter automatiquement les demandes de
                 rendez-vous.
               </p>
               <Switch
                 id="autoAccept"
-                disabled={!edit}
-                checked={providerInfos.autoAcceptAppointments}
+                checked={
+                  providerInfos?.autoAcceptAppointments ??
+                  prevInfos.autoAcceptAppointments
+                }
                 onCheckedChange={(checked) => {
                   setProviderInfos({
                     ...providerInfos,
@@ -185,7 +167,7 @@ export default function SalonInformations() {
                 }}
               />
             </div>
-            <p className={`text-muted ${!edit && "hidden"}`}>
+            <p className={"text-muted"}>
               Si vous choisissez de ne pas accepter automatiquement les demandes
               de rendez-vous, elles auront le status <b>En attente</b> tant que
               vous ne les aurez pas confirmées ou refusées.
@@ -196,20 +178,17 @@ export default function SalonInformations() {
           <Label htmlFor="vacancyMode" className="text-destructive">
             Mode vacances
           </Label>
-          <div
-            className={`${
-              edit ? "bg-white" : "bg-white/50"
-            } rounded-md px-3 py-2 space-y-4`}
-          >
+          <div className="bg-white rounded-md px-3 py-2 space-y-4">
             <div className="flex items-center justify-between gap-4">
-              <p className={!edit ? "text-muted" : "text-destructive"}>
+              <p>
                 Passez en mode vacances pour ne plus recevoir de demandes de
                 rendez-vous.
               </p>
               <Switch
                 id="vacancyMode"
-                disabled={!edit}
-                checked={providerInfos.isInVacancyMode}
+                checked={
+                  providerInfos?.isInVacancyMode ?? prevInfos.isInVacancyMode
+                }
                 onCheckedChange={(checked) => {
                   setProviderInfos({
                     ...providerInfos,
@@ -219,7 +198,7 @@ export default function SalonInformations() {
                 className="data-[state=checked]:bg-destructive"
               />
             </div>
-            <p className={`text-muted ${!edit && "hidden"}`}>
+            <p className="text-muted">
               En cas de fermerture temporaire de votre salon, vous pouvez
               activer le mode vacances pour ne plus recevoir de demandes de
               rendez-vous pendant un certain temps.
@@ -229,7 +208,7 @@ export default function SalonInformations() {
         {editError && setTimeout(() => setEditError(null), 3000) && (
           <p className="text-destructive text-sm">{editError}</p>
         )}
-        {edit ? (
+        {providerInfos && (
           <>
             <Button onClick={handleSubmit} disabled={editLoading && true}>
               {editLoading ? (
@@ -238,23 +217,12 @@ export default function SalonInformations() {
                 "Enregistrer les modifications"
               )}
             </Button>
-            <Button
-              variant="outline"
-              className="block"
-              onClick={ () => {
-                setEdit(false);
-                clearInfos();
-              }}
-            >
+            <Button variant="outline" className="block" onClick={handleReset}>
               Annuler les modifications
             </Button>
           </>
-        ) : (
-          <Button variant="outline" onClick={() => setEdit(true)}>
-            Modifier mes informations
-          </Button>
         )}
-      </section>
+      </form>
     </main>
   );
 }

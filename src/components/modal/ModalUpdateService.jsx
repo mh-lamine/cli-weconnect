@@ -21,12 +21,12 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useEffect, useState } from "react";
-import { Loader2, PlusCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 
-const ModalUpdateService = ({ providerCategoryId, createService }) => {
+const ModalUpdateService = ({ prevService, updateService }) => {
   const [open, setOpen] = useState(false);
   const [service, setService] = useState();
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,6 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Convertir en nombre pour les champs 'price' et 'duration'
     const parsedValue =
       name === "price" || name === "duration" ? parseFloat(value) : value;
 
@@ -46,14 +45,20 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!service?.name || !service?.price || !service?.duration) {
-      setError("Veuillez renseigner tous les champs.");
+    setLoading(true);
+
+    const hasChanges = Object.keys(service).some(
+      (key) => service[key] !== prevService[key]
+    );
+
+    if (!hasChanges) {
+      setLoading(false);
+      setOpen(false);
       return;
     }
 
-    setLoading(true);
     try {
-      await createService({ providerCategoryId, ...service });
+      await updateService(prevService.id, service);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
@@ -75,10 +80,9 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Ajouter une prestation</DialogTitle>
+            <DialogTitle>Modifier la prestation {prevService.name}</DialogTitle>
             <DialogDescription>
-              Définissez un nom, un prix et une durée pour ajouter une
-              prestation.
+              Modifiez le nom, le prix ou la durée de la prestation.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
@@ -88,6 +92,7 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
                 id="name"
                 name="name"
                 type="text"
+                defaultValue={prevService.name}
                 onChange={handleChange}
               />
             </div>
@@ -97,6 +102,7 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
                 id="price"
                 name="price"
                 type="number"
+                defaultValue={prevService.price}
                 onChange={handleChange}
               />
             </div>
@@ -106,6 +112,7 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
                 id="duration"
                 name="duration"
                 type="number"
+                defaultValue={prevService.duration}
                 onChange={handleChange}
               />
             </div>
@@ -115,6 +122,7 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
                 id="description"
                 name="description"
                 className="resize-none"
+                defaultValue={prevService.description}
                 onChange={handleChange}
               />
             </div>
@@ -129,7 +137,7 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
                   Annuler
                 </Button>
                 <Button onClick={handleSubmit} disabled={loading && true}>
-                  {loading ? <Loader2 className="animate-spin" /> : "Ajouter"}
+                  {loading ? <Loader2 className="animate-spin" /> : "Modifier"}
                 </Button>
               </div>
             </DialogClose>
@@ -142,21 +150,25 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">
-          <PlusCircle />
-        </Button>
+        <Button variant="outline">Modifier</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Ajouter une prestation</DrawerTitle>
+          <DrawerTitle> Modifier la prestation {prevService.name} </DrawerTitle>
           <DrawerDescription>
-            Définissez un nom, un prix et une durée pour ajouter une prestation.
+            Modifiez le nom, le prix ou la durée de la prestation.
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col px-4 gap-2">
           <div>
             <Label htmlFor="name">Nom</Label>
-            <Input id="name" name="name" type="text" onChange={handleChange} />
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              defaultValue={prevService.name}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <Label htmlFor="price">Prix</Label>
@@ -164,6 +176,7 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
               id="price"
               name="price"
               type="number"
+              defaultValue={prevService.price}
               onChange={handleChange}
             />
           </div>
@@ -173,6 +186,7 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
               id="duration"
               name="duration"
               type="number"
+              defaultValue={prevService.duration}
               onChange={handleChange}
             />
           </div>
@@ -188,7 +202,7 @@ const ModalUpdateService = ({ providerCategoryId, createService }) => {
                 onClick={handleSubmit}
                 disabled={loading && true}
               >
-                {loading ? <Loader2 className="animate-spin" /> : "Ajouter"}
+                {loading ? <Loader2 className="animate-spin" /> : "Modifier"}
               </Button>
               <Button
                 className="w-full"
