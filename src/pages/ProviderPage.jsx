@@ -35,7 +35,6 @@ export default function ProviderPage() {
 
   if (error) return <div className="flex-1">Error: {error}</div>;
 
-  console.log(provider);
   return (
     <main className="w-full flex-1">
       <header>
