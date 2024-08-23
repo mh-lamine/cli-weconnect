@@ -2,9 +2,15 @@ import ModalAddCategory from "@/components/modal/ModalAddCategory";
 import ModalAddService from "@/components/modal/ModalAddService";
 import ModalDisableCategory from "@/components/modal/ModalDisableCategory";
 import ModalDisableService from "@/components/modal/ModalDisableService";
+import ModalUpdateService from "@/components/modal/ModalUpdateService";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { Loader2 } from "lucide-react";
+import { EllipsisVertical, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -145,23 +151,29 @@ const SalonServices = () => {
                               <h3 className="text-xl">{service.name}</h3>
                               <p>{service.description}</p>
                             </div>
-                            <div className="flex flex-col items-end">
-                              <div className="flex items-center">
-                                <p>{service.duration}mn</p>
-                                <div className="divider divider-horizontal" />
-                                <p>{service.price}€</p>
-
-                                <ModalDisableService
-                                  id={service.id}
-                                  providerCategoryId={category.id}
-                                  disableService={disableService}
-                                />
-                              </div>
-                              <ModalDisableService
-                                id={service.id}
-                                providerCategoryId={category.id}
-                                disableService={disableService}
-                              />
+                            <div className="flex items-center">
+                              <p>{service.duration}mn</p>
+                              <div className="divider divider-horizontal" />
+                              <p>{service.price}€</p>
+                              <Popover>
+                                <PopoverTrigger>
+                                  <Button variant="ghost" className="ml-4">
+                                    <EllipsisVertical />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-fit flex flex-col gap-2">
+                                  <ModalUpdateService
+                                    id={service.id}
+                                    providerCategoryId={category.id}
+                                    disableService={disableService}
+                                  />
+                                  <ModalDisableService
+                                    id={service.id}
+                                    providerCategoryId={category.id}
+                                    disableService={disableService}
+                                  />
+                                </PopoverContent>
+                              </Popover>
                             </div>
                           </div>
                         </div>
