@@ -58,7 +58,6 @@ const SalonServices = () => {
       await axiosPrivate.put(`/api/providerCategory/${id}`, { isActive: true });
       getCategories();
     } catch (error) {
-      console.log(error);
       setApiError(error);
     }
   }
@@ -168,9 +167,9 @@ const SalonServices = () => {
         const hasInactiveServices = category.services.some(
           (service) => !service.isActive
         );
-      console.log("hasInactiveServices",hasInactiveServices, category)
+
         return (
-          hasInactiveServices && (
+          (hasInactiveServices || !category.isActive) && (
             <div key={category.id} className="space-y-2 text-muted">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-medium">{category.name}</h2>
@@ -179,14 +178,14 @@ const SalonServices = () => {
                     variant="link"
                     onClick={() => enableCategory(category.id)}
                   >
-                    Réactiver la catégorie
+                    Activer la catégorie
                   </Button>
                 )}
               </div>
               <ul className="space-y-2">
                 {category.services.map(
                   (service) =>
-                    !service.isActive && (
+                    (!service.isActive || !category.isActive) && (
                       <li
                         key={service.id}
                         className="flex items-center justify-between gap-4"
@@ -199,8 +198,15 @@ const SalonServices = () => {
                                 variant="link"
                                 onClick={() => enableService(service.id)}
                               >
-                                Réactiver le service
+                                Activer le service
                               </Button>
+                            )}
+                            {!category.isActive && (
+                              <div className="flex items-center">
+                                <p>{service.duration}mn</p>
+                                <div className="divider divider-horizontal" />
+                                <p>{service.price}€</p>
+                              </div>
                             )}
                           </div>
                           <p>{service.description}</p>
