@@ -54,15 +54,18 @@ export default function HomePage() {
           alt="hair salon"
           className="max-h-[50vh] w-full object-cover"
         />
-        <div className="flex items-center gap-2 -mt-6 mb-6 w-2/3 mx-auto h-12 px-4 shadow-sm rounded-md bg-white">
+        <div className="flex items-center gap-2 -mt-6 w-2/3 mx-auto h-12 px-4 shadow-sm rounded-md bg-white">
           <Search />
           <Input
             type="text"
-            placeholder="Cherchez un nom de salon, une adresse ou type de prestation"
+            placeholder="Barber, Toulouse"
             className="border-0 focus-visible:ring-0 text-lg"
             onChange={filterProviders}
           />
         </div>
+        <p className="text-muted text-sm mx-auto my-2">
+          Recherchez un salon, une adresse ou type de prestation.
+        </p>
       </header>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-screen-lg mx-auto  p-4">
         {providersToDisplay.map((provider, index) => (
