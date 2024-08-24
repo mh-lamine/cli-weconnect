@@ -105,7 +105,7 @@ export default function SalonInformations() {
   }
 
   return (
-    <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col space-y-4">
+    <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
       <Button
         variant="link"
         className="justify-start h-0 p-0"

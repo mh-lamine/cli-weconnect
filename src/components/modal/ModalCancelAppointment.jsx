@@ -21,21 +21,21 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useState } from "react";
-import { EyeOffIcon, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
-const ModalDisableCategory = ({ id, disableCategory }) => {
+const ModalCancelAppointment = ({ id, cancelAppointment }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  const handleSubmit = async (e) => {
+  const handleCancel = async (e) => {
     e.preventDefault();
 
     setLoading(true);
     try {
-      await disableCategory(id);
+      await cancelAppointment(id);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
@@ -47,17 +47,15 @@ const ModalDisableCategory = ({ id, disableCategory }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="ghost" className="ml-2">
-            <EyeOffIcon className="text-destructive" />
-          </Button>
+          <Button variant="outline">Annuler le rendez-vous</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="text-destructive">
-              Retirer la catégorie
+                Annuler le rendez-vous
             </DialogTitle>
             <DialogDescription>
-              Toutes les prestations associées seront retirées.
+                Êtes-vous sûr de vouloir annuler ce rendez-vous ?   
             </DialogDescription>
           </DialogHeader>
           {error && setTimeout(() => setError(null), 3000) && (
@@ -68,11 +66,11 @@ const ModalDisableCategory = ({ id, disableCategory }) => {
               <div className="w-full flex items-center justify-between">
                 <Button variant="outline">Annuler</Button>
                 <Button
-                  onClick={handleSubmit}
+                  onClick={handleCancel}
                   variant="destructive"
                   disabled={loading && true}
                 >
-                  {loading ? <Loader2 className="animate-spin" /> : "Retirer"}
+                  {loading ? <Loader2 className="animate-spin" /> : "Confirmer"}
                 </Button>
               </div>
             </DialogClose>
@@ -85,17 +83,15 @@ const ModalDisableCategory = ({ id, disableCategory }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="ghost" className="ml-2">
-          <EyeOffIcon className="text-destructive" />
-        </Button>
+        <Button variant="outline">Annuler le rendez-vous</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle className="text-destructive">
-            Retirer la catégorie
+            Annuler le rendez-vous
           </DrawerTitle>
           <DrawerDescription>
-            Toutes les prestations associées seront retirées.
+            Êtes-vous sûr de vouloir annuler ce rendez-vous ?
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="pt-2">
@@ -106,11 +102,11 @@ const ModalDisableCategory = ({ id, disableCategory }) => {
             <div className="space-y-2">
               <Button
                 className="w-full"
-                onClick={handleSubmit}
+                onClick={handleCancel}
                 variant="destructive"
                 disabled={loading && true}
               >
-                {loading ? <Loader2 className="animate-spin" /> : "Retirer"}
+                {loading ? <Loader2 className="animate-spin" /> : "Confirmer"}
               </Button>
               <Button className="w-full" variant="outline">
                 Annuler
@@ -123,4 +119,4 @@ const ModalDisableCategory = ({ id, disableCategory }) => {
   );
 };
 
-export default ModalDisableCategory;
+export default ModalCancelAppointment;

@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, lazy, Suspense, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import RequireAuth from "./components/RequireAuth";
@@ -16,6 +16,7 @@ import RegisterPage from "./pages/RegisterPage";
 import Account from "./pages/Account";
 import ProviderPage from "./pages/ProviderPage";
 import ErrorPage from "./pages/ErrorPage";
+import { Loader2 } from "lucide-react";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Salon = lazy(() => import("./pages/Salon"));
@@ -25,6 +26,7 @@ const SalonServices = lazy(() => import("./pages/SalonServices"));
 
 export default function App() {
   const { setAuth } = useAuth();
+  const [loading, setLoading] = useState(true);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
@@ -35,9 +37,18 @@ export default function App() {
       } catch (error) {
         console.error(error);
       }
+      setLoading(false);
     }
     getUser();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="w-screen h-screen grid place-items-center bg-light">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <Routes>
