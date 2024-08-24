@@ -43,11 +43,7 @@ export default function App() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="w-screen h-screen grid place-items-center bg-light">
-        <Loader2 className="w-8 h-8 animate-spin" />
-      </div>
-    );
+    return <PageLoader />;
   }
 
   return (
@@ -72,7 +68,7 @@ export default function App() {
             <Route
               path="dashboard"
               element={
-                <Suspense fallback={<div>Chargement...</div>}>
+                <Suspense fallback={<PageLoader />}>
                   <Dashboard />
                 </Suspense>
               }
@@ -80,7 +76,7 @@ export default function App() {
             <Route
               path="salon"
               element={
-                <Suspense fallback={<div>Chargement...</div>}>
+                <Suspense fallback={<PageLoader />}>
                   <Salon />
                 </Suspense>
               }
@@ -88,7 +84,7 @@ export default function App() {
             <Route
               path="salon/informations"
               element={
-                <Suspense fallback={<div>Chargement...</div>}>
+                <Suspense fallback={<PageLoader />}>
                   <SalonInformations />
                 </Suspense>
               }
@@ -96,7 +92,7 @@ export default function App() {
             <Route
               path="salon/availabilities"
               element={
-                <Suspense fallback={<div>Chargement...</div>}>
+                <Suspense fallback={<PageLoader />}>
                   <SalonAvailabilities />
                 </Suspense>
               }
@@ -104,7 +100,7 @@ export default function App() {
             <Route
               path="salon/services"
               element={
-                <Suspense fallback={<div>Chargement...</div>}>
+                <Suspense fallback={<PageLoader />}>
                   <SalonServices />
                 </Suspense>
               }
@@ -118,3 +114,9 @@ export default function App() {
     </Routes>
   );
 }
+
+const PageLoader = () => (
+  <div className="w-screen h-screen grid place-items-center bg-light">
+    <Loader2 className="w-8 h-8 animate-spin" />
+  </div>
+);
