@@ -2,8 +2,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/utils/formatting";
 import LeftArrow from "./svg/LeftArrow";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "./ui/skeleton";
 
-export default function ProviderHeader({ name, address }) {
+export default function ProviderHeader({ loading, name, address }) {
   const navigate = useNavigate();
   return (
     <div
@@ -21,17 +22,29 @@ export default function ProviderHeader({ name, address }) {
       </span>
       <div className="hero-overlay bg-opacity-40"></div>
       <div className="hero-content text-neutral-content mt-auto mr-auto">
-        <div className="flex items-center p-4">
-          <Avatar className="w-14 h-14">
-            <AvatarImage src="" />
-            <AvatarFallback className="text-xl">
-              {name && getInitials(name)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="ml-4">
-            <h1 className="text-3xl font-semibold">{name}</h1>
-            <p>{address}</p>
-          </div>
+        <div className="flex items-center space-x-4">
+          {loading ? (
+            <>
+              <Skeleton className="h-14 w-14 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </>
+          ) : (
+            <>
+              <Avatar className="w-14 h-14">
+                <AvatarImage src="" />
+                <AvatarFallback className="text-xl">
+                  {name && getInitials(name)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="ml-4">
+                <h1 className="text-3xl font-semibold">{name}</h1>
+                <p>{address}</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

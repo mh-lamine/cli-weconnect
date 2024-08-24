@@ -6,11 +6,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { getProvidersByFilters } from "@/actions/providerActions";
 import { useParams } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProviderPage() {
   const { providerId } = useParams();
@@ -31,29 +30,50 @@ export default function ProviderPage() {
     fetchData();
   }, []);
 
-  if (loading) return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
-
   if (error) return <div className="flex-1">Error: {error}</div>;
 
   return (
     <main className="w-full flex-1">
       <header>
         <ProviderHeader
-          name={provider.providerName}
-          address={provider.address}
+          loading={loading}
+          name={provider?.providerName}
+          address={provider?.address}
         />
       </header>
       <div className="p-6 pb-0 max-w-screen-md mx-auto">
-        {provider.providerCategories.map((category, index) => (
-          <div key={index}>
-            <Services
-              index={index}
-              category={category}
-              services={category.services}
-              availabilities={provider?.availabilities}
-            />
+        {loading ? (
+          <div className="space-y-12">
+            <Skeleton className="w-[150px] h-6 mt-8" />
+            <div className="flex items-center justify-between">
+              <div className="flex gap-8">
+                <Skeleton className="w-[50px] h-4 mt-4" />
+                <Skeleton className="w-[50px] h-4 mt-4" />
+              </div>
+              <Skeleton className="w-[100px] h-[40px]" />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex gap-8">
+                <Skeleton className="w-[50px] h-4 mt-4" />
+                <Skeleton className="w-[50px] h-4 mt-4" />
+              </div>
+              <Skeleton className="w-[100px] h-[40px]" />
+            </div>
+            <Skeleton className="w-[150px] h-6 mt-8" />
+            <Skeleton className="w-[150px] h-6 mt-8" />
           </div>
-        ))}
+        ) : (
+          provider?.providerCategories.map((category, index) => (
+            <div key={index}>
+              <Services
+                index={index}
+                category={category}
+                services={category.services}
+                availabilities={provider?.availabilities}
+              />
+            </div>
+          ))
+        )}
       </div>
     </main>
   );

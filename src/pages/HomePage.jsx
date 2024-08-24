@@ -1,10 +1,11 @@
 import { getProvidersByFilters } from "@/actions/providerActions";
 import Error from "@/components/Error";
 import ProviderCard from "@/components/ProviderCard";
-import { Loader2, Search } from "lucide-react";
+import {  Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import homeBg from "/home-bg.jpg";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomePage() {
   const [providers, setProviders] = useState();
@@ -36,9 +37,7 @@ export default function HomePage() {
     setFilteredProviders(filteredProviders);
   };
 
-  if (loading) {
-    return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
-  }
+  const SkeletonList = Array.from({ length: 3 });
 
   if (error) {
     return <Error />;
@@ -52,8 +51,9 @@ export default function HomePage() {
         <img
           src={homeBg}
           alt="hair salon"
-          className="max-h-[50vh] w-full object-cover"
+          className="aspect-video max-h-[50vh] w-full object-cover"
         />
+
         <div className="flex items-center gap-2 -mt-6 w-2/3 mx-auto h-12 px-4 shadow-sm rounded-md bg-white">
           <Search />
           <Input
@@ -68,15 +68,31 @@ export default function HomePage() {
         </p>
       </header>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-screen-lg mx-auto  p-4">
-        {providersToDisplay.map((provider, index) => (
-          <li
-            key={index}
-            className="rounded-xl bg-dark/5 shadow  overflow-hidden"
-          >
-            <ProviderCard provider={provider} />
-          </li>
-        ))}
+        {loading
+          ? SkeletonList.map((_, index) => <SkeletonProviderCard key={index} />)
+          : providersToDisplay.map((provider, index) => (
+              <li
+                key={index}
+                className="rounded-xl bg-dark/5 shadow  overflow-hidden"
+              >
+                <ProviderCard provider={provider} />
+              </li>
+            ))}
       </ul>
     </main>
   );
 }
+
+const SkeletonProviderCard = () => (
+  <div>
+    <Skeleton className="h-[250px] rounded-xl bg-primary/10 flex flex-col justify-end p-4">
+      <Skeleton className="h-4 w-1/2 mt-2" />
+      <Skeleton className="h-4 w-1/2 mt-2" />
+      <div className="flex gap-4 mt-2">
+        <Skeleton className="w-12 aspect-video" />
+        <Skeleton className="w-12 aspect-video" />
+        <Skeleton className="w-12 aspect-video" />
+      </div>
+    </Skeleton>
+  </div>
+);
