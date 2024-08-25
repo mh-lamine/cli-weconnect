@@ -86,7 +86,7 @@ const ModalCancelAppointment = ({ id, cancelAppointment }) => {
         <Button variant="outline">Annuler le rendez-vous</Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle className="text-destructive">
             Annuler le rendez-vous
           </DrawerTitle>

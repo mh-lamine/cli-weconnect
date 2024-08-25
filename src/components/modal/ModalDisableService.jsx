@@ -86,7 +86,7 @@ const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
         <Button variant="destructive">Retirer</Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle className="text-destructive">
             Retirer la prestation
           </DrawerTitle>

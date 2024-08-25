@@ -149,7 +149,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle>Ajouter une prestation</DrawerTitle>
           <DrawerDescription>
             Définissez un nom, un prix et une durée pour ajouter une prestation.

@@ -153,7 +153,7 @@ const ModalUpdateService = ({ prevService, updateService }) => {
         <Button variant="outline">Modifier</Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle> Modifier la prestation</DrawerTitle>
           <DrawerDescription>
             Modifiez les détails de la prestation.

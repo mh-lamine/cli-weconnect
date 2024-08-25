@@ -115,7 +115,7 @@ const ModalAddCategory = ({ createCategory }) => {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle>Ajouter une categorie</DrawerTitle>
           <DrawerDescription>
             Définissez un nom pour ajouter une categorie.

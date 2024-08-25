@@ -1,52 +1,137 @@
-import Error from "@/components/Error";
+import ProviderAppointment from "@/components/ProviderAppointment";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [appointments, setAppointments] = useState();
-  const [error, setError] = useState();
-  // const [loading, setLoading] = useState(true);
+  const [apiLoading, setApiLoading] = useState(true);
 
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // useEffect(() => {
-  //   async function getProvider() {
-  //     try {
-  //       const response = await axiosPrivate.get("/api/users");
-  //       setAppointments(response.data);
-  //     } catch (error) {
-  //       setError(error);
-  //       if (error.response?.status === 401) {
-  //         navigate("/login", { state: { from: location }, replace: true });
-  //       }
-  //     }
-  //     setLoading(false);
-  //   }
-  //   getProvider();
-  // }, []);
+  async function getAppointmentsAsProvider() {
+    try {
+      const response = await axiosPrivate.get("/api/appointments/provider");
+      setAppointments(response.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setApiLoading(false);
+    }
+  }
 
-  // if (loading) {
-  //   return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
-  // }
+  async function acceptAppointment(id) {
+    try {
+      await axiosPrivate.patch(`/api/appointments/${id}`, {
+        status: "ACCEPTED",
+      });
+      getAppointmentsAsProvider();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-  // if (error) {
-  //   return <Error />;
-  // }
+  async function cancelAppointment(id) {
+    try {
+      await axiosPrivate.patch(`/api/appointments/${id}`, {
+        status: "CANCELLED",
+      });
+      getAppointmentsAsProvider();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getAppointmentsAsProvider();
+  }, []);
+
   return (
-    <div className="flex flex-1 flex-col items-center space-y-2">
-      <h1>Mes prochains rendez-vous</h1>
-
-      <Button asChild>
-        <Link to="/salon">Mon salon</Link>
+    <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
+      <Button
+        variant="link"
+        className="justify-start h-0 p-0"
+        onClick={() => navigate(-1)}
+      >
+        Retour
       </Button>
-      <Button asChild>
-        <Link to="/">accueil</Link>
-      </Button>
-    </div>
+      <Tabs defaultValue="today" className="space-y-4">
+        <TabsContent value="today">
+          <h1 className="text-3xl font-semibold">
+            Mes rendez-vous de la journée
+          </h1>
+        </TabsContent>
+        <TabsContent value="incoming">
+          <h1 className="text-3xl font-semibold">Mes demandes en attente</h1>
+        </TabsContent>
+        <TabsList>
+          <TabsTrigger value="today">Aujourd'hui</TabsTrigger>
+          <TabsTrigger value="incoming">À venir</TabsTrigger>
+        </TabsList>
+        <TabsContent value="today" className="space-y-4">
+          {appointments?.todaysAppointments.length ? (
+            <>
+              <p className="text-muted">
+                Vous avez {appointments?.todaysAppointments.length} rendez-vous
+                aujourd'hui.
+              </p>
+              {appointments.todaysAppointments
+                .filter((appointment) => appointment.status === "ACCEPTED")
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .map((appointment) => (
+                  <ProviderAppointment
+                    key={appointment.id}
+                    appointment={appointment}
+                    cancelAppointment={cancelAppointment}
+                    today={true}
+                  />
+                ))}
+              <div className="divider divider-start text-muted">
+                Mes rendez-vous passés
+              </div>
+              {appointments.todaysAppointments
+                .filter((appointment) => appointment.status === "COMPLETED")
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .map((appointment) => (
+                  <ProviderAppointment
+                    key={appointment.id}
+                    appointment={appointment}
+                    past={true}
+                    today={true}
+                  />
+                ))}
+            </>
+          ) : (
+            <p className="text-muted">
+              {" "}
+              Vous n'avez aucun rendez-vous aujourd'hui.
+            </p>
+          )}
+        </TabsContent>
+        <TabsContent value="incoming">
+          {appointments?.futureAppointments.length ? (
+            <>
+              <p className="text-muted">
+                Vous avez {appointments?.futureAppointments.length} demandes en
+                attente
+              </p>
+              {appointments.futureAppointments.map((appointment) => (
+                <ProviderAppointment
+                  key={appointment.id}
+                  appointment={appointment}
+                  acceptAppointment={acceptAppointment}
+                  cancelAppointment={cancelAppointment}
+                />
+              ))}
+            </>
+          ) : (
+            <p className="text-muted">Vous n'avez aucune demande en attente.</p>
+          )}
+        </TabsContent>
+      </Tabs>
+    </main>
   );
 }

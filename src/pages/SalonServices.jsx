@@ -153,38 +153,34 @@ const SalonServices = () => {
                     service.isActive && (
                       <li
                         key={service.id}
-                        className="flex items-center justify-between gap-4"
+                        className="flex items-start justify-between gap-10 w-full rounded-md p-4 pr-0 bg-gray-100"
                       >
-                        <div className="w-full rounded-md p-4 pr-0 bg-gray-100">
-                          <div className="flex items-start justify-between gap-10">
-                            <div>
-                              <h3 className="text-xl">{service.name}</h3>
-                              <p>{service.description}</p>
-                            </div>
-                            <div className="flex items-center">
-                              <p>{service.duration}mn</p>
-                              <div className="divider divider-horizontal" />
-                              <p>{service.price}€</p>
-                              <Popover>
-                                <PopoverTrigger>
-                                  <Button variant="ghost" className="ml-4">
-                                    <EllipsisVertical />
-                                  </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-fit flex flex-col gap-2">
-                                  <ModalUpdateService
-                                    prevService={service}
-                                    updateService={updateService}
-                                  />
-                                  <ModalDisableService
-                                    id={service.id}
-                                    providerCategoryId={category.id}
-                                    disableService={disableService}
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                            </div>
-                          </div>
+                        <div>
+                          <h3 className="text-xl">{service.name}</h3>
+                          <p>{service.description}</p>
+                        </div>
+                        <div className="flex flex-col-reverse gap-2 items-center md:flex-row md:gap-0">
+                          <p>{service.duration}mn</p>
+                          <div className="divider divider-horizontal" />
+                          <p>{service.price}€</p>
+                          <Popover>
+                            <PopoverTrigger>
+                              <Button variant="ghost" className="ml-4">
+                                <EllipsisVertical />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-fit flex flex-col gap-2">
+                              <ModalUpdateService
+                                prevService={service}
+                                updateService={updateService}
+                              />
+                              <ModalDisableService
+                                id={service.id}
+                                providerCategoryId={category.id}
+                                disableService={disableService}
+                              />
+                            </PopoverContent>
+                          </Popover>
                         </div>
                       </li>
                     )

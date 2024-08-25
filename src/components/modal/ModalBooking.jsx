@@ -167,7 +167,7 @@ export default function ModalBooking({ service, availabilities }) {
                 locale={fr}
               />
             </PopoverContent>
-            {loadingTimeSlots ? (
+            {!date ? null : loadingTimeSlots ? (
               <div className="flex flex-wrap gap-2">
                 {SkeletonList.map((_, index) => (
                   <Skeleton key={index} className="w-[65px] aspect-video" />
@@ -223,7 +223,7 @@ export default function ModalBooking({ service, availabilities }) {
         <Button variant="outline">Réserver</Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle>{service.name}</DrawerTitle>
           <DrawerDescription>{service.description}</DrawerDescription>
         </DrawerHeader>
@@ -249,7 +249,7 @@ export default function ModalBooking({ service, availabilities }) {
                 locale={fr}
               />
             </PopoverContent>
-            {loadingTimeSlots ? (
+            {!date ? null : loadingTimeSlots ? (
               <div className="flex flex-wrap gap-2">
                 {SkeletonList.map((_, index) => (
                   <Skeleton key={index} className="w-[65px] aspect-video" />

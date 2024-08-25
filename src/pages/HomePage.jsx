@@ -63,7 +63,7 @@ export default function HomePage() {
             onChange={filterProviders}
           />
         </div>
-        <p className="text-muted text-sm mx-auto my-2">
+        <p className="text-muted text-sm text-center p-4">
           Recherchez un salon, une adresse ou type de prestation.
         </p>
       </header>

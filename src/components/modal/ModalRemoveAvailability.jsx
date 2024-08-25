@@ -90,7 +90,7 @@ const ModalRemoveAvailability = ({ id, removeAvailability }) => {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle className="text-destructive">
             Supprimer un créneau
           </DrawerTitle>

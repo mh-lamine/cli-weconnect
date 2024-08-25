@@ -119,7 +119,7 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle>Ajouter un créneau</DrawerTitle>
           <DrawerDescription>
             Selectionnez une heure de début et une heure de fin pour créer un

@@ -90,7 +90,7 @@ const ModalDisableCategory = ({ id, disableCategory }) => {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle className="text-destructive">
             Retirer la catégorie
           </DrawerTitle>

@@ -2,7 +2,7 @@ import ModalCancelAppointment from "./modal/ModalCancelAppointment";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
-const FutureAppointment = ({
+const ClientAppointment = ({
   appointment,
   cancelAppointment,
   past = false,
@@ -86,4 +86,4 @@ const FutureAppointment = ({
   );
 };
 
-export default FutureAppointment;
+export default ClientAppointment;

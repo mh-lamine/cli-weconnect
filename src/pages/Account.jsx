@@ -1,5 +1,5 @@
 import EditableInput from "@/components/EditableInput";
-import Appointment from "@/components/Appointment";
+import ClientAppointment from "@/components/ClientAppointment";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAuth from "@/hooks/useAuth";
@@ -8,6 +8,7 @@ import useLogout from "@/hooks/useLogout";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Account = () => {
   const { auth, setAuth } = useAuth();
@@ -28,18 +29,19 @@ const Account = () => {
     }
   }
 
-  useEffect(() => {
-    async function getAppointmentsAsClient() {
-      setApiLoading(true);
-      try {
-        const response = await axiosPrivate.get("/api/appointments/client");
-        setAppointments(response.data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setApiLoading(false);
-      }
+  async function getAppointmentsAsClient() {
+    setApiLoading(true);
+    try {
+      const response = await axiosPrivate.get("/api/appointments/client");
+      setAppointments(response.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setApiLoading(false);
     }
+  }
+  
+  useEffect(() => {
     getAppointmentsAsClient();
   }, []);
 
@@ -104,6 +106,8 @@ const Account = () => {
     setLoading(false);
   };
 
+  const SkeletonList = Array.from({ length: 1 });
+
   return (
     <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
       <Button
@@ -127,7 +131,9 @@ const Account = () => {
           <TabsTrigger value="infos">Mes informations</TabsTrigger>
         </TabsList>
         <TabsContent value="appointments" className="space-y-4">
-          {apiLoading ? null : appointments?.futureAppointments.length ? (
+          {apiLoading ? (
+            SkeletonList.map((_, index) => <AppointmentSkeleton key={index} />)
+          ) : appointments?.futureAppointments.length ? (
             <>
               <p className="text-muted">
                 Vous avez {appointments?.futureAppointments.length} rendez-vous
@@ -136,7 +142,7 @@ const Account = () => {
               {appointments.futureAppointments
                 .sort((a, b) => new Date(a.date) - new Date(b.date))
                 .map((appointment) => (
-                  <Appointment
+                  <ClientAppointment
                     key={appointment.id}
                     appointment={appointment}
                     cancelAppointment={cancelAppointment}
@@ -149,7 +155,7 @@ const Account = () => {
                 appointments.pastAppointments
                   .sort((a, b) => new Date(b.date) - new Date(a.date))
                   .map((appointment) => (
-                    <Appointment
+                    <ClientAppointment
                       key={appointment.id}
                       appointment={appointment}
                       past={true}
@@ -157,7 +163,10 @@ const Account = () => {
                   ))}
             </>
           ) : (
-            <p className="text-muted"> Vous n'avez aucun rendez-vous à venir.</p>
+            <p className="text-muted">
+              {" "}
+              Vous n'avez aucun rendez-vous à venir.
+            </p>
           )}
         </TabsContent>
         <TabsContent value="infos">
@@ -222,3 +231,26 @@ const Account = () => {
 };
 
 export default Account;
+
+const AppointmentSkeleton = () => {
+  const Skel = () => (
+    <div className="flex flex-col gap-4">
+      <Skeleton className="w-1/4 h-6" />
+      <div className="flex gap-4">
+        <Skeleton className="w-[100px] h-2" />
+        <Skeleton className="w-[150px] h-2" />
+      </div>
+      <Skeleton className="w-1/3 h-4" />
+      <Skeleton className="w-1/3 h-4" />
+      <Skeleton className="w-[100px] h-4" />
+      <Skeleton className="w-full h-8" />
+    </div>
+  );
+  return (
+    <>
+      <Skeleton className="w-1/4 h-2 mb-10" />
+      <Skel />
+      <Skel />
+    </>
+  );
+};
