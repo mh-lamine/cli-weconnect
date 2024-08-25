@@ -23,6 +23,7 @@ const Salon = lazy(() => import("./pages/Salon"));
 const SalonInformations = lazy(() => import("./pages/SalonInformations"));
 const SalonAvailabilities = lazy(() => import("./pages/SalonAvailabilities"));
 const SalonServices = lazy(() => import("./pages/SalonServices"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 export default function App() {
   const { setAuth } = useAuth();
@@ -108,6 +109,9 @@ export default function App() {
           </Route>
         </Route>
       </Route>
+
+      {/* admin routes */}
+      <Route path="admin" element={<Admin />} />
 
       {/* error routes */}
       <Route path="*" element={<ErrorPage />} />
