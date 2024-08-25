@@ -1,7 +1,7 @@
 import { getProvidersByFilters } from "@/actions/providerActions";
 import Error from "@/components/Error";
 import ProviderCard from "@/components/ProviderCard";
-import {  Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import homeBg from "/home-bg.jpg";
 import { Input } from "@/components/ui/input";
@@ -67,14 +67,11 @@ export default function HomePage() {
           Recherchez un salon, une adresse ou type de prestation.
         </p>
       </header>
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-screen-lg mx-auto  p-4">
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-screen-lg mx-auto p-4">
         {loading
           ? SkeletonList.map((_, index) => <SkeletonProviderCard key={index} />)
           : providersToDisplay.map((provider, index) => (
-              <li
-                key={index}
-                className="rounded-xl bg-dark/5 shadow  overflow-hidden"
-              >
+              <li key={index}>
                 <ProviderCard provider={provider} />
               </li>
             ))}
@@ -85,14 +82,13 @@ export default function HomePage() {
 
 const SkeletonProviderCard = () => (
   <div>
-    <Skeleton className="h-[250px] rounded-xl bg-primary/10 flex flex-col justify-end p-4">
-      <Skeleton className="h-4 w-1/2 mt-2" />
-      <Skeleton className="h-4 w-1/2 mt-2" />
-      <div className="flex gap-4 mt-2">
-        <Skeleton className="w-12 aspect-video" />
-        <Skeleton className="w-12 aspect-video" />
-        <Skeleton className="w-12 aspect-video" />
+    <Skeleton className="w-full aspect-video rounded-xl mb-2" />
+    <div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
       </div>
-    </Skeleton>
+    </div>
   </div>
 );

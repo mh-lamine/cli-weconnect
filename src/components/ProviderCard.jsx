@@ -1,22 +1,32 @@
 import { Link } from "react-router-dom";
-import Tag from "./Tag";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { getInitials } from "@/utils/formatting";
+import logo from "/weconnect_tinified.png";
 
 export default function ProviderCard({ provider }) {
   return (
-    <Link to={`provider/${provider.id}`}>
-      {/* <img src="" alt="photo du salon" /> */}
-      <div className="bg-muted grid place-items-center h-40 text-light text-xs">
-        no photo
-      </div>
-      <div className="p-2 flex flex-col justify-around">
-        <div>
-          <h1>{provider.providerName}</h1>
-          <p className="text-sm flex-wrap">{provider.address}</p>
-          <div className="flex whitespace-nowrap overflow-x-auto no-scrollbar items-center gap-1 py-2">
-            {provider.providerCategories.map((category, index) => (
-              <Tag key={index} name={category.name} />
-            ))}
-          </div>
+    <Link to={`provider/${provider.id}`} className="space-y-2">
+      {provider.coverImage ? (
+        <img
+          src={provider.coverImage}
+          alt="photo du salon"
+          className=" rounded-xl w-full aspect-video"
+        />
+      ) : (
+        <div className="w-full aspect-video bg-muted grid place-items-center text-light text-xl rounded-xl">
+          <img src={logo} alt="weconnect logo" className="w-1/6" />
+        </div>
+      )}
+      <div className="flex items-center space-x-4">
+        <Avatar className="w-12 h-12">
+          <AvatarImage src="" />
+          <AvatarFallback className="text-lg">
+            {provider.providerName && getInitials(provider.providerName)}
+          </AvatarFallback>
+        </Avatar>
+        <div className="ml-4">
+          <h1 className="text-lg font-medium">{provider.providerName}</h1>
+          <p className="text-sm">{provider.address}</p>
         </div>
       </div>
     </Link>
