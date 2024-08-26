@@ -161,7 +161,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
             <Input id="name" name="name" type="text" onChange={handleChange} />
           </div>
           <div>
-            <Label htmlFor="price">Prix</Label>
+            <Label htmlFor="price">Prix (en €)</Label>
             <Input
               id="price"
               name="price"
@@ -170,11 +170,20 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
             />
           </div>
           <div>
-            <Label htmlFor="duration">Durée</Label>
+            <Label htmlFor="duration">Durée (en minutes)</Label>
             <Input
               id="duration"
               name="duration"
               type="number"
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              name="description"
+              className="resize-none"
               onChange={handleChange}
             />
           </div>

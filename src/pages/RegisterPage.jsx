@@ -12,7 +12,9 @@ const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
 export default function RegisterPage() {
   const { setAuth } = useAuth();
-  const [credentials, setCredentials] = useState({
+  const [userInfos, setUserInfos] = useState({
+    lastName: "",
+    firstName: "",
     phoneNumber: "",
     password: "",
   });
@@ -24,18 +26,23 @@ export default function RegisterPage() {
   const from = location.state?.from?.pathname || { pathname: "/" };
 
   const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    setUserInfos({ ...userInfos, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    if (!PHONE_NUMBER_REGEX.test(credentials.phoneNumber)) {
+    if (!userInfos.lastName || !userInfos.firstName) {
+      setError("Veuillez renseigner votre nom et prénom");
+      setLoading(false);
+      return;
+    }
+    if (!PHONE_NUMBER_REGEX.test(userInfos.phoneNumber)) {
       setError("Le numéro de téléphone n'est pas valide");
       setLoading(false);
       return;
     }
-    if (!PASSWORD_REGEX.test(credentials.password)) {
+    if (!PASSWORD_REGEX.test(userInfos.password)) {
       setError(
         "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre"
       );
@@ -43,10 +50,7 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const { accessToken, isProvider } = await handleRegister(
-        credentials,
-        "register"
-      );
+      const { accessToken, isProvider } = await handleRegister(userInfos);
       setAuth({ accessToken, isProvider });
       navigate(from, { replace: true });
     } catch (error) {
@@ -62,10 +66,21 @@ export default function RegisterPage() {
   return (
     <div className="text-center flex flex-col gap-4 w-4/5 max-w-[500px]">
       <h1 className="text-3xl font-semibold">Créer un compte</h1>
-      <p>
-        Entrez votre numéro de téléphone et créez un mot de passe pour démarrer
-      </p>
       <form className="space-y-2 py-2">
+        <Input
+          name="lastName"
+          type="text"
+          placeholder="Nom"
+          onChange={handleChange}
+          onClick={() => setError("")}
+        />
+        <Input
+          name="firstName"
+          type="text"
+          placeholder="Prénom"
+          onChange={handleChange}
+          onClick={() => setError("")}
+        />
         <Input
           name="phoneNumber"
           type="tel"
