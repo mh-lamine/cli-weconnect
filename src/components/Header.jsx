@@ -6,7 +6,7 @@ export default function Header() {
   const { auth } = useAuth();
 
   return (
-    <div className="drawer">
+    <div className="drawer sticky top-0 z-20">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col ">
         {/* Navbar */}
@@ -65,7 +65,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <div className="drawer-side z-20">
+      <div className="drawer-side z-30">
         <label
           htmlFor="my-drawer-3"
           aria-label="close sidebar"

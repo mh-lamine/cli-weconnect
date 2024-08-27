@@ -2,8 +2,9 @@ import ProviderAppointment from "@/components/ProviderAppointment";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { Settings } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [appointments, setAppointments] = useState();
@@ -67,10 +68,15 @@ export default function Dashboard() {
         <TabsContent value="incoming">
           <h1 className="text-3xl font-semibold">Mes demandes en attente</h1>
         </TabsContent>
-        <TabsList>
-          <TabsTrigger value="today">Aujourd'hui</TabsTrigger>
-          <TabsTrigger value="incoming">À venir</TabsTrigger>
-        </TabsList>
+        <div className="flex items-center gap-4">
+          <TabsList>
+            <TabsTrigger value="today">Aujourd'hui</TabsTrigger>
+            <TabsTrigger value="incoming">À venir</TabsTrigger>
+          </TabsList>
+          <Link to="/salon">
+            <Settings size={24} className="text-primary" />
+          </Link>
+        </div>
         <TabsContent value="today" className="space-y-4">
           {appointments?.todaysAppointments.length ? (
             <>
