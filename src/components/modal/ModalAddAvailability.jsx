@@ -46,11 +46,11 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
     setLoading(true);
     try {
       await createAvailability({ dayOfWeek, ...availability });
+      setOpen(false);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setLoading(false);
-    setOpen(false);
   };
 
   useEffect(() => {

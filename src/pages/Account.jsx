@@ -10,12 +10,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const PHONE_NUMBER_REGEX =
+  /^(?:(?:\+|00)33\s?[1-9](?:[\s.-]?\d{2}){4}|0[1-9](?:[\s.-]?\d{2}){4})$/;
+
 const Account = () => {
   const { auth, setAuth } = useAuth();
   const [appointments, setAppointments] = useState();
   const [userInfos, setUserInfos] = useState();
   const [loading, setLoading] = useState(false);
   const [apiLoading, setApiLoading] = useState(false);
+  const [error, setError] = useState("");
   const logout = useLogout();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
@@ -40,7 +44,7 @@ const Account = () => {
       setApiLoading(false);
     }
   }
-  
+
   useEffect(() => {
     getAppointmentsAsClient();
   }, []);
@@ -78,6 +82,15 @@ const Account = () => {
       return;
     }
 
+    for (const info in userInfos) {
+      // console.log(typeof userInfos[info]);
+      if (userInfos[info] === "") {
+        setError("Veuillez renseigner tous les champs");
+        setLoading(false);
+        return;
+      }
+    }
+
     if (
       userInfos.phoneNumber &&
       !PHONE_NUMBER_REGEX.test(userInfos.phoneNumber)
@@ -86,11 +99,11 @@ const Account = () => {
       setLoading(false);
       return;
     }
-    if (userInfos.email && !EMAIL_REGEX.test(userInfos.email)) {
-      setError("L'adresse email n'est pas valide");
-      setLoading(false);
-      return;
-    }
+    // if (userInfos.email && !EMAIL_REGEX.test(userInfos.email)) {
+    //   setError("L'adresse email n'est pas valide");
+    //   setLoading(false);
+    //   return;
+    // }
 
     try {
       await axiosPrivate.patch("/api/users", userInfos);
@@ -193,14 +206,17 @@ const Account = () => {
                 defaultValue={auth.phoneNumber}
                 handleChange={handleChange}
               />
-              <EditableInput
+              {/* <EditableInput
                 id="email"
                 label="Email"
                 type="email"
                 defaultValue={auth.email}
                 handleChange={handleChange}
-              />
+              /> */}
             </div>
+            {error && setTimeout(() => setError(null), 3000) && (
+              <p className="text-destructive text-sm">{error}</p>
+            )}
             {userInfos && (
               <>
                 <Button onClick={handleSubmit} disabled={loading && true}>
@@ -218,7 +234,6 @@ const Account = () => {
           </form>
         </TabsContent>
       </Tabs>
-
       <Button
         variant="destructive"
         onClick={handleLogout}

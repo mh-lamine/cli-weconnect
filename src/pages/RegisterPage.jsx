@@ -68,16 +68,16 @@ export default function RegisterPage() {
       <h1 className="text-3xl font-semibold">Créer un compte</h1>
       <form className="space-y-2 py-2">
         <Input
-          name="lastName"
+          name="firstName"
           type="text"
-          placeholder="Nom"
+          placeholder="Prénom"
           onChange={handleChange}
           onClick={() => setError("")}
         />
         <Input
-          name="firstName"
+          name="lastName"
           type="text"
-          placeholder="Prénom"
+          placeholder="Nom"
           onChange={handleChange}
           onClick={() => setError("")}
         />

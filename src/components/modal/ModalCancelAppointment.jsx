@@ -36,11 +36,11 @@ const ModalCancelAppointment = ({ id, cancelAppointment }) => {
     setLoading(true);
     try {
       await cancelAppointment(id);
+      setOpen(false);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setLoading(false);
-    setOpen(false);
   };
 
   if (isDesktop) {

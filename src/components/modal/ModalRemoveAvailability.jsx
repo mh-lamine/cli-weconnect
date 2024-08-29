@@ -36,11 +36,11 @@ const ModalRemoveAvailability = ({ id, removeAvailability }) => {
     setLoading(true);
     try {
       await removeAvailability(id);
+      setOpen(false);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setLoading(false);
-    setOpen(false);
   };
 
   if (isDesktop) {

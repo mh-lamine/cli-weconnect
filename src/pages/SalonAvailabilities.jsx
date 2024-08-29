@@ -1,4 +1,3 @@
-import Error from "@/components/Error";
 import ModalAddAvailability from "@/components/modal/ModalAddAvailability";
 import ModalRemoveAvailability from "@/components/modal/ModalRemoveAvailability";
 import { Button } from "@/components/ui/button";
@@ -76,10 +75,6 @@ const SalonAvailabilities = () => {
     return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
   }
 
-  if (error) {
-    return <Error />;
-  }
-
   return (
     <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col space-y-4">
       <Button
@@ -95,7 +90,7 @@ const SalonAvailabilities = () => {
           <DailyAvailability
             dayFR={dayFR}
             dayEN={dayEN}
-            availabilities={availabilities[dayEN]}
+            availabilities={availabilities && availabilities[dayEN]}
             createAvailability={createAvailability}
             removeAvailability={removeAvailability}
           />

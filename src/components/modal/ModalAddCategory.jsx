@@ -48,11 +48,11 @@ const ModalAddCategory = ({ createCategory }) => {
     setLoading(true);
     try {
       await createCategory(category);
+      setOpen(false);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setLoading(false);
-    setOpen(false);
   };
 
   useEffect(() => {

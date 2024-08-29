@@ -36,11 +36,11 @@ const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
     setLoading(true);
     try {
       await disableService(id, providerCategoryId);
+      setOpen(false);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setLoading(false);
-    setOpen(false);
   };
 
   if (isDesktop) {

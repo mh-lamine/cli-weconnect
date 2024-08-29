@@ -59,11 +59,11 @@ const ModalUpdateService = ({ prevService, updateService }) => {
 
     try {
       await updateService(prevService.id, service);
+      setOpen(false);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setLoading(false);
-    setOpen(false);
   };
 
   useEffect(() => {

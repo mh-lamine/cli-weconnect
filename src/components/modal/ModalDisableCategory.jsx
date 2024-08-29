@@ -36,11 +36,11 @@ const ModalDisableCategory = ({ id, disableCategory }) => {
     setLoading(true);
     try {
       await disableCategory(id);
+      setOpen(false);
     } catch (error) {
       setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setLoading(false);
-    setOpen(false);
   };
 
   if (isDesktop) {
