@@ -1,9 +1,9 @@
+import ModalAction from "@/components/modal/ModalAction";
 import ModalAddAvailability from "@/components/modal/ModalAddAvailability";
-import ModalRemoveAvailability from "@/components/modal/ModalRemoveAvailability";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { Loader2 } from "lucide-react";
+import { Loader2, MinusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -137,9 +137,14 @@ const DailyAvailability = ({
                   defaultValue={end}
                   className="!opacity-100"
                 />
-                <ModalRemoveAvailability
+                <ModalAction
                   id={id}
-                  removeAvailability={removeAvailability}
+                  action={removeAvailability}
+                  actionLabel="Supprimer"
+                  buttonVariant="ghost"
+                  title="Supprimer un créneau"
+                  description="Êtes-vous sûr de vouloir supprimer ce créneau de disponibilité ?"
+                  trigger={<MinusCircle className="text-destructive" />}
                 />
               </div>
             );

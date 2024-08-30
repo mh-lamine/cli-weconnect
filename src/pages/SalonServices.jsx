@@ -1,6 +1,6 @@
+import ModalAction from "@/components/modal/ModalAction";
 import ModalAddCategory from "@/components/modal/ModalAddCategory";
 import ModalAddService from "@/components/modal/ModalAddService";
-import ModalDisableCategory from "@/components/modal/ModalDisableCategory";
 import ModalDisableService from "@/components/modal/ModalDisableService";
 import ModalUpdateService from "@/components/modal/ModalUpdateService";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { EllipsisVertical, Loader2 } from "lucide-react";
+import { EllipsisVertical, EyeOffIcon, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -135,15 +135,19 @@ const SalonServices = () => {
             <div key={category.id} className="space-y-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-medium">{category.name}</h2>
-                <div>
+                <div className="space-x-2">
                   <ModalAddService
                     providerCategoryId={category.id}
                     createService={createService}
                   />
-                  <ModalDisableCategory
+                  <ModalAction
                     id={category.id}
-                    name={category.name}
-                    disableCategory={disableCategory}
+                    action={disableCategory}
+                    actionLabel="Retirer"
+                    buttonVariant="destructive"
+                    title="Retirer la catégorie"
+                    description="Toutes les prestations associées seront retirées."
+                    trigger={<EyeOffIcon />}
                   />
                 </div>
               </div>

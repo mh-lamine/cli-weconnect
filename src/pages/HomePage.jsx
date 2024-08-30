@@ -3,7 +3,7 @@ import Error from "@/components/Error";
 import ProviderCard from "@/components/ProviderCard";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import homeBg from "/home-bg.jpg";
+import homeBg from "/home-bg.webp";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -47,7 +47,15 @@ export default function HomePage() {
 
   return (
     <main className="w-full flex flex-1 flex-col">
-      <header className="flex flex-col h-1/3">
+      <header className="relative flex flex-col h-1/3">
+        <h1
+          style={{
+            fontFamily: "Source Serif Pro, serif",
+          }}
+          className="absolute inset-0 text-center font-semibold p-4 text-light top-[40%] text-[6vw]"
+        >
+          L'élégance à portée de main
+        </h1>
         <img
           src={homeBg}
           alt="hair salon"

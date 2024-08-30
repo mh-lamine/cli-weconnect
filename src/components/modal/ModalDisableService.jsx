@@ -21,7 +21,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useState } from "react";
-import { Loader2, MinusCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
   const [open, setOpen] = useState(false);

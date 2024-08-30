@@ -1,6 +1,6 @@
-import ModalCancelAppointment from "./modal/ModalCancelAppointment";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import ModalAction from "./modal/ModalAction";
 
 const ClientAppointment = ({
   appointment,
@@ -60,26 +60,33 @@ const ClientAppointment = ({
         </span>
       </h3>
       {appointment.status === "PENDING" && (
-        <Badge
-          variant="outline"
-          className={past && "bg-muted"}
-        >
+        <Badge variant="outline" className={past && "bg-muted"}>
           En attente de confirmation
         </Badge>
       )}
       {appointment.status === "ACCEPTED" && (
-        <Badge variant="success" className={past && "bg-muted"}>Confirmé</Badge>
+        <Badge variant="success" className={past && "bg-muted"}>
+          Confirmé
+        </Badge>
       )}
       {appointment.status === "COMPLETED" && (
-        <Badge variant="success" className={past && "bg-muted"}>Passé</Badge>
+        <Badge variant="success" className={past && "bg-muted"}>
+          Passé
+        </Badge>
       )}
       {appointment.status === "CANCELLED" && (
-        <Badge variant="destructive" className={past && "bg-muted"}>Annulé</Badge>
+        <Badge variant="destructive" className={past && "bg-muted"}>
+          Annulé
+        </Badge>
       )}
       {!past && (
-        <ModalCancelAppointment
+        <ModalAction
           id={appointment.id}
-          cancelAppointment={cancelAppointment}
+          action={cancelAppointment}
+          actionLabel="Annuler"
+          title="Annuler le rendez-vous"
+          description="Êtes-vous sûr de vouloir annuler ce rendez-vous ?"
+          trigger="Annuler"
         />
       )}
     </div>
