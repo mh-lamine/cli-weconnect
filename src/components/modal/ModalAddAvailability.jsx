@@ -43,12 +43,17 @@ const ModalAddAvailability = ({ dayOfWeek, createAvailability }) => {
       return;
     }
 
+    if (availability.startTime >= availability.endTime) {
+      setError("L'heure de début doit être avant l'heure de début.");
+      return;
+    }
+
     setLoading(true);
     try {
       await createAvailability({ dayOfWeek, ...availability });
       setOpen(false);
     } catch (error) {
-      setError("Une erreur est survenue, veuillez réessayer plus tard.");
+      setError("Une disponibilité se chevauche déjà avec cet intervalle.");
     }
     setLoading(false);
   };

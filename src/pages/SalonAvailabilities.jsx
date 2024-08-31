@@ -37,7 +37,6 @@ const SalonAvailabilities = () => {
   async function getAvailabilities() {
     try {
       const response = await axiosPrivate.get("/api/availabilities");
-      console.log(response.data);
       setAvailabilities(formatAvailabilities(response.data.availabilities));
       setSpecialAvailabilities(response.data.specialAvailabilities);
     } catch (error) {
@@ -50,12 +49,15 @@ const SalonAvailabilities = () => {
   }
 
   async function createAvailability(availability) {
-    await axiosPrivate.post("/api/availabilities", availability);
-    getAvailabilities();
+      await axiosPrivate.post("/api/availabilities", availability);
+      getAvailabilities();
   }
 
   async function createSpecialAvailability(availability) {
-    await axiosPrivate.post("/api/availabilities/special", availability);
+    const res = await axiosPrivate.post(
+      "/api/availabilities/special",
+      availability
+    );
     getAvailabilities();
   }
 
@@ -136,9 +138,9 @@ const SalonAvailabilities = () => {
             specialAvailabilities.map(({ id, date, startTime, endTime }) => (
               <div
                 key={id}
-                className="flex flex-col sm:flex-row sm:items-center gap-2 pb-4"
+                className="flex flex-col sm:flex-row sm:items-center gap-4"
               >
-                <span className="flex-1">
+                <span className="flex-1 text-2xl font-medium">
                   {DateTime.fromISO(date).toFormat("DDDD")}
                 </span>
                 <div className="flex flex-1 gap-2">

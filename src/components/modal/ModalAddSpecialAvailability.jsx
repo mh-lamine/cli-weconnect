@@ -29,7 +29,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { DateTime } from "luxon";
 
-const ModalAddSpecialAvailability = ({createSpecialAvailability}) => {
+const ModalAddSpecialAvailability = ({ createSpecialAvailability }) => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
   const [availability, setAvailability] = useState();
@@ -44,14 +44,15 @@ const ModalAddSpecialAvailability = ({createSpecialAvailability}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      !date ||
-      !availability?.startTime ||
-      !availability?.endTime
-    ) {
+    if (!date || !availability?.startTime || !availability?.endTime) {
       setError(
         "Veuillez renseigner une date, une heure de début et une heure de fin."
       );
+      return;
+    }
+
+    if (availability.startTime >= availability.endTime) {
+      setError("L'heure de début doit être avant l'heure de début.");
       return;
     }
 
@@ -63,9 +64,10 @@ const ModalAddSpecialAvailability = ({createSpecialAvailability}) => {
       });
       setOpen(false);
     } catch (error) {
-      setError("Une erreur est survenue, veuillez réessayer plus tard.");
+      setError("Une disponibilité se chevauche déjà avec cet intervalle.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -150,7 +152,9 @@ const ModalAddSpecialAvailability = ({createSpecialAvailability}) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="link">Ajouter une disponibilité</Button>
+        <Button variant="link" className="h-min p-0">
+          Ajouter une disponibilité
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
@@ -161,25 +165,27 @@ const ModalAddSpecialAvailability = ({createSpecialAvailability}) => {
           </DrawerDescription>
         </DrawerHeader>
         <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-full">
-              {date ? (
-                <span>{formatDate(date)}</span>
-              ) : (
-                <span>Choisir une date</span>
-              )}
-              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-              locale={fr}
-            />
-          </PopoverContent>
+          <div className="px-4 pb-2">
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-full">
+                {date ? (
+                  <span>{formatDate(date)}</span>
+                ) : (
+                  <span>Choisir une date</span>
+                )}
+                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                initialFocus
+                locale={fr}
+              />
+            </PopoverContent>
+          </div>
         </Popover>
         <div className="flex items-center justify-center gap-4 px-4">
           De

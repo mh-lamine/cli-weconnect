@@ -67,6 +67,10 @@ export default function ModalBooking({ service, availabilities }) {
   };
 
   async function handleCreateAppointment() {
+    if (!timeSlotSelected.date || !timeSlotSelected.startTime) {
+      setError("Veuillez choisir un créneau.");
+      return;
+    }
     const appointmentDate = `${DateTime.fromJSDate(
       timeSlotSelected.date
     ).toISODate()}T${timeSlotSelected.startTime}`;
@@ -88,29 +92,20 @@ export default function ModalBooking({ service, availabilities }) {
         }.`,
         variant: "success",
       });
+      setOpen(false);
     } catch (error) {
       if (error.response?.status === 401) {
-        toast({
-          title: "Erreur de réservation",
-          description:
-            "Vous devez être connecté pour réservder un rendez-vous.",
-          variant: "destructive",
-        });
+        setError("Vous devez être connecté pour réserver un rendez-vous.");
         return;
       }
-      toast({
-        title: "Erreur de réservation",
-        description:
-          error.message ||
-          "Une erreur est survenue lors de la création de votre rendez-vous. Veuillez réessayer plus tard.",
-        variant: "destructive",
-      });
+      setError("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setDate(null);
     setTimeSlotSelected({ date: null, startTime: "" });
   }
 
   useEffect(() => {
+    setTimeSlotSelected({ date: null, startTime: "" });
     if (!date) return;
     async function fetchAvailableTimeSlots() {
       setLoadingTimeSlots(true);
@@ -133,7 +128,7 @@ export default function ModalBooking({ service, availabilities }) {
     fetchAvailableTimeSlots();
   }, [date]);
 
-  const SkeletonList = Array.from({ length: 10 });
+  const SkeletonList = Array.from({ length: 8 });
 
   if (isDesktop) {
     return (
@@ -202,15 +197,23 @@ export default function ModalBooking({ service, availabilities }) {
               <p> Aucune disponibilité pour ce jour.</p>
             )}
           </Popover>
+          {error && setTimeout(() => setError(null), 3000) && (
+            <p className="text-destructive text-sm">{error}</p>
+          )}
           <DialogFooter className="sm:justify-start">
-            <DialogClose asChild>
-              <div className="w-full flex items-center justify-between">
-                <Button variant="outline">Annuler</Button>
-                {timeSlotSelected.date && timeSlotSelected.startTime && (
-                  <Button onClick={handleCreateAppointment}>Réserver</Button>
-                )}
-              </div>
-            </DialogClose>
+            <div className="w-full flex items-center justify-between">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setOpen(false);
+                  setDate(null);
+                  setTimeSlotSelected({ date: null, startTime: "" });
+                }}
+              >
+                Annuler
+              </Button>
+              <Button onClick={handleCreateAppointment}>Réserver</Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -239,7 +242,7 @@ export default function ModalBooking({ service, availabilities }) {
                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0">
               <Calendar
                 mode="single"
                 selected={date}
@@ -285,19 +288,26 @@ export default function ModalBooking({ service, availabilities }) {
             )}
           </div>
         </Popover>
+        {error && setTimeout(() => setError(null), 3000) && (
+          <p className="text-destructive text-sm p-4">{error}</p>
+        )}
         <DrawerFooter className="pt-2">
-          <DrawerClose asChild>
-            <div className="space-y-2">
-              {timeSlotSelected.date && timeSlotSelected.startTime && (
-                <Button onClick={handleCreateAppointment} className="w-full">
-                  Réserver
-                </Button>
-              )}
-              <Button className="w-full" variant="outline">
-                Annuler
-              </Button>
-            </div>
-          </DrawerClose>
+          <div className="space-y-2">
+            <Button onClick={handleCreateAppointment} className="w-full">
+              Réserver
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => {
+                setOpen(false);
+                setDate(null);
+                setTimeSlotSelected({ date: null, startTime: "" });
+              }}
+            >
+              Annuler
+            </Button>
+          </div>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

@@ -62,7 +62,7 @@ export default function HomePage() {
           className="aspect-video max-h-[50vh] w-full object-cover"
         />
 
-        <div className="flex items-center gap-2 -mt-6 w-2/3 mx-auto h-12 px-4 shadow-sm rounded-md bg-white">
+        <div className="z-10 flex items-center gap-2 -mt-6 w-2/3 mx-auto h-12 px-4 shadow-sm rounded-md bg-white">
           <Search />
           <Input
             type="text"
