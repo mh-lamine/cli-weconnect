@@ -4,7 +4,7 @@ import logo from "/weconnect-no-bg.svg";
 export default function Footer() {
   return (
     <>
-      <footer className="footer bg-dark text-light p-10 flex justify-around">
+      <footer className="footer mt-20 bg-dark text-light p-10 flex justify-around">
         <nav>
           <h6 className="footer-title text-lg opacity-100">Prestations</h6>
           <Link className="link link-hover text-muted">Barber</Link>
