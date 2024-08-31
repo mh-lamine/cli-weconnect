@@ -1,9 +1,12 @@
 import ModalAction from "@/components/modal/ModalAction";
 import ModalAddAvailability from "@/components/modal/ModalAddAvailability";
+import ModalAddSpecialAvailability from "@/components/modal/ModalAddSpecialAvailability";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Loader2, MinusCircle } from "lucide-react";
+import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -19,6 +22,7 @@ const SalonAvailabilities = () => {
   };
 
   const [availabilities, setAvailabilities] = useState();
+  const [specialAvailabilities, setSpecialAvailabilities] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +37,9 @@ const SalonAvailabilities = () => {
   async function getAvailabilities() {
     try {
       const response = await axiosPrivate.get("/api/availabilities");
-      setAvailabilities(formatAvailabilities(response.data));
+      console.log(response.data);
+      setAvailabilities(formatAvailabilities(response.data.availabilities));
+      setSpecialAvailabilities(response.data.specialAvailabilities);
     } catch (error) {
       setError(error);
       if (error.response?.status === 401) {
@@ -48,8 +54,18 @@ const SalonAvailabilities = () => {
     getAvailabilities();
   }
 
+  async function createSpecialAvailability(availability) {
+    await axiosPrivate.post("/api/availabilities/special", availability);
+    getAvailabilities();
+  }
+
   async function removeAvailability(id) {
     await axiosPrivate.delete(`/api/availabilities/${id}`);
+    getAvailabilities();
+  }
+
+  async function removeSpecialAvailability(id) {
+    await axiosPrivate.delete(`/api/availabilities/special/${id}`);
     getAvailabilities();
   }
 
@@ -85,20 +101,79 @@ const SalonAvailabilities = () => {
         Retour
       </Button>
       <h1 className="text-3xl font-semibold">Mes disponibilités</h1>
-      {Object.entries(daysOfWeek).map(([dayFR, dayEN], i) => (
-        <div key={i}>
-          <DailyAvailability
-            dayFR={dayFR}
-            dayEN={dayEN}
-            availabilities={availabilities && availabilities[dayEN]}
-            createAvailability={createAvailability}
-            removeAvailability={removeAvailability}
+      <Tabs defaultValue="weekly" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="weekly">Par semaine</TabsTrigger>
+          <TabsTrigger value="daily">Par jour</TabsTrigger>
+        </TabsList>
+        <TabsContent value="weekly">
+          <p className="text-muted pb-4">
+            Gérez vos horaires de travail hebdomadaires.
+          </p>
+          {Object.entries(daysOfWeek).map(([dayFR, dayEN], i) => (
+            <div key={i}>
+              <DailyAvailability
+                dayFR={dayFR}
+                dayEN={dayEN}
+                availabilities={availabilities && availabilities[dayEN]}
+                createAvailability={createAvailability}
+                removeAvailability={removeAvailability}
+              />
+              {i !== Object.entries(daysOfWeek).length - 1 && (
+                <div className="divider w-1/2 mx-auto" />
+              )}
+            </div>
+          ))}
+        </TabsContent>
+        <TabsContent value="daily">
+          <p className="text-muted pb-4">
+            Définissez des horaires spéciales pour des jours précis.
+          </p>
+          <ModalAddSpecialAvailability
+            createSpecialAvailability={createSpecialAvailability}
           />
-          {i !== Object.entries(daysOfWeek).length - 1 && (
-            <div className="divider w-1/2 mx-auto" />
+          {specialAvailabilities?.length ? (
+            specialAvailabilities.map(({ id, date, startTime, endTime }) => (
+              <div
+                key={id}
+                className="flex flex-col sm:flex-row sm:items-center gap-2 pb-4"
+              >
+                <span className="flex-1">
+                  {DateTime.fromISO(date).toFormat("DDDD")}
+                </span>
+                <div className="flex flex-1 gap-2">
+                  <div className="flex items-center justify-center">
+                    <Input
+                      disabled
+                      type="time"
+                      defaultValue={startTime}
+                      className="!opacity-100 w-min"
+                    />
+                    <div className="divider divider-horizontal m-0"></div>
+                    <Input
+                      disabled
+                      type="time"
+                      defaultValue={endTime}
+                      className="!opacity-100 w-min"
+                    />
+                  </div>
+                  <ModalAction
+                    id={id}
+                    action={removeSpecialAvailability}
+                    actionLabel="Supprimer"
+                    buttonVariant="ghost"
+                    title="Supprimer une disponibilité spéciale"
+                    description="Êtes-vous sûr de vouloir supprimer cette disponibilité spéciale ?"
+                    trigger={<MinusCircle className="text-destructive" />}
+                  />
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-muted">Aucune disponibilité spéciale</p>
           )}
-        </div>
-      ))}
+        </TabsContent>
+      </Tabs>
     </main>
   );
 };
@@ -128,14 +203,14 @@ const DailyAvailability = ({
                   disabled
                   type="time"
                   defaultValue={start}
-                  className="!opacity-100"
+                  className="!opacity-100 w-min"
                 />
                 <div className="divider divider-horizontal m-0"></div>
                 <Input
                   disabled
                   type="time"
                   defaultValue={end}
-                  className="!opacity-100"
+                  className="!opacity-100 w-min"
                 />
                 <ModalAction
                   id={id}
