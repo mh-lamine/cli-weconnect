@@ -1,7 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Outlet } from "react-router-dom";
-import { Toaster } from "@/components/ui/toaster";
 
 export default function ClientLayout() {
   return (
@@ -9,7 +8,6 @@ export default function ClientLayout() {
       <Header />
       <Outlet />
       <Footer />
-      <Toaster />
     </div>
   );
 }

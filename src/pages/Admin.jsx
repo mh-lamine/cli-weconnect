@@ -12,7 +12,6 @@ const Admin = () => {
 
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
-console.log(data)
   const handleChange = (e) => {
     setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };

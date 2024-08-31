@@ -16,7 +16,7 @@ import RegisterPage from "./pages/RegisterPage";
 import Account from "./pages/Account";
 import ProviderPage from "./pages/ProviderPage";
 import ErrorPage from "./pages/ErrorPage";
-import { Loader2 } from "lucide-react";
+import logo from "/weconnect-no-bg.svg";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Salon = lazy(() => import("./pages/Salon"));
@@ -44,7 +44,9 @@ export default function App() {
   }, []);
 
   if (loading) {
-    return <PageLoader />;
+    return (
+        <PageLoader />
+    );
   }
 
   return (
@@ -121,6 +123,6 @@ export default function App() {
 
 const PageLoader = () => (
   <div className="w-screen h-screen grid place-items-center bg-light">
-    <Loader2 className="w-8 h-8 animate-spin" />
+    <img src={logo} alt="Logo" className="w-20 h-20 animate-spin" />
   </div>
 );

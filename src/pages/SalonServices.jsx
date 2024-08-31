@@ -78,7 +78,6 @@ const SalonServices = () => {
   }
 
   async function updateService(id, service) {
-    console.log(service);
     try {
       await axiosPrivate.put(`/api/providerService/${id}`, service);
       getCategories();

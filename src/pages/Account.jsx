@@ -83,7 +83,6 @@ const Account = () => {
     }
 
     for (const info in userInfos) {
-      // console.log(typeof userInfos[info]);
       if (userInfos[info] === "") {
         setError("Veuillez renseigner tous les champs");
         setLoading(false);
