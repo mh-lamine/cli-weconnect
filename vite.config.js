@@ -15,7 +15,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../2server/dist",
+    outDir: "../wserv/dist",
     emptyOutDir: true,
   },
 });
