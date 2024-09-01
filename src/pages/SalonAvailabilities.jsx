@@ -163,10 +163,11 @@ const SalonAvailabilities = () => {
                     id={id}
                     action={removeSpecialAvailability}
                     actionLabel="Supprimer"
-                    buttonVariant="ghost"
+                    variant="destructive" 
                     title="Supprimer une disponibilité spéciale"
                     description="Êtes-vous sûr de vouloir supprimer cette disponibilité spéciale ?"
                     trigger={<MinusCircle className="text-destructive" />}
+                    triggerVariant="ghost"
                   />
                 </div>
               </div>
@@ -218,10 +219,11 @@ const DailyAvailability = ({
                   id={id}
                   action={removeAvailability}
                   actionLabel="Supprimer"
-                  buttonVariant="ghost"
+                  variant="destructive"
                   title="Supprimer un créneau"
                   description="Êtes-vous sûr de vouloir supprimer ce créneau de disponibilité ?"
                   trigger={<MinusCircle className="text-destructive" />}
+                  triggerVariant="ghost"
                 />
               </div>
             );

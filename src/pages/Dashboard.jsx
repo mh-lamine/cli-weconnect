@@ -1,4 +1,10 @@
 import ProviderAppointment from "@/components/ProviderAppointment";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -66,7 +72,7 @@ export default function Dashboard() {
           </h1>
         </TabsContent>
         <TabsContent value="incoming">
-          <h1 className="text-3xl font-semibold">Mes demandes en attente</h1>
+          <h1 className="text-3xl font-semibold">Mes rendez-vous à venir</h1>
         </TabsContent>
         <div className="flex items-center gap-4">
           <TabsList>
@@ -119,22 +125,67 @@ export default function Dashboard() {
         </TabsContent>
         <TabsContent value="incoming">
           {appointments?.futureAppointments.length ? (
-            <>
-              <p className="text-muted">
-                Vous avez {appointments?.futureAppointments.length} demandes en
-                attente
-              </p>
-              {appointments.futureAppointments.map((appointment) => (
-                <ProviderAppointment
-                  key={appointment.id}
-                  appointment={appointment}
-                  acceptAppointment={acceptAppointment}
-                  cancelAppointment={cancelAppointment}
-                />
-              ))}
-            </>
+            <Accordion
+              type="single"
+              collapsible
+              defaultValue={"item-0"}
+              className="w-full"
+            >
+              <AccordionItem value={`item-0`}>
+                <AccordionTrigger>
+                  <p className="text-muted">
+                    Vous avez{" "}
+                    {
+                      appointments.futureAppointments.filter(
+                        (appointment) => appointment.status === "PENDING"
+                      ).length
+                    }{" "}
+                    demande(s) en attente.
+                  </p>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {appointments.futureAppointments
+                    .filter((appointment) => appointment.status === "PENDING")
+                    .sort((a, b) => new Date(a.date) - new Date(b.date))
+                    .map((appointment) => (
+                      <ProviderAppointment
+                        key={appointment.id}
+                        appointment={appointment}
+                        acceptAppointment={acceptAppointment}
+                        cancelAppointment={cancelAppointment}
+                      />
+                    ))}
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value={`item-1`}>
+                <AccordionTrigger>
+                  <p className="text-muted">
+                    Vous avez{" "}
+                    {
+                      appointments.futureAppointments.filter(
+                        (appointment) => appointment.status === "ACCEPTED"
+                      ).length
+                    }{" "}
+                    rendez-vous à venir.
+                  </p>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {appointments.futureAppointments
+                    .filter((appointment) => appointment.status === "ACCEPTED")
+                    .sort((a, b) => new Date(a.date) - new Date(b.date))
+                    .map((appointment) => (
+                      <ProviderAppointment
+                        key={appointment.id}
+                        appointment={appointment}
+                        acceptAppointment={acceptAppointment}
+                        cancelAppointment={cancelAppointment}
+                      />
+                    ))}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           ) : (
-            <p className="text-muted">Vous n'avez aucune demande en attente.</p>
+            <p className="text-muted">Vous n'avez aucun rendez-vous à venir.</p>
           )}
         </TabsContent>
       </Tabs>

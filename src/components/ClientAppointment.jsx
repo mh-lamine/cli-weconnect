@@ -83,10 +83,11 @@ const ClientAppointment = ({
         <ModalAction
           id={appointment.id}
           action={cancelAppointment}
-          actionLabel="Annuler"
-          title="Annuler le rendez-vous"
-          description="Êtes-vous sûr de vouloir annuler ce rendez-vous ?"
-          trigger="Annuler"
+          actionLabel="Supprimer"
+          title="Supprimer le rendez-vous"
+          description="Êtes-vous sûr de vouloir supprimer votre rendez-vous ?"
+          trigger="Supprimer"
+          variant="destructive"
         />
       )}
     </div>

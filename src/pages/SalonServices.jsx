@@ -143,10 +143,11 @@ const SalonServices = () => {
                     id={category.id}
                     action={disableCategory}
                     actionLabel="Retirer"
-                    buttonVariant="destructive"
+                    variant="destructive"
                     title="Retirer la catégorie"
                     description="Toutes les prestations associées seront retirées."
-                    trigger={<EyeOffIcon />}
+                    trigger={<EyeOffIcon className="text-destructive" />}
+                    triggerVariant="ghost"
                   />
                 </div>
               </div>

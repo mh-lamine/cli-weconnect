@@ -34,9 +34,7 @@ export default function Footer() {
       <footer className="footer bg-dark text-light border-light border-t px-10 py-4">
         <aside className="grid-flow-col items-center">
           <img src={logo} alt="logo weconnect" className="w-12 invert" />
-          <p>
-            Copyright © {new Date().getFullYear()} - Tous droits reservés 
-          </p>
+          <p>Copyright © {new Date().getFullYear()} - Tous droits reservés</p>
         </aside>
         <nav className="md:place-self-center md:justify-self-end">
           <div className="grid grid-flow-col gap-4">
@@ -49,10 +47,10 @@ export default function Footer() {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-instagram"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-instagram"
               >
                 <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />

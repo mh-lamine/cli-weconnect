@@ -30,7 +30,8 @@ const ModalAction = ({
   title,
   description,
   trigger,
-  buttonVariant = "outline",
+  variant = "outline",
+  triggerVariant,
 }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,23 +54,21 @@ const ModalAction = ({
   const DesktopContent = () => (
     <>
       <DialogHeader>
-        <DialogTitle className="text-destructive">{title}</DialogTitle>
+        <DialogTitle className={variant == "destructive" && "text-destructive"}>
+          {title}
+        </DialogTitle>
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       {error && <p className="text-destructive text-sm">{error}</p>}
       <DialogFooter className="sm:justify-start">
-        <DialogClose asChild>
-          <div className="w-full flex items-center justify-between">
+        <div className="w-full flex items-center justify-between">
+          <Button onClick={handleAction} variant={variant} disabled={loading}>
+            {loading ? <Loader2 className="animate-spin" /> : actionLabel}
+          </Button>
+          <DialogClose asChild>
             <Button variant="outline">Annuler</Button>
-            <Button
-              onClick={handleAction}
-              variant="destructive"
-              disabled={loading}
-            >
-              {loading ? <Loader2 className="animate-spin" /> : actionLabel}
-            </Button>
-          </div>
-        </DialogClose>
+          </DialogClose>
+        </div>
       </DialogFooter>
     </>
   );
@@ -77,26 +76,28 @@ const ModalAction = ({
   const MobileContent = () => (
     <>
       <DrawerHeader>
-        <DrawerTitle className="text-destructive">{title}</DrawerTitle>
+        <DrawerTitle className={variant == "destructive" && "text-destructive"}>
+          {title}
+        </DrawerTitle>
         <DrawerDescription>{description}</DrawerDescription>
       </DrawerHeader>
       {error && <p className="text-destructive text-sm">{error}</p>}
       <DrawerFooter className="pt-2">
-        <DrawerClose asChild>
-          <div className="space-y-2">
-            <Button
-              className="w-full"
-              onClick={handleAction}
-              variant="destructive"
-              disabled={loading}
-            >
-              {loading ? <Loader2 className="animate-spin" /> : actionLabel}
-            </Button>
+        <div className="space-y-2">
+          <Button
+            className="w-full"
+            onClick={handleAction}
+            variant={variant}
+            disabled={loading}
+          >
+            {loading ? <Loader2 className="animate-spin" /> : actionLabel}
+          </Button>
+          <DrawerClose asChild>
             <Button className="w-full" variant="outline">
               Annuler
             </Button>
-          </div>
-        </DrawerClose>
+          </DrawerClose>
+        </div>
       </DrawerFooter>
     </>
   );
@@ -106,7 +107,7 @@ const ModalAction = ({
       {isDesktop ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant={buttonVariant}>{trigger}</Button>
+            <Button variant={triggerVariant || variant}>{trigger}</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DesktopContent />
@@ -115,7 +116,7 @@ const ModalAction = ({
       ) : (
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerTrigger asChild>
-            <Button variant={buttonVariant}>{trigger}</Button>
+            <Button variant={triggerVariant || variant}>{trigger}</Button>
           </DrawerTrigger>
           <DrawerContent>
             <MobileContent />

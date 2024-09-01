@@ -1,4 +1,4 @@
-import ModalHandleAppointment from "./modal/ModalHandleAppointment";
+import ModalAction from "./modal/ModalAction";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
@@ -72,29 +72,25 @@ const ProviderAppointment = ({
       )}
       <div className="flex justify-between">
         {appointment.status === "PENDING" && (
-          <ModalHandleAppointment
+          <ModalAction
             id={appointment.id}
-            appointmentAction={acceptAppointment}
-            actionText={"Accepter"}
-            dialogTitle={"Accepter le rendez-vous"}
-            dialogDescription={
-              "Êtes-vous sûr de vouloir accepter ce rendez-vous ?"
-            }
-            buttonText={"Accepter"}
+            action={acceptAppointment}
+            actionLabel={"Accepter"}
+            title={"Accepter le rendez-vous"}
+            description={"Êtes-vous sûr de vouloir accepter ce rendez-vous ?"}
+            trigger={"Accepter"}
             variant={"success"}
           />
         )}
         {(appointment.status === "PENDING" ||
           appointment.status === "ACCEPTED") && (
-          <ModalHandleAppointment
+          <ModalAction
             id={appointment.id}
-            appointmentAction={cancelAppointment}
-            actionText={"Refuser"}
-            dialogTitle={"Refuser le rendez-vous"}
-            dialogDescription={
-              "Êtes-vous sûr de vouloir refuser ce rendez-vous ?"
-            }
-            buttonText={"Refuser"}
+            action={cancelAppointment}
+            actionLabel={"Refuser"}
+            title={"Refuser le rendez-vous"}
+            description={"Êtes-vous sûr de vouloir refuser ce rendez-vous ?"}
+            trigger={"Refuser"}
             variant={"destructive"}
           />
         )}
