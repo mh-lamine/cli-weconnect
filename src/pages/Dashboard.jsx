@@ -52,9 +52,18 @@ export default function Dashboard() {
     }
   }
 
+  const filterAndSortAppointments = (appointments, status) => {
+    return appointments
+      .filter((appointment) => appointment.status === status)
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+  };
+
   useEffect(() => {
     getAppointmentsAsProvider();
   }, []);
+
+  const todaysAppointments = appointments?.todaysAppointments || [];
+  const futureAppointments = appointments?.futureAppointments || [];
 
   return (
     <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
@@ -84,37 +93,34 @@ export default function Dashboard() {
           </Link>
         </div>
         <TabsContent value="today" className="space-y-4">
-          {appointments?.todaysAppointments.length ? (
+          {todaysAppointments.length ? (
             <>
               <p className="text-muted">
-                Vous avez {appointments?.todaysAppointments.length} rendez-vous
-                aujourd'hui.
+                Vous avez {todaysAppointments.length} rendez-vous aujourd'hui.
               </p>
-              {appointments.todaysAppointments
-                .filter((appointment) => appointment.status === "ACCEPTED")
-                .sort((a, b) => new Date(a.date) - new Date(b.date))
-                .map((appointment) => (
+              {filterAndSortAppointments(todaysAppointments, "ACCEPTED").map(
+                (appointment) => (
                   <ProviderAppointment
                     key={appointment.id}
                     appointment={appointment}
                     cancelAppointment={cancelAppointment}
                     today={true}
                   />
-                ))}
+                )
+              )}
               <div className="divider divider-start text-muted">
                 Mes rendez-vous passés
               </div>
-              {appointments.todaysAppointments
-                .filter((appointment) => appointment.status === "COMPLETED")
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .map((appointment) => (
+              {filterAndSortAppointments(todaysAppointments, "COMPLETED").map(
+                (appointment) => (
                   <ProviderAppointment
                     key={appointment.id}
                     appointment={appointment}
                     past={true}
                     today={true}
                   />
-                ))}
+                )
+              )}
             </>
           ) : (
             <p className="text-muted">
@@ -124,7 +130,7 @@ export default function Dashboard() {
           )}
         </TabsContent>
         <TabsContent value="incoming">
-          {appointments?.futureAppointments.length ? (
+          {futureAppointments.length ? (
             <Accordion
               type="single"
               collapsible
@@ -144,17 +150,16 @@ export default function Dashboard() {
                   </p>
                 </AccordionTrigger>
                 <AccordionContent>
-                  {appointments.futureAppointments
-                    .filter((appointment) => appointment.status === "PENDING")
-                    .sort((a, b) => new Date(a.date) - new Date(b.date))
-                    .map((appointment) => (
+                  {filterAndSortAppointments(futureAppointments, "PENDING").map(
+                    (appointment) => (
                       <ProviderAppointment
                         key={appointment.id}
                         appointment={appointment}
                         acceptAppointment={acceptAppointment}
                         cancelAppointment={cancelAppointment}
                       />
-                    ))}
+                    )
+                  )}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value={`item-1`}>
@@ -170,17 +175,17 @@ export default function Dashboard() {
                   </p>
                 </AccordionTrigger>
                 <AccordionContent>
-                  {appointments.futureAppointments
-                    .filter((appointment) => appointment.status === "ACCEPTED")
-                    .sort((a, b) => new Date(a.date) - new Date(b.date))
-                    .map((appointment) => (
-                      <ProviderAppointment
-                        key={appointment.id}
-                        appointment={appointment}
-                        acceptAppointment={acceptAppointment}
-                        cancelAppointment={cancelAppointment}
-                      />
-                    ))}
+                  {filterAndSortAppointments(
+                    futureAppointments,
+                    "ACCEPTED"
+                  ).map((appointment) => (
+                    <ProviderAppointment
+                      key={appointment.id}
+                      appointment={appointment}
+                      acceptAppointment={acceptAppointment}
+                      cancelAppointment={cancelAppointment}
+                    />
+                  ))}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
