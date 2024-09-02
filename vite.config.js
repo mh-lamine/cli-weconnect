@@ -15,7 +15,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../static/cli",
+    outDir: "../serv/static/cli-weconnect",
     emptyOutDir: true,
   },
 });
