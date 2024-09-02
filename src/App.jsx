@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense, useState } from "react";
+import { useEffect, lazy, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import RequireAuth from "./components/RequireAuth";
@@ -18,11 +18,6 @@ import ProviderPage from "./pages/ProviderPage";
 import ErrorPage from "./pages/ErrorPage";
 import logo from "/weconnect-no-bg.svg";
 
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Salon = lazy(() => import("./pages/Salon"));
-const SalonInformations = lazy(() => import("./pages/SalonInformations"));
-const SalonAvailabilities = lazy(() => import("./pages/SalonAvailabilities"));
-const SalonServices = lazy(() => import("./pages/SalonServices"));
 const Admin = lazy(() => import("./pages/Admin"));
 
 export default function App() {
@@ -68,46 +63,6 @@ export default function App() {
         <Route element={<RequireAuth />}>
           <Route element={<Layout />}>
             <Route path="account" element={<Account />} />
-            <Route
-              path="dashboard"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <Dashboard />
-                </Suspense>
-              }
-            />
-            <Route
-              path="salon"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <Salon />
-                </Suspense>
-              }
-            />
-            <Route
-              path="salon/informations"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <SalonInformations />
-                </Suspense>
-              }
-            />
-            <Route
-              path="salon/availabilities"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <SalonAvailabilities />
-                </Suspense>
-              }
-            />
-            <Route
-              path="salon/services"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <SalonServices />
-                </Suspense>
-              }
-            />
           </Route>
         </Route>
       </Route>

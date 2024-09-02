@@ -41,16 +41,9 @@ export default function Header() {
             </Link>
             <div className="flex items-center gap-2">
               {auth ? (
-                <>
-                  {auth?.isProvider && (
-                    <Button asChild>
-                      <Link to={"dashboard"}>Mon tableau de bord</Link>
-                    </Button>
-                  )}
-                  <Button asChild variant="outline">
-                    <Link to={"account"}>Mon compte</Link>
-                  </Button>
-                </>
+                <Button asChild variant="outline">
+                  <Link to={"account"}>Mon compte</Link>
+                </Button>
               ) : (
                 <>
                   <Button asChild variant={"outline"}>
@@ -82,16 +75,9 @@ export default function Header() {
           </ul>
           <div className="w-full flex flex-col items-center gap-2 mt-auto">
             {auth ? (
-              <>
-                {auth?.isProvider && (
-                  <Button asChild className="w-full">
-                    <Link to={"dashboard"}>Mon tableau de bord</Link>
-                  </Button>
-                )}
-                <Button asChild variant="outline" className="w-full">
-                  <Link to={"account"}>Mon compte</Link>
-                </Button>
-              </>
+              <Button asChild variant="outline" className="w-full">
+                <Link to={"account"}>Mon compte</Link>
+              </Button>
             ) : (
               <>
                 <Button asChild variant={"outline"} className="w-full">
