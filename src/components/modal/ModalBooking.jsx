@@ -40,7 +40,12 @@ import { useToast } from "../ui/use-toast";
 import axiosPrivate from "@/api/axiosPrivate";
 import { Skeleton } from "../ui/skeleton";
 
-export default function ModalBooking({ service, availabilities }) {
+export default function ModalBooking({
+  service,
+  availabilities,
+  specialAvailabilities,
+}) {
+  console.log(specialAvailabilities);
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
   const [loadingTimeSlots, setLoadingTimeSlots] = useState(false);
@@ -56,13 +61,21 @@ export default function ModalBooking({ service, availabilities }) {
   const formattedAvailabilities =
     availabilities && formatAvailabilitiesByDayOfWeek(availabilities);
 
+  const isSpecialDay = (date) => {
+    const formattedDate = DateTime.fromJSDate(date).toISODate();
+    return specialAvailabilities.some(
+      (special) => special.date === formattedDate
+    );
+  };
+
   const isDayOff = (date) => {
     const formattedDate = DateTime.fromJSDate(date).setLocale("en");
     const dayOfWeek = formattedDate.weekdayLong.toUpperCase();
     return (
-      formattedDate.toISODate() < DateTime.now().toISODate() ||
-      formattedDate > OneYearFromNow ||
-      !formattedAvailabilities[dayOfWeek]
+      (formattedDate.toISODate() < DateTime.now().toISODate() ||
+        formattedDate > OneYearFromNow ||
+        !formattedAvailabilities[dayOfWeek]) &&
+      !isSpecialDay(date)
     );
   };
 

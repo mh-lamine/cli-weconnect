@@ -70,6 +70,7 @@ export default function ProviderPage() {
                 category={category}
                 services={category.services}
                 availabilities={provider?.availabilities}
+                specialAvailabilities={provider?.specialAvailabilities} 
               />
             </div>
           ))
@@ -79,7 +80,7 @@ export default function ProviderPage() {
   );
 }
 
-function Services({ index, category, services, availabilities }) {
+function Services({ index, category, services, availabilities, specialAvailabilities }) {
   return (
     <Accordion
       type="single"
@@ -105,7 +106,7 @@ function Services({ index, category, services, availabilities }) {
               </div>
               <p>{service.description}</p>
             </div>
-            <ModalBooking service={service} availabilities={availabilities} />
+            <ModalBooking service={service} availabilities={availabilities} specialAvailabilities={specialAvailabilities} />
           </AccordionContent>
         ))}
       </AccordionItem>
