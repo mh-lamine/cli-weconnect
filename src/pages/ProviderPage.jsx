@@ -10,12 +10,14 @@ import { useEffect, useState } from "react";
 import { getProvidersByFilters } from "@/actions/providerActions";
 import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
+import ModalAction from "@/components/modal/ModalAction";
 
 export default function ProviderPage() {
   const { providerId } = useParams();
   const [provider, setProvider] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -41,7 +43,7 @@ export default function ProviderPage() {
           address={provider?.address}
         />
       </header>
-      <div className="p-6 pb-0 max-w-screen-md mx-auto">
+      <div className="px-6 pb-0 max-w-screen-md mx-auto">
         {loading ? (
           <div className="space-y-12">
             <Skeleton className="w-[150px] h-6 mt-8" />
@@ -63,24 +65,48 @@ export default function ProviderPage() {
             <Skeleton className="w-[150px] h-6 mt-8" />
           </div>
         ) : (
-          provider?.providerCategories.map((category, index) => (
-            <div key={index}>
-              <Services
-                index={index}
-                category={category}
-                services={category.services}
-                availabilities={provider?.availabilities}
-                specialAvailabilities={provider?.specialAvailabilities} 
+          <>
+            {provider?.bookingTerms && (
+              <ModalAction
+                defaultOpen={!termsAccepted}
+                title="Conditions de réservation"
+                description={
+                  <p className="whitespace-pre-line">
+                    {provider?.bookingTerms}
+                  </p>
+                }
+                action={() => setTermsAccepted(true)}
+                actionLabel="J'accepte"
+                trigger={"Conditions de réservation"}
+                triggerVariant="link"
+                cancelText="Fermer"
               />
-            </div>
-          ))
+            )}
+            {provider?.providerCategories.map((category, index) => (
+              <div key={index}>
+                <Services
+                  index={index}
+                  category={category}
+                  services={category.services}
+                  availabilities={provider?.availabilities}
+                  specialAvailabilities={provider?.specialAvailabilities}
+                />
+              </div>
+            ))}
+          </>
         )}
       </div>
     </main>
   );
 }
 
-function Services({ index, category, services, availabilities, specialAvailabilities }) {
+function Services({
+  index,
+  category,
+  services,
+  availabilities,
+  specialAvailabilities,
+}) {
   return (
     <Accordion
       type="single"
@@ -106,7 +132,11 @@ function Services({ index, category, services, availabilities, specialAvailabili
               </div>
               <p>{service.description}</p>
             </div>
-            <ModalBooking service={service} availabilities={availabilities} specialAvailabilities={specialAvailabilities} />
+            <ModalBooking
+              service={service}
+              availabilities={availabilities}
+              specialAvailabilities={specialAvailabilities}
+            />
           </AccordionContent>
         ))}
       </AccordionItem>

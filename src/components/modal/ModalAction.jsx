@@ -32,8 +32,10 @@ const ModalAction = ({
   trigger,
   variant = "outline",
   triggerVariant,
+  defaultOpen = false,
+  cancelText = "Annuler",
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -94,7 +96,7 @@ const ModalAction = ({
           </Button>
           <DrawerClose asChild>
             <Button className="w-full" variant="outline">
-              Annuler
+              {cancelText}
             </Button>
           </DrawerClose>
         </div>

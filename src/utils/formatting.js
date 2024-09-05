@@ -14,7 +14,7 @@ export function formatDate(date) {
     .toFormat("DDDD");
 
   return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-};
+}
 
 export function formatAvailabilitiesByDayOfWeek(data) {
   const groupedData = {};

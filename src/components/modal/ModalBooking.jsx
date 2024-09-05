@@ -2,7 +2,6 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -12,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -36,7 +34,6 @@ import { DateTime } from "luxon";
 import { fr } from "date-fns/locale";
 import { OneYearFromNow } from "@/utils/dateManagement";
 import { getProviderAvailableTimeSlots } from "@/actions/providerActions";
-import { useToast } from "../ui/use-toast";
 import axiosPrivate from "@/api/axiosPrivate";
 import { Skeleton } from "../ui/skeleton";
 
@@ -45,7 +42,6 @@ export default function ModalBooking({
   availabilities,
   specialAvailabilities,
 }) {
-  console.log(specialAvailabilities);
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
   const [loadingTimeSlots, setLoadingTimeSlots] = useState(false);
@@ -56,7 +52,6 @@ export default function ModalBooking({
     startTime: "",
   });
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const { toast } = useToast();
 
   const formattedAvailabilities =
     availabilities && formatAvailabilitiesByDayOfWeek(availabilities);
@@ -98,16 +93,9 @@ export default function ModalBooking({
 
     try {
       await axiosPrivate.post("/api/appointments", appointment);
-      toast({
-        title: "Créneau réservé !",
-        description: `Vous avez rendez-vous le ${formatDate(date)} à ${
-          timeSlotSelected.startTime
-        }.`,
-        variant: "success",
-      });
       setOpen(false);
     } catch (error) {
-      if (error.response?.status === 401) {
+      if (error.response?.status === 403) {
         setError("Vous devez être connecté pour réserver un rendez-vous.");
         return;
       }
