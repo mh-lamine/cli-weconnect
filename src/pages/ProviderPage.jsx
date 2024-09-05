@@ -17,7 +17,6 @@ export default function ProviderPage() {
   const [provider, setProvider] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -68,14 +67,13 @@ export default function ProviderPage() {
           <>
             {provider?.bookingTerms && (
               <ModalAction
-                defaultOpen={!termsAccepted}
+                defaultOpen={true}
                 title="Conditions de réservation"
                 description={
                   <p className="whitespace-pre-line">
                     {provider?.bookingTerms}
                   </p>
                 }
-                action={() => setTermsAccepted(true)}
                 actionLabel="J'accepte"
                 trigger={"Conditions de réservation"}
                 triggerVariant="link"

@@ -25,7 +25,7 @@ import { Loader2 } from "lucide-react";
 
 const ModalAction = ({
   id,
-  action,
+  action = null,
   actionLabel,
   title,
   description,
@@ -64,11 +64,13 @@ const ModalAction = ({
       {error && <p className="text-destructive text-sm">{error}</p>}
       <DialogFooter className="sm:justify-start">
         <div className="w-full flex items-center justify-between">
-          <Button onClick={handleAction} variant={variant} disabled={loading}>
-            {loading ? <Loader2 className="animate-spin" /> : actionLabel}
-          </Button>
+          {action && (
+            <Button onClick={handleAction} variant={variant} disabled={loading}>
+              {loading ? <Loader2 className="animate-spin" /> : actionLabel}
+            </Button>
+          )}
           <DialogClose asChild>
-            <Button variant="outline">Annuler</Button>
+            <Button variant="outline">{cancelText}</Button>
           </DialogClose>
         </div>
       </DialogFooter>
@@ -86,14 +88,16 @@ const ModalAction = ({
       {error && <p className="text-destructive text-sm">{error}</p>}
       <DrawerFooter className="pt-2">
         <div className="space-y-2">
-          <Button
-            className="w-full"
-            onClick={handleAction}
-            variant={variant}
-            disabled={loading}
-          >
-            {loading ? <Loader2 className="animate-spin" /> : actionLabel}
-          </Button>
+          {action && (
+            <Button
+              className="w-full"
+              onClick={handleAction}
+              variant={variant}
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="animate-spin" /> : actionLabel}
+            </Button>
+          )}
           <DrawerClose asChild>
             <Button className="w-full" variant="outline">
               {cancelText}
