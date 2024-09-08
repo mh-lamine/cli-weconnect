@@ -1,40 +1,45 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "/weconnect-no-bg.svg";
 
 export default function Footer() {
+  const location = useLocation();
   return (
     <>
-      <footer className="footer mt-20 bg-dark text-light p-10 flex justify-around">
-        <nav>
-          <h6 className="footer-title text-lg opacity-100">Prestations</h6>
-          <Link className="link link-hover text-muted">Barber</Link>
-          <Link className="link link-hover text-muted">Estheticienne</Link>
-          <Link className="link link-hover text-muted">Tresseuse</Link>
-          <Link className="link link-hover text-muted">Maquilleuse</Link>
-        </nav>
-        <nav>
-          <h6 className="footer-title text-lg opacity-100">Contact</h6>
-          <Link className="link link-hover text-muted">À propos</Link>
-          <Link className="link link-hover text-muted">Nous contacter</Link>
-          <Link className="link link-hover text-muted">
-            Devenir prestataire
-          </Link>
-        </nav>
-        <nav>
-          <h6 className="footer-title text-lg opacity-100">Mentions légales</h6>
-          <Link className="link link-hover text-muted">
-            Conditions d'utilisation
-          </Link>
-          <Link className="link link-hover text-muted">
-            Politique de confidentialité
-          </Link>
-          <Link className="link link-hover text-muted">Cookie policy</Link>
-        </nav>
-      </footer>
-      <footer className="footer bg-dark text-light border-light border-t px-10 py-4">
+      {location.pathname === "/" && (
+        <footer className="footer mt-20 bg-dark text-light p-10 flex flex-wrap justify-around">
+          <nav>
+            <h6 className="footer-title text-lg opacity-100">Prestations</h6>
+            <Link className="link link-hover text-muted">Barber</Link>
+            <Link className="link link-hover text-muted">Estheticienne</Link>
+            <Link className="link link-hover text-muted">Tresseuse</Link>
+            <Link className="link link-hover text-muted">Maquilleuse</Link>
+          </nav>
+          <nav>
+            <h6 className="footer-title text-lg opacity-100">Contact</h6>
+            <Link className="link link-hover text-muted">À propos</Link>
+            <Link className="link link-hover text-muted">Nous contacter</Link>
+            <Link className="link link-hover text-muted">
+              Devenir prestataire
+            </Link>
+          </nav>
+          <nav>
+            <h6 className="footer-title text-lg opacity-100">
+              Mentions légales
+            </h6>
+            <Link className="link link-hover text-muted">
+              Conditions d'utilisation
+            </Link>
+            <Link className="link link-hover text-muted">
+              Politique de confidentialité
+            </Link>
+            <Link className="link link-hover text-muted">Cookie policy</Link>
+          </nav>
+        </footer>
+      )}
+      <footer className="footer bg-dark text-light border-light border-t px-10 py-4 flex gap-2 flex-col items-center sm:flex-row sm:justify-between">
         <aside className="grid-flow-col items-center">
           <img src={logo} alt="logo weconnect" className="w-12 invert" />
-          <p>Copyright © {new Date().getFullYear()} - Tous droits reservés</p>
+          <p>Copyright © {new Date().getFullYear()} <br/> Tous droits reservés</p>
         </aside>
         <nav className="md:place-self-center md:justify-self-end">
           <div className="grid grid-flow-col gap-4">
