@@ -2,9 +2,10 @@ import { handleRegister } from "@/actions/authActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useAuth from "@/hooks/useAuth";
-import { Loader2 } from "lucide-react";
+import { EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const PHONE_NUMBER_REGEX =
   /^(?:(?:\+|00)33\s?[1-9](?:[\s.-]?\d{2}){4}|0[1-9](?:[\s.-]?\d{2}){4})$/;
@@ -18,8 +19,8 @@ export default function RegisterPage() {
     phoneNumber: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,17 +34,17 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     if (!userInfos.lastName || !userInfos.firstName) {
-      setError("Veuillez renseigner votre nom et prénom");
+      toast.error("Veuillez renseigner votre nom et prénom");
       setLoading(false);
       return;
     }
     if (!PHONE_NUMBER_REGEX.test(userInfos.phoneNumber)) {
-      setError("Le numéro de téléphone n'est pas valide");
+      toast.error("Le numéro de téléphone n'est pas valide");
       setLoading(false);
       return;
     }
     if (!PASSWORD_REGEX.test(userInfos.password)) {
-      setError(
+      toast.error(
         "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre"
       );
       setLoading(false);
@@ -55,9 +56,9 @@ export default function RegisterPage() {
       navigate(from, { replace: true });
     } catch (error) {
       if (error.response.status === 409) {
-        setError("Ce numéro de téléphone est déjà utilisé");
+        toast.error("Ce numéro de téléphone est déjà utilisé");
       } else {
-        setError("Une erreur est survenue, veuillez réessayer plus tard");
+        toast.error("Une erreur est survenue, veuillez réessayer plus tard");
       }
     }
     setLoading(false);
@@ -72,33 +73,32 @@ export default function RegisterPage() {
           type="text"
           placeholder="Prénom"
           onChange={handleChange}
-          onClick={() => setError("")}
         />
         <Input
           name="lastName"
           type="text"
           placeholder="Nom"
           onChange={handleChange}
-          onClick={() => setError("")}
         />
         <Input
           name="phoneNumber"
           type="tel"
           placeholder="Numéro de téléphone"
           onChange={handleChange}
-          onClick={() => setError("")}
         />
-        <div className="flex items-center gap-2">
+        <div className="relative flex items-center">
           <Input
             name="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Mot de passe"
             onChange={handleChange}
-            onClick={() => setError("")}
+          />
+          <EyeOff
+            className="w-6 h-6 ml-auto absolute right-3 text-primary"
+            onClick={() => setShowPassword(!showPassword)}
           />
         </div>
       </form>
-      {error && <p className="text-destructive text-sm">{error}</p>}
       <Button onClick={handleSubmit} disabled={loading && true}>
         {loading ? <Loader2 className="animate-spin" /> : "Créer un compte"}
       </Button>

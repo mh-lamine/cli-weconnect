@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <>
       {location.pathname === "/" && (
-        <footer className="footer mt-20 bg-dark text-light p-10 flex flex-wrap justify-around">
+        <footer className="footer bg-dark text-light p-10 flex flex-wrap justify-around">
           <nav>
             <h6 className="footer-title text-lg opacity-100">Prestations</h6>
             <Link className="link link-hover text-muted">Barber</Link>
@@ -43,7 +43,7 @@ export default function Footer() {
         </aside>
         <nav className="md:place-self-center md:justify-self-end">
           <div className="grid grid-flow-col gap-4">
-            <Link className="flex items-center gap-2">
+            <Link to={"https://www.instagram.com/weconnect_off"} className="flex items-center gap-2">
               Suivez-nous sur
               <svg
                 xmlns="http://www.w3.org/2000/svg"

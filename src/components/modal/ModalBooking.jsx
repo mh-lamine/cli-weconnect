@@ -94,7 +94,8 @@ export default function ModalBooking({
     try {
       await axiosPrivate.post("/api/appointments", appointment);
       toast.success(
-        `Votre rendez-vous a été créé avec succès.\nRetrouvez tous vos rendez-vous sur votre espace personnel.\nÀ très bientôt ! 🚀`
+        `Votre rendez-vous a été créé avec succès.
+        Retrouvez tous vos rendez-vous sur votre espace personnel.\nÀ très bientôt ! 🚀`
       );
       setOpen(false);
     } catch (error) {

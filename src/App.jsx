@@ -80,9 +80,14 @@ export default function App() {
           error: <AlertCircle />,
         }}
         toastOptions={{
+          style: {
+            display: "flex",
+            gap: "2em",
+            whiteSpace: "pre-line",
+          },
           classNames: {
             error: "bg-destructive text-light",
-            success: "bg-success",
+            success: "bg-success text-light",
           },
         }}
       />

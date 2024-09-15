@@ -4,9 +4,9 @@ import { Outlet } from "react-router-dom";
 
 export default function ClientLayout() {
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center justify-between bg-light text-dark">
+    <div className="w-screen min-h-screen flex flex-col items-center bg-light text-dark">
       <Header />
-      <div className="min-h-[80vh] w-full">
+      <div className="flex-1 w-full">
         <Outlet />
       </div>
       <Footer />

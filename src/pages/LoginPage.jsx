@@ -3,9 +3,10 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { handleLogin } from "@/actions/authActions";
-import { Loader2 } from "lucide-react";
+import { EyeOff, Loader2 } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const { setAuth, persist, setPersist } = useAuth();
@@ -13,8 +14,8 @@ export default function LoginPage() {
     phoneNumber: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,9 +38,9 @@ export default function LoginPage() {
       navigate(from, { replace: true });
     } catch (error) {
       if (error.response.status === 401) {
-        setError("Numéro de téléphone ou mot de passe incorrect");
+        toast.error("Numéro de téléphone ou mot de passe incorrect");
       } else {
-        setError("Une erreur est survenue, veuillez réessayer plus tard");
+        toast.error("Une erreur est survenue, veuillez réessayer plus tard");
       }
     }
     setLoading(false);
@@ -58,15 +59,20 @@ export default function LoginPage() {
           type="tel"
           placeholder="Numéro de téléphone"
           onChange={handleChange}
-          onClick={() => setError("")}
         />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Mot de passe"
-          onChange={handleChange}
-          onClick={() => setError("")}
-        />
+        <div className="relative flex items-center">
+          <Input
+            name="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Mot de passe"
+            onChange={handleChange}
+          />
+          <EyeOff
+            className="w-6 h-6 ml-auto absolute right-3 text-primary"
+            onClick={() => setShowPassword(!showPassword)}
+          />
+        </div>
+
         <div className="items-top flex items-center pt-2 space-x-2">
           <Checkbox id="terms1" onClick={togglePersist} checked={persist} />
           <div className="grid gap-1.5 leading-none">
@@ -79,7 +85,6 @@ export default function LoginPage() {
           </div>
         </div>
       </form>
-      {error && <p className="text-destructive text-sm">{error}</p>}
       <Button onClick={handleSubmit} disabled={loading && true}>
         {loading ? <Loader2 className="animate-spin" /> : "Se connecter"}
       </Button>
