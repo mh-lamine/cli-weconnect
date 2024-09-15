@@ -36,6 +36,7 @@ import { OneYearFromNow } from "@/utils/dateManagement";
 import { getProviderAvailableTimeSlots } from "@/actions/providerActions";
 import axiosPrivate from "@/api/axiosPrivate";
 import { Skeleton } from "../ui/skeleton";
+import { toast } from "sonner";
 
 export default function ModalBooking({
   service,
@@ -45,7 +46,6 @@ export default function ModalBooking({
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
   const [loadingTimeSlots, setLoadingTimeSlots] = useState(false);
-  const [error, setError] = useState();
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [timeSlotSelected, setTimeSlotSelected] = useState({
     date: null,
@@ -76,7 +76,7 @@ export default function ModalBooking({
 
   async function handleCreateAppointment() {
     if (!timeSlotSelected.date || !timeSlotSelected.startTime) {
-      setError("Veuillez choisir un créneau.");
+      toast.error("Sélectionnez un créneau pour réserver votre rendez-vous.");
       return;
     }
     const appointmentDate = `${DateTime.fromJSDate(
@@ -93,13 +93,29 @@ export default function ModalBooking({
 
     try {
       await axiosPrivate.post("/api/appointments", appointment);
+      toast.success(
+        `Votre rendez-vous a été créé avec succès.\nRetrouvez tous vos rendez-vous sur votre espace personnel.\nÀ très bientôt ! 🚀`
+      );
       setOpen(false);
     } catch (error) {
       if (error.response?.status === 403) {
-        setError("Vous devez être connecté pour réserver un rendez-vous.");
+        toast.error("Connectez-vous pour réserver un rendez-vous.", {
+          action: (
+            <Button
+              variant="outline"
+              className="text-light"
+              onClick={() => {
+                setOpen(false);
+                navigate("/login", { state: { from: location } });
+              }}
+            >
+              Se connecter
+            </Button>
+          ),
+        });
         return;
       }
-      setError("Une erreur est survenue, veuillez réessayer plus tard.");
+      toast.error("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setDate(null);
     setTimeSlotSelected({ date: null, startTime: "" });
@@ -120,8 +136,8 @@ export default function ModalBooking({
           serviceDuration
         );
         setAvailableTimeSlots(data);
-      } catch {
-        setError(error);
+      } catch (error) {
+        toast.error(error);
       } finally {
         setLoadingTimeSlots(false);
       }
@@ -198,9 +214,6 @@ export default function ModalBooking({
               <p> Aucune disponibilité pour ce jour.</p>
             )}
           </Popover>
-          {error && setTimeout(() => setError(null), 3000) && (
-            <p className="text-destructive text-sm">{error}</p>
-          )}
           <DialogFooter className="sm:justify-start">
             <div className="w-full flex items-center justify-between">
               <Button
@@ -289,9 +302,6 @@ export default function ModalBooking({
             )}
           </div>
         </Popover>
-        {error && setTimeout(() => setError(null), 3000) && (
-          <p className="text-destructive text-sm p-4">{error}</p>
-        )}
         <DrawerFooter className="pt-2">
           <div className="space-y-2">
             <Button onClick={handleCreateAppointment} className="w-full">

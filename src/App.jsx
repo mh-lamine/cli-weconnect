@@ -17,6 +17,8 @@ import Account from "./pages/Account";
 import ProviderPage from "./pages/ProviderPage";
 import ErrorPage from "./pages/ErrorPage";
 import logo from "/weconnect-no-bg.svg";
+import { Toaster } from "sonner";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 const Admin = lazy(() => import("./pages/Admin"));
 
@@ -39,40 +41,52 @@ export default function App() {
   }, []);
 
   if (loading) {
-    return (
-        <PageLoader />
-    );
+    return <PageLoader />;
   }
 
   return (
-    <Routes>
-      {/* public routes */}
-      <Route path="/" element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route path="provider/:providerId" element={<ProviderPage />} />
-      </Route>
+    <>
+      <Routes>
+        {/* public routes */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="provider/:providerId" element={<ProviderPage />} />
+        </Route>
 
-      {/* auth routes */}
-      <Route element={<AuthLayout />}>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
-      </Route>
+        {/* auth routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+        </Route>
 
-      {/* protected routes */}
-      <Route element={<PersistLogin />}>
-        <Route element={<RequireAuth />}>
-          <Route element={<Layout />}>
-            <Route path="account" element={<Account />} />
+        {/* protected routes */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route element={<Layout />}>
+              <Route path="account" element={<Account />} />
+            </Route>
           </Route>
         </Route>
-      </Route>
 
-      {/* admin routes */}
-      <Route path="admin" element={<Admin />} />
+        {/* admin routes */}
+        <Route path="admin" element={<Admin />} />
 
-      {/* error routes */}
-      <Route path="*" element={<ErrorPage />} />
-    </Routes>
+        {/* error routes */}
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+      <Toaster
+        icons={{
+          success: <CheckCircle />,
+          error: <AlertCircle />,
+        }}
+        toastOptions={{
+          classNames: {
+            error: "bg-destructive text-light",
+            success: "bg-success",
+          },
+        }}
+      />
+    </>
   );
 }
 
