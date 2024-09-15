@@ -88,13 +88,15 @@ export default function RegisterPage() {
           onChange={handleChange}
           onClick={() => setError("")}
         />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Mot de passe"
-          onChange={handleChange}
-          onClick={() => setError("")}
-        />
+        <div className="flex items-center gap-2">
+          <Input
+            name="password"
+            type="password"
+            placeholder="Mot de passe"
+            onChange={handleChange}
+            onClick={() => setError("")}
+          />
+        </div>
       </form>
       {error && <p className="text-destructive text-sm">{error}</p>}
       <Button onClick={handleSubmit} disabled={loading && true}>

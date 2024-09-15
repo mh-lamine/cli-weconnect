@@ -54,7 +54,7 @@ export default function HomePage() {
           }}
           className="absolute inset-0 text-center font-semibold p-4 text-light top-[40%] text-[6vw]"
         >
-          L'élégance à portée de clic
+          L'élégance à portée de main
         </h1>
         <img
           src={homeBg}
