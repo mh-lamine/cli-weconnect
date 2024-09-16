@@ -8,7 +8,7 @@ export default function ProviderCard({ provider }) {
     <Link to={`provider/${provider.id}`} className="space-y-2">
       {provider.coverImage ? (
         <img
-          src={provider.coverImage[0]}
+          src={provider.coverImage}
           alt="photo du salon"
           className=" rounded-xl w-full aspect-video"
         />
