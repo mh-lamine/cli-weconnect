@@ -57,8 +57,8 @@ const Account = () => {
   const rmfiles = async () => {
     try {
       await axiosPrivate.patch("/api/users", {
-        profile: null,
-        cover: null,
+        profilePicture: null,
+        coverImage: [],
       });
     } catch (error) {
       console.log(error);
