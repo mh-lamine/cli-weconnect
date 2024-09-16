@@ -6,17 +6,17 @@ import logo from "/weconnect_tinified.png";
 export default function ProviderCard({ provider }) {
   return (
     <Link to={`provider/${provider.id}`} className="space-y-2">
-      {provider.coverImage.length > 0 ? (
+      {/* {provider.coverImage.length > 0 ? (
         <img
           src={provider.coverImage[0]}
           alt="photo du salon"
           className=" rounded-xl w-full aspect-video"
         />
-      ) : (
+      ) : ( */}
         <div className="w-full aspect-video bg-muted grid place-items-center text-light text-xl rounded-xl">
           <img src={logo} alt="weconnect logo" className="w-1/6" />
         </div>
-      )}
+       {/* )} */}
       <div className="flex items-center space-x-4">
         <Avatar className="w-12 h-12">
           <AvatarImage src={provider.profilePicture} />
