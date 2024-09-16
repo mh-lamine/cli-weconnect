@@ -75,6 +75,7 @@ export default function App() {
         <Route path="*" element={<ErrorPage />} />
       </Routes>
       <Toaster
+      position="top-right"
         icons={{
           success: <CheckCircle />,
           error: <AlertCircle />,
