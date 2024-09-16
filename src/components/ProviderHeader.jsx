@@ -4,14 +4,19 @@ import LeftArrow from "./svg/LeftArrow";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "./ui/skeleton";
 
-export default function ProviderHeader({ loading, name, address }) {
+export default function ProviderHeader({
+  loading,
+  name,
+  address,
+  profilePicture,
+  coverImage,
+}) {
   const navigate = useNavigate();
   return (
     <div
       className="hero w-full aspect-video relative max-h-[40vh] sm:max-h-[20vh]"
       style={{
-        backgroundImage:
-          "url(https://images.unsplash.com/photo-1619607146034-5a05296c8f9a?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+        backgroundImage: `url(${coverImage && coverImage[0]})`,
       }}
     >
       <span
@@ -34,7 +39,7 @@ export default function ProviderHeader({ loading, name, address }) {
           ) : (
             <>
               <Avatar className="w-14 h-14">
-                <AvatarImage src="" />
+                <AvatarImage src={profilePicture} />
                 <AvatarFallback className="text-xl">
                   {name && getInitials(name)}
                 </AvatarFallback>

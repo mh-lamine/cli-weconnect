@@ -40,6 +40,8 @@ export default function ProviderPage() {
           loading={loading}
           name={provider?.providerName}
           address={provider?.address}
+          profilePicture={provider?.profilePicture}
+          coverImage={provider?.coverImage}
         />
       </header>
       <div className="px-6 pb-0 max-w-screen-md mx-auto">
