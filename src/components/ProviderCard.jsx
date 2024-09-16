@@ -6,7 +6,7 @@ import logo from "/weconnect_tinified.png";
 export default function ProviderCard({ provider }) {
   return (
     <Link to={`provider/${provider.id}`} className="space-y-2">
-      {provider.coverImage.length > 0 ? (
+      {provider.coverImage ? (
         <img
           src={provider.coverImage[0]}
           alt="photo du salon"
