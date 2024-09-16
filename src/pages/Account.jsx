@@ -58,7 +58,7 @@ const Account = () => {
     try {
       await axiosPrivate.patch("/api/users", {
         profilePicture: null,
-        coverImage: [],
+        coverImage: null,
       });
     } catch (error) {
       console.log(error);
