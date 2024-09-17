@@ -11,6 +11,7 @@ import { getProvidersByFilters } from "@/actions/providerActions";
 import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import ModalAction from "@/components/modal/ModalAction";
+import { Button } from "@/components/ui/button";
 
 export default function ProviderPage() {
   const { providerId } = useParams();
@@ -32,6 +33,42 @@ export default function ProviderPage() {
   }, []);
 
   if (error) return <div className="flex-1">Error: {error}</div>;
+
+  if (provider?.isInVacancyMode) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-8">
+          <h1 className="text-3xl font-semibold text-center">
+            Votre prestataire est actuellement en vacances ! 🌴
+          </h1>
+          <p className="text-center">
+            Vous pouvez consulter ses informations de contact pour prendre
+            rendez-vous ultérieurement
+          </p>
+          <div className="flex items-center space-x-4">
+            <Button asChild>
+              <a
+                href={`tel:${provider.phoneNumber}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Appeler
+              </a>
+            </Button>
+            <Button asChild variant="outline">
+              <a
+                href={`mailto:${provider.email}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Envoyer un mail
+              </a>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="w-full flex-1">
@@ -90,6 +127,7 @@ export default function ProviderPage() {
                   services={category.services}
                   availabilities={provider?.availabilities}
                   specialAvailabilities={provider?.specialAvailabilities}
+                  autoAccept={provider?.autoAcceptAppointments}
                 />
               </div>
             ))}
@@ -106,6 +144,7 @@ function Services({
   services,
   availabilities,
   specialAvailabilities,
+  autoAccept
 }) {
   return (
     <Accordion
@@ -136,6 +175,7 @@ function Services({
               service={service}
               availabilities={availabilities}
               specialAvailabilities={specialAvailabilities}
+              autoAccept={autoAccept}
             />
           </AccordionContent>
         ))}

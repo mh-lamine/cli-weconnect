@@ -19,6 +19,7 @@ import ErrorPage from "./pages/ErrorPage";
 import logo from "/weconnect-no-bg.svg";
 import { Toaster } from "sonner";
 import { AlertCircle, CheckCircle } from "lucide-react";
+import BecomeProPage from "./pages/BecomeProPage";
 
 const Admin = lazy(() => import("./pages/Admin"));
 
@@ -51,6 +52,9 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="provider/:providerId" element={<ProviderPage />} />
+          <Route element={<PersistLogin />}>
+            <Route path="pro" element={<BecomeProPage />} />
+          </Route>
         </Route>
 
         {/* auth routes */}
@@ -75,7 +79,7 @@ export default function App() {
         <Route path="*" element={<ErrorPage />} />
       </Routes>
       <Toaster
-      position="top-right"
+        position="top-right"
         icons={{
           success: <CheckCircle />,
           error: <AlertCircle />,

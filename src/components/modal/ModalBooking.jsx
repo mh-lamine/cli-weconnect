@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/drawer";
 import { Calendar } from "@/components/ui/calendar";
 import { useEffect, useState } from "react";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -42,6 +42,7 @@ export default function ModalBooking({
   service,
   availabilities,
   specialAvailabilities,
+  autoAccept,
 }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
@@ -51,6 +52,7 @@ export default function ModalBooking({
     date: null,
     startTime: "",
   });
+  const [loading, setLoading] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const formattedAvailabilities =
@@ -75,6 +77,7 @@ export default function ModalBooking({
   };
 
   async function handleCreateAppointment() {
+    setLoading(true);
     if (!timeSlotSelected.date || !timeSlotSelected.startTime) {
       toast.error("Sélectionnez un créneau pour réserver votre rendez-vous.");
       return;
@@ -86,7 +89,7 @@ export default function ModalBooking({
     const appointment = {
       date: appointmentDate,
       duration: service.duration,
-      status: "PENDING",
+      status: autoAccept ? "ACCEPTED" : "PENDING",
       serviceId: service.id,
       providerId: service.providerId,
     };
@@ -120,6 +123,7 @@ export default function ModalBooking({
     }
     setDate(null);
     setTimeSlotSelected({ date: null, startTime: "" });
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -227,7 +231,9 @@ export default function ModalBooking({
               >
                 Annuler
               </Button>
-              <Button onClick={handleCreateAppointment}>Réserver</Button>
+              <Button disabled={loading} onClick={handleCreateAppointment}>
+                {loading ? <Loader2 className="animate-spin" /> : "Réserver"}
+              </Button>
             </div>
           </DialogFooter>
         </DialogContent>
@@ -305,8 +311,12 @@ export default function ModalBooking({
         </Popover>
         <DrawerFooter className="pt-2">
           <div className="space-y-2">
-            <Button onClick={handleCreateAppointment} className="w-full">
-              Réserver
+            <Button
+              disabled={loading}
+              onClick={handleCreateAppointment}
+              className="w-full"
+            >
+              {loading ? <Loader2 className="animate-spin" /> : "Réserver"}
             </Button>
             <Button
               variant="outline"

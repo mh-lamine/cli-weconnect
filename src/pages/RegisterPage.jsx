@@ -117,6 +117,9 @@ export default function RegisterPage() {
       <Button asChild variant="outline">
         <Link to={"/login"}>Se connecter</Link>
       </Button>
+      <Button variant="link">
+        <Link to={"/pro"}>Devenir prestataire</Link>
+      </Button>
     </div>
   );
 }
