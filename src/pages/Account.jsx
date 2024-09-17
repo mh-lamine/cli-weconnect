@@ -54,17 +54,6 @@ const Account = () => {
     navigate("/login");
   };
 
-  const rmfiles = async () => {
-    try {
-      await axiosPrivate.patch("/api/users", {
-        profilePicture: null,
-        coverImage: null,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const handleChange = (e) => {
     setUserInfos({ ...userInfos, [e.target.id]: e.target.value });
   };
@@ -244,13 +233,6 @@ const Account = () => {
           </form>
         </TabsContent>
       </Tabs>
-      <Button
-        variant="destructive"
-        onClick={rmfiles}
-        className="w-fit mt-auto"
-      >
-        Supprimer mes images
-      </Button>
       <Button
         variant="destructive"
         onClick={handleLogout}
