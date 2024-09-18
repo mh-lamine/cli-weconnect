@@ -87,7 +87,7 @@ function ContactMethods({ provider, past }) {
       {contactMethods.instagram && (
         <Button variant="link" className={`w-fit py-0 ${past && "text-muted"}`}>
           <a
-            href={`https://www.instagram.com/${contactMethods.instagram}`}
+            href={`https://www.instagram.com/${contactMethods.instagram.split("@")[1]}`}
             target="_blank"
             rel="noopener noreferrer"
           >
