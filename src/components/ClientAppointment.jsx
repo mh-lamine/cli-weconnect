@@ -91,7 +91,7 @@ function ContactMethods({ provider, past }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            @{contactMethods.instagram.split(".com/")[1]}
+            {contactMethods.instagram}
           </a>
         </Button>
       )}
