@@ -52,9 +52,6 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="provider/:providerId" element={<ProviderPage />} />
-          <Route element={<PersistLogin />}>
-            <Route path="pro" element={<BecomeProPage />} />
-          </Route>
         </Route>
 
         {/* auth routes */}
@@ -68,6 +65,7 @@ export default function App() {
           <Route element={<RequireAuth />}>
             <Route element={<Layout />}>
               <Route path="account" element={<Account />} />
+              <Route path="pro" element={<BecomeProPage />} />
             </Route>
           </Route>
         </Route>

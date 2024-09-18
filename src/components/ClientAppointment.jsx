@@ -14,30 +14,7 @@ const ClientAppointment = ({
           {appointment.provider.providerName}
         </h2>
       </div>
-      <div className="flex flex-col md:flex-row md:gap-4">
-        <Button
-          variant="link"
-          className={`w-fit py-0 ${past && "text-muted"}`}
-        >
-          <a href={`tel:${appointment.provider.phoneNumber}`}>
-            {appointment.provider.phoneNumber.replace(/(\d{2})(?=\d)/g, "$1 ")}
-          </a>
-        </Button>
-        <Button
-          variant="link"
-          className={`w-fit py-0 ${past && "text-muted"}`}
-        >
-          <a
-            href={`https://www.google.com/maps?q=${encodeURIComponent(
-              appointment.provider.address
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {appointment.provider.address}
-          </a>
-        </Button>
-      </div>
+      <ContactMethods provider={appointment.provider} past={past} />
       <h3 className="text-lg">
         Vous avez réservé{" "}
         <span className="font-medium">{appointment.service.name}</span> <br />{" "}
@@ -95,3 +72,38 @@ const ClientAppointment = ({
 };
 
 export default ClientAppointment;
+
+function ContactMethods({ provider, past }) {
+  const { contactMethods, address } = provider;
+  return (
+    <div className="flex flex-col md:flex-row md:gap-4">
+      {contactMethods.phoneNumber && (
+        <Button variant="link" className={`w-fit py-0 ${past && "text-muted"}`}>
+          <a href={`tel:${contactMethods.phoneNumber}`}>
+            {contactMethods.phoneNumber.replace(/(\d{2})(?=\d)/g, "$1 ")}
+          </a>
+        </Button>
+      )}
+      {contactMethods.instagram && (
+        <Button variant="link" className={`w-fit py-0 ${past && "text-muted"}`}>
+          <a
+            href={`https://www.instagram.com/${contactMethods.instagram}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @{contactMethods.instagram.split(".com/")[1]}
+          </a>
+        </Button>
+      )}
+      <Button variant="link" className={`w-fit py-0 ${past && "text-muted"}`}>
+        <a
+          href={`https://www.google.com/maps?q=${encodeURIComponent(address)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {address}
+        </a>
+      </Button>
+    </div>
+  );
+}

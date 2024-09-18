@@ -26,7 +26,7 @@ export default function ProviderHeader({
         <LeftArrow theme={"light"} size={36} />
       </span>
       <div className="hero-overlay bg-opacity-40"></div>
-      <div className="hero-content text-neutral-content mt-auto mr-auto">
+      <div className="hero-content mt-auto mr-auto">
         <div className="flex items-center space-x-4">
           {loading ? (
             <>

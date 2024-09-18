@@ -80,6 +80,7 @@ export default function ModalBooking({
     setLoading(true);
     if (!timeSlotSelected.date || !timeSlotSelected.startTime) {
       toast.error("Sélectionnez un créneau pour réserver votre rendez-vous.");
+      setLoading(false);
       return;
     }
     const appointmentDate = `${DateTime.fromJSDate(

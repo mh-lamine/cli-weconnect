@@ -12,6 +12,8 @@ import useAuth from "@/hooks/useAuth";
 import { Loader2, XCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useNavigate } from "react-router-dom";
 
 const activities = [
   "Coiffure",
@@ -27,39 +29,84 @@ const activities = [
 ];
 
 export default function BecomeProPage() {
-  const [providerInfos, setProviderInfos] = useState({
-    providerName: "",
-    address: "",
+  const [providerInfos, setProviderInfos] = useState({});
+  const [contactMethods, setContactMethods] = useState({
+    phoneNumber: null,
+    instagram: null,
+    email: null,
+  });
+  const [selectedContactMethods, setSelectedContactMethods] = useState({
+    phoneNumber: false,
+    instagram: false,
+    email: false,
   });
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
 
   const { auth } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setProviderInfos((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { id, name, value } = e.target;
+    if (name === "contactMethod") {
+      setContactMethods((prev) => ({ ...prev, [id]: value }));
+      return;
+    }
+    setProviderInfos((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSelect = (id, value) => {
+    if (value === false) {
+      setContactMethods((prev) => ({ ...prev, [id]: null }));
+    }
+    setSelectedContactMethods((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    if (auth.isProvider) {
+      toast(
+        "Vous êtes déjà prestataire, mais on apprécie la motivation !"
+      );
+      setLoading(false);
+      return;
+    }
     if (!providerInfos.providerName || !providerInfos.address) {
       toast.error("Veuillez renseigner tous les champs");
+      setLoading(false);
       return;
     }
     if (tags.length === 0) {
       toast.error("Veuillez sélectionner au moins une activité");
+      setLoading(false);
       return;
     }
+
     try {
-      const response = await axiosPrivate.patch("/api/users", {
+      await axiosPrivate.patch("/api/users", {
         isProvider: true,
         ...providerInfos,
+        contactMethods,
       });
-
-      console.log(response.data);
+      window.location.href = "https://pro.weconnect-rdv.fr";
+      toast.success(
+        `Bienvenue, ${providerInfos.providerName}.\nVous pouvez désormais accéder à votre tableau de bord !`
+      );
     } catch (error) {
-      toast.error(error);
+      console.error("Erreur lors de la mise à jour de l'utilisateur :", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Une erreur est survenue. Veuillez réessayer.");
+      }
     }
     setLoading(false);
   };
@@ -76,7 +123,7 @@ export default function BecomeProPage() {
           <input
             type="text"
             onChange={handleChange}
-            name="providerName"
+            id="providerName"
             className="bg-transparent border-b border-primary font-medium focus-visible:ring-0 focus:outline-none"
           />
         </p>
@@ -84,22 +131,63 @@ export default function BecomeProPage() {
           Il se situe au{" "}
           <input
             type="text"
-            name="address"
+            id="address"
             onChange={handleChange}
             className="bg-transparent border-b border-primary font-medium focus-visible:ring-0 focus:outline-none"
           />
         </p>
-        <p className="text-xl">
-          Je suis joignable au{" "}
-          <input
-            type="tel"
-            name="phoneNumber"
-            value={auth?.phoneNumber}
-            disabled
-            onChange={handleChange}
-            className="bg-transparent border-b border-primary font-medium focus-visible:ring-0 focus:outline-none text-muted"
-          />
-        </p>
+        <div className="text-xl space-y-4">
+          <p>Mes clients peuvent me contacter par :</p>
+          <div className="flex gap-4">
+            <ContactMethod
+              id="phoneNumber"
+              label="Téléphone"
+              handleSelect={handleSelect}
+            />
+            <ContactMethod
+              id="instagram"
+              label="Instagram"
+              handleSelect={handleSelect}
+            />
+            <ContactMethod
+              id="email"
+              label="Email"
+              handleSelect={handleSelect}
+            />
+          </div>
+          <div className="flex flex-col gap-4 max-w-sm">
+            {selectedContactMethods.phoneNumber && (
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="contactMethod"
+                placeholder="Numéro de téléphone"
+                onChange={handleChange}
+                className="bg-transparent border-b border-primary font-medium focus-visible:ring-0 focus:outline-none"
+              />
+            )}
+            {selectedContactMethods.instagram && (
+              <input
+                type="text"
+                id="instagram"
+                name="contactMethod"
+                placeholder="Lien Instagram"
+                onChange={handleChange}
+                className="bg-transparent border-b border-primary font-medium focus-visible:ring-0 focus:outline-none"
+              />
+            )}
+            {selectedContactMethods.email && (
+              <input
+                type="email"
+                id="email"
+                name="contactMethod"
+                placeholder="Adresse email"
+                onChange={handleChange}
+                className="bg-transparent border-b border-primary font-medium focus-visible:ring-0 focus:outline-none"
+              />
+            )}
+          </div>
+        </div>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <p className="text-xl ">Mes principales activités sont</p>
@@ -120,7 +208,7 @@ export default function BecomeProPage() {
               </SelectContent>
             </Select>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {tags.map((activity) => (
               <span
                 key={activity}
@@ -148,3 +236,17 @@ export default function BecomeProPage() {
     </main>
   );
 }
+
+const ContactMethod = ({ id, label, handleSelect }) => {
+  return (
+    <div className="flex items-center space-x-2">
+      <Checkbox onCheckedChange={(value) => handleSelect(id, value)} id={id} />
+      <label
+        htmlFor={id}
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      >
+        {label}
+      </label>
+    </div>
+  );
+};
