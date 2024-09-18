@@ -13,7 +13,6 @@ import { Loader2, XCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useNavigate } from "react-router-dom";
 
 const activities = [
   "Coiffure",
@@ -31,9 +30,9 @@ const activities = [
 export default function BecomeProPage() {
   const [providerInfos, setProviderInfos] = useState({});
   const [contactMethods, setContactMethods] = useState({
-    phoneNumber: null,
-    instagram: null,
-    email: null,
+    phoneNumber: "",
+    instagram: "",
+    email: "",
   });
   const [selectedContactMethods, setSelectedContactMethods] = useState({
     phoneNumber: false,
@@ -44,7 +43,6 @@ export default function BecomeProPage() {
   const [tags, setTags] = useState([]);
 
   const { auth } = useAuth();
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, name, value } = e.target;
@@ -93,9 +91,6 @@ export default function BecomeProPage() {
         contactMethods,
       });
       window.location.href = "https://pro.weconnect-rdv.fr";
-      toast.success(
-        `Bienvenue, ${providerInfos.providerName}.\nVous pouvez désormais accéder à votre tableau de bord !`
-      );
     } catch (error) {
       console.error("Erreur lors de la mise à jour de l'utilisateur :", error);
       if (
