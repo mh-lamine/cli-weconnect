@@ -58,7 +58,7 @@ export default function RegisterPage() {
       if (error.response.status === 409) {
         toast.error("Ce numéro de téléphone est déjà utilisé");
       } else {
-        toast.error("Une erreur est survenue, veuillez réessayer plus tard");
+        toast.error("Une erreur est survenue, veuillez contacter le support");
       }
     }
     setLoading(false);

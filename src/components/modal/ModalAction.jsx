@@ -53,7 +53,7 @@ const ModalAction = ({
       }
       setOpen(false);
     } catch (error) {
-      setError("Une erreur est survenue, veuillez réessayer plus tard.");
+      setError("Une erreur est survenue, veuillez contacter le support.");
     }
     setLoading(false);
   };

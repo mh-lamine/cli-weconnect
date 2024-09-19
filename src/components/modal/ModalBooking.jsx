@@ -120,7 +120,7 @@ export default function ModalBooking({
         });
         return;
       }
-      toast.error("Une erreur est survenue, veuillez réessayer plus tard.");
+      toast.error("Une erreur est survenue, veuillez contacter le support.");
     }
     setDate(null);
     setTimeSlotSelected({ date: null, startTime: "" });

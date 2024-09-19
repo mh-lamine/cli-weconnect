@@ -109,7 +109,7 @@ const Account = () => {
       await getUser();
     } catch (error) {
       if (!error.response) {
-        setError("Une erreur est survenue, veuillez réessayer plus tard");
+        setError("Une erreur est survenue, veuillez contacter le support");
       } else {
         setError(error.response.data.message);
       }

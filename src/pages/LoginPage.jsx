@@ -40,7 +40,7 @@ export default function LoginPage() {
       if (error.response.status === 401) {
         toast.error("Numéro de téléphone ou mot de passe incorrect");
       } else {
-        toast.error("Une erreur est survenue, veuillez réessayer plus tard");
+        toast.error("Une erreur est survenue, veuillez contacter le support");
       }
     }
     setLoading(false);
