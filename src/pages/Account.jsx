@@ -165,7 +165,6 @@ const Account = () => {
               </div>
               {appointments.pastAppointments?.length &&
                 appointments.pastAppointments
-                  .sort((a, b) => new Date(b.date) - new Date(a.date))
                   .map((appointment) => (
                     <ClientAppointment
                       key={appointment.id}

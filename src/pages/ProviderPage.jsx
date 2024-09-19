@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import ModalAction from "@/components/modal/ModalAction";
 import { Button } from "@/components/ui/button";
+import { convertToHhMm } from "@/utils/formatting";
 
 export default function ProviderPage() {
   const { providerId } = useParams();
@@ -167,7 +168,7 @@ function Services({
               <div className="flex text-sm">
                 <p className="text-muted">{service.price}€</p>
                 <div className="divider divider-horizontal"></div>
-                <p>{service.duration}mn</p>
+                <p>{convertToHhMm(service.duration)}</p>
               </div>
               <p>{service.description}</p>
             </div>
