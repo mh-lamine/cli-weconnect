@@ -30,23 +30,25 @@ export default function ProviderHeader({
         <div className="flex items-center space-x-4">
           {loading ? (
             <>
-              <Skeleton className="h-14 w-14 rounded-full" />
+              <Skeleton className="h-16 w-16 rounded-full" />
               <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
+                <Skeleton className="h-8 w-[250px]" />
+                <Skeleton className="h-8 w-[200px]" />
               </div>
             </>
           ) : (
             <>
-              <Avatar className="w-14 h-14">
+              <Avatar className="w-16 h-16">
                 <AvatarImage src={profilePicture} />
-                <AvatarFallback className="text-xl">
+                <AvatarFallback className="text-2xl">
                   {name && getInitials(name)}
                 </AvatarFallback>
               </Avatar>
-              <div className="ml-4">
-                <h1 className="text-3xl font-semibold">{name}</h1>
-                <p>{address}</p>
+              <div className="ml-4 space-y-1">
+                <h1 className="text-2xl font-semibold bg-muted px-2 py-1 rounded-sm">
+                  {name}
+                </h1>
+                <p className="bg-muted px-2 py-1 rounded-sm w-fit">{address}</p>
               </div>
             </>
           )}
