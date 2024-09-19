@@ -10,7 +10,7 @@ export default function ProviderCard({ provider }) {
         <img
           src={provider.coverImage}
           alt="photo du salon"
-          className=" rounded-xl w-full aspect-video"
+          className=" rounded-xl w-full aspect-video object-cover"
         />
       ) : (
         <div className="w-full aspect-video bg-muted grid place-items-center text-light text-xl rounded-xl">

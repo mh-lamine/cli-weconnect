@@ -63,6 +63,7 @@ const ClientAppointment = ({
           actionLabel="Supprimer"
           title="Supprimer le rendez-vous"
           description="Êtes-vous sûr de vouloir supprimer votre rendez-vous ?"
+          successMessage="Rendez-vous supprimé"
           trigger="Supprimer"
           variant="destructive"
         />
