@@ -166,7 +166,7 @@ export default function BecomeProPage() {
                 type="text"
                 id="instagram"
                 name="contactMethod"
-                placeholder="Lien Instagram"
+                placeholder="Sous la forme @weconnect_off"
                 onChange={handleChange}
                 className="bg-transparent border-b border-primary font-medium focus-visible:ring-0 focus:outline-none"
               />

@@ -36,6 +36,7 @@ export default function ProviderPage() {
   if (error) return <div className="flex-1">Error: {error}</div>;
 
   if (provider?.isInVacancyMode) {
+    const { contactMethods } = provider;
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center space-y-8">
@@ -46,25 +47,27 @@ export default function ProviderPage() {
             Vous pouvez consulter ses informations de contact pour prendre
             rendez-vous ultérieurement
           </p>
-          <div className="flex items-center space-x-4">
-            <Button asChild>
-              <a
-                href={`tel:${provider.phoneNumber}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Appeler
-              </a>
-            </Button>
-            <Button asChild variant="outline">
-              <a
-                href={`mailto:${provider.email}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Envoyer un mail
-              </a>
-            </Button>
+          <div className="flex flex-col md:flex-row md:gap-4">
+            {contactMethods.phoneNumber && (
+              <Button className={"w-fit py-0"}>
+                <a href={`tel:${contactMethods.phoneNumber}`}>
+                  {contactMethods.phoneNumber.replace(/(\d{2})(?=\d)/g, "$1 ")}
+                </a>
+              </Button>
+            )}
+            {contactMethods.instagram && (
+              <Button className={"w-fit py-0"}>
+                <a
+                  href={`https://www.instagram.com/${
+                    contactMethods.instagram.split("@")[1]
+                  }`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {contactMethods.instagram}
+                </a>
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -145,7 +148,7 @@ function Services({
   services,
   availabilities,
   specialAvailabilities,
-  autoAccept
+  autoAccept,
 }) {
   return (
     <Accordion
