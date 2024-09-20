@@ -159,7 +159,7 @@ function Services({
     >
       <AccordionItem value={`item-${index}`}>
         <AccordionTrigger>
-          <h2 className="text-2xl font-medium">{category.name}</h2>
+          <h2 className="text-2xl font-medium text-left">{category.name}</h2>
         </AccordionTrigger>
         {services.map((service, index) => (
           <AccordionContent
