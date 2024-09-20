@@ -124,7 +124,7 @@ export default function ProviderPage() {
               />
             )}
             {provider?.providerCategories.map((category, index) => (
-              <div key={index}>
+              <div key={category.id}>
                 <Services
                   index={index}
                   category={category}
