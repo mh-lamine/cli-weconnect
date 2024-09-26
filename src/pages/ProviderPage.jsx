@@ -161,28 +161,30 @@ function Services({
         <AccordionTrigger>
           <h2 className="text-2xl font-medium text-left">{category.name}</h2>
         </AccordionTrigger>
-        {services.map((service, index) => (
-          <AccordionContent
-            key={index}
-            className="flex items-center justify-between"
-          >
-            <div className="w-3/4 pt-4 space-y-2">
-              <h3 className="text-lg text-left">{service.name}</h3>
-              <div className="flex text-sm">
-                <p className="text-muted">{service.price}€</p>
-                <div className="divider divider-horizontal"></div>
-                <p>{convertToHhMm(service.duration)}</p>
+        {services
+          .sort((a, b) => a.name - b.name)
+          .map((service, index) => (
+            <AccordionContent
+              key={index}
+              className="flex items-center justify-between"
+            >
+              <div className="w-3/4 pt-4 space-y-2">
+                <h3 className="text-lg text-left">{service.name}</h3>
+                <div className="flex text-sm">
+                  <p className="text-muted">{service.price}€</p>
+                  <div className="divider divider-horizontal"></div>
+                  <p>{convertToHhMm(service.duration)}</p>
+                </div>
+                <p>{service.description}</p>
               </div>
-              <p>{service.description}</p>
-            </div>
-            <ModalBooking
-              service={service}
-              availabilities={availabilities}
-              specialAvailabilities={specialAvailabilities}
-              autoAccept={autoAccept}
-            />
-          </AccordionContent>
-        ))}
+              <ModalBooking
+                service={service}
+                availabilities={availabilities}
+                specialAvailabilities={specialAvailabilities}
+                autoAccept={autoAccept}
+              />
+            </AccordionContent>
+          ))}
       </AccordionItem>
     </Accordion>
   );

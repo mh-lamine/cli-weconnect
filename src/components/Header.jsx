@@ -91,7 +91,7 @@ export default function Header() {
               <>
                 {auth.isProvider ? (
                   <Button asChild className="w-full">
-                    <Link to={"https://pro.weconnect-rdv.fr"}>
+                    <Link to={"https://pro.weconnect-rdv.fr"} target="_blank" rel="noopener noreferrer">
                       Tableau de bord
                     </Link>
                   </Button>
