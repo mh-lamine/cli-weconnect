@@ -20,6 +20,7 @@ import logo from "/weconnect-no-bg.svg";
 import { Toaster } from "sonner";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import BecomeProPage from "./pages/BecomeProPage";
+import RegisterSalon from "./pages/RegisterSalon";
 
 const Admin = lazy(() => import("./pages/Admin"));
 
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="provider/:providerId" element={<ProviderPage />} />
+          <Route path="/entreprise" element={<RegisterSalon/>}/>
         </Route>
 
         {/* auth routes */}
