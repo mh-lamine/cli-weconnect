@@ -16,7 +16,7 @@ export default function ProviderHeader({
     <div
       className="hero w-full aspect-video relative max-h-[40vh] sm:max-h-[20vh]"
       style={{
-        backgroundImage: `url(${coverImage && coverImage})`,
+        backgroundImage: `url("${coverImage && coverImage}")`,
       }}
     >
       <span

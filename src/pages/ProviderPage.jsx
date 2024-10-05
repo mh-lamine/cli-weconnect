@@ -79,7 +79,7 @@ export default function ProviderPage() {
       <header>
         <ProviderHeader
           loading={loading}
-          name={provider?.providerName}
+          name={provider?.providerName || provider?.name}
           address={provider?.address}
           profilePicture={provider?.profilePicture}
           coverImage={provider?.coverImage}
@@ -123,7 +123,7 @@ export default function ProviderPage() {
                 cancelText="Fermer"
               />
             )}
-            {provider?.providerCategories.map((category, index) => (
+            {provider?.providerCategories?.map((category, index) => (
               <div key={category.id}>
                 <Services
                   index={index}

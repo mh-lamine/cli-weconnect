@@ -4,6 +4,7 @@ import { getInitials } from "@/utils/formatting";
 import logo from "/weconnect_tinified.png";
 
 export default function ProviderCard({ provider }) {
+  const name = provider.providerName || provider.name;
   return (
     <Link to={`provider/${provider.id}`} className="space-y-2">
       {provider.coverImage ? (
@@ -21,11 +22,11 @@ export default function ProviderCard({ provider }) {
         <Avatar className="w-12 h-12">
           <AvatarImage src={provider.profilePicture} />
           <AvatarFallback className="text-lg">
-            {provider.providerName && getInitials(provider.providerName)}
+            {name && getInitials(name)}
           </AvatarFallback>
         </Avatar>
         <div className="ml-4">
-          <h1 className="text-lg font-medium">{provider.providerName}</h1>
+          <h1 className="text-lg font-medium">{name}</h1>
           <p className="text-sm">{provider.address}</p>
         </div>
       </div>
