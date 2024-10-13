@@ -93,6 +93,7 @@ export default function ModalBooking({
       status: autoAccept ? "ACCEPTED" : "PENDING",
       serviceId: service.id,
       providerId: service.providerId,
+      salonId: service.salonId,
     };
 
     try {
@@ -104,23 +105,11 @@ export default function ModalBooking({
       setOpen(false);
     } catch (error) {
       if (error.response?.status === 403) {
-        toast.error("Connectez-vous pour réserver un rendez-vous.", {
-          action: (
-            <Button
-              variant="outline"
-              className="text-light"
-              onClick={() => {
-                setOpen(false);
-                navigate("/login", { state: { from: location } });
-              }}
-            >
-              Se connecter
-            </Button>
-          ),
-        });
+        toast.error("Connectez-vous pour réserver un rendez-vous.");
         return;
       }
       toast.error("Une erreur est survenue, veuillez contacter le support.");
+      console.error(error);
     }
     setDate(null);
     setTimeSlotSelected({ date: null, startTime: "" });
@@ -132,12 +121,12 @@ export default function ModalBooking({
     if (!date) return;
     async function fetchAvailableTimeSlots() {
       setLoadingTimeSlots(true);
-      const providerId = service.providerId;
+      const id = service.providerId || service.salonId;
       const formattedDate = DateTime.fromJSDate(date).toISODate();
       const serviceDuration = service.duration;
       try {
         const data = await getProviderAvailableTimeSlots(
-          providerId,
+          id,
           formattedDate,
           serviceDuration
         );

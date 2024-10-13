@@ -7,20 +7,21 @@ const ClientAppointment = ({
   cancelAppointment,
   past = false,
 }) => {
+  const {provider, salon, service, date, status} = appointment;
   return (
     <div className={`flex flex-col gap-2 py-2 ${past && "text-muted"}`}>
       <div className="divider divider-start my-0">
         <h2 className="text-xl font-semibold">
-          {appointment.provider.providerName}
+          {provider?.providerName || salon.name}
         </h2>
       </div>
-      <ContactMethods provider={appointment.provider} past={past} />
+      <ContactMethods provider={provider} salon={salon} past={past} />
       <h3 className="text-lg">
         Vous avez réservé{" "}
-        <span className="font-medium">{appointment.service.name}</span> <br />{" "}
+        <span className="font-medium">{service.name}</span> <br />{" "}
         le{" "}
         <span className="font-medium">
-          {new Date(appointment.date)
+          {new Date(date)
             .toLocaleDateString("fr-FR", {
               weekday: "long",
               month: "long",
@@ -30,28 +31,28 @@ const ClientAppointment = ({
         </span>
         à{" "}
         <span className="font-medium">
-          {new Date(appointment.date).toLocaleTimeString("fr-FR", {
+          {new Date(date).toLocaleTimeString("fr-FR", {
             hour: "2-digit",
             minute: "2-digit",
           })}
         </span>
       </h3>
-      {appointment.status === "PENDING" && (
+      {status === "PENDING" && (
         <Badge variant="outline" className={past && "bg-muted"}>
           En attente de confirmation
         </Badge>
       )}
-      {appointment.status === "ACCEPTED" && (
+      {status === "ACCEPTED" && (
         <Badge variant="success" className={past && "bg-muted"}>
           Confirmé
         </Badge>
       )}
-      {appointment.status === "COMPLETED" && (
+      {status === "COMPLETED" && (
         <Badge variant="success" className={past && "bg-muted"}>
           Passé
         </Badge>
       )}
-      {appointment.status === "CANCELLED" && (
+      {status === "CANCELLED" && (
         <Badge variant="destructive" className={past && "bg-muted"}>
           Annulé
         </Badge>
@@ -74,25 +75,27 @@ const ClientAppointment = ({
 
 export default ClientAppointment;
 
-function ContactMethods({ provider, past }) {
-  const { contactMethods, address } = provider;
+function ContactMethods({ provider, salon, past }) {
+  const salonNumber = salon?.phoneNumber || provider?.contactMethods.phoneNumber;
+  const address = salon?.address || provider?.address;
+  const instagram = provider?.contactMethods.instagram;
   return (
     <div className="flex flex-col md:flex-row md:gap-4">
-      {contactMethods.phoneNumber && (
+      {salonNumber && (
         <Button variant="link" className={`w-fit py-0 ${past && "text-muted"}`}>
-          <a href={`tel:${contactMethods.phoneNumber}`}>
-            {contactMethods.phoneNumber.replace(/(\d{2})(?=\d)/g, "$1 ")}
+          <a href={`tel:${salonNumber}`}>
+            {salonNumber.replace(/(\d{2})(?=\d)/g, "$1 ")}
           </a>
         </Button>
       )}
-      {contactMethods.instagram && (
+      {instagram && (
         <Button variant="link" className={`w-fit py-0 ${past && "text-muted"}`}>
           <a
-            href={`https://www.instagram.com/${contactMethods.instagram.split("@")[1]}`}
+            href={`https://www.instagram.com/${instagram.split("@")[1]}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {contactMethods.instagram}
+            {instagram}
           </a>
         </Button>
       )}
