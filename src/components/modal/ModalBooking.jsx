@@ -33,10 +33,14 @@ import {
 import { DateTime } from "luxon";
 import { fr } from "date-fns/locale";
 import { OneYearFromNow } from "@/utils/dateManagement";
-import { getProviderAvailableTimeSlots } from "@/actions/providerActions";
+import {
+  getProviderAvailableTimeSlots,
+  getSalonAvailableTimeSlots,
+} from "@/actions/providerActions";
 import axiosPrivate from "@/api/axiosPrivate";
 import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
+import MemberCard from "../MemberCard";
 
 export default function ModalBooking({
   service,
@@ -48,10 +52,12 @@ export default function ModalBooking({
   const [date, setDate] = useState();
   const [loadingTimeSlots, setLoadingTimeSlots] = useState(false);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [salonAvailableTimeSlots, setSalonAvailableTimeSlots] = useState();
   const [timeSlotSelected, setTimeSlotSelected] = useState({
     date: null,
     startTime: "",
   });
+  const [selectedMember, setSelectedMember] = useState();
   const [loading, setLoading] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -77,12 +83,18 @@ export default function ModalBooking({
   };
 
   async function handleCreateAppointment() {
-    setLoading(true);
     if (!timeSlotSelected.date || !timeSlotSelected.startTime) {
       toast.error("Sélectionnez un créneau pour réserver votre rendez-vous.");
       setLoading(false);
       return;
     }
+
+    if (salonAvailableTimeSlots && !selectedMember) {
+      toast.error("Sélectionnez un membre pour réserver votre rendez-vous.");
+      setLoading(false);
+      return;
+    }
+
     const appointmentDate = `${DateTime.fromJSDate(
       timeSlotSelected.date
     ).toISODate()}T${timeSlotSelected.startTime}`;
@@ -94,9 +106,11 @@ export default function ModalBooking({
       serviceId: service.id,
       providerId: service.providerId,
       salonId: service.salonId,
+      memberId: selectedMember
     };
 
     try {
+      setLoading(true);
       await axiosPrivate.post("/api/appointments", appointment);
       toast.success(
         `Votre rendez-vous a été créé avec succès.
@@ -110,10 +124,11 @@ export default function ModalBooking({
       }
       toast.error("Une erreur est survenue, veuillez contacter le support.");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
     setDate(null);
     setTimeSlotSelected({ date: null, startTime: "" });
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -121,20 +136,52 @@ export default function ModalBooking({
     if (!date) return;
     async function fetchAvailableTimeSlots() {
       setLoadingTimeSlots(true);
-      const id = service.providerId || service.salonId;
+      const { providerId, salonId } = service;
       const formattedDate = DateTime.fromJSDate(date).toISODate();
       const serviceDuration = service.duration;
-      try {
-        const data = await getProviderAvailableTimeSlots(
-          id,
-          formattedDate,
-          serviceDuration
-        );
-        setAvailableTimeSlots(data);
-      } catch (error) {
-        toast.error(error);
-      } finally {
-        setLoadingTimeSlots(false);
+      if (providerId) {
+        try {
+          const data = await getProviderAvailableTimeSlots(
+            providerId,
+            formattedDate,
+            serviceDuration
+          );
+          setAvailableTimeSlots(data);
+        } catch (error) {
+          toast.error(error);
+        } finally {
+          setLoadingTimeSlots(false);
+        }
+      }
+      if (salonId) {
+        try {
+          const data = await getSalonAvailableTimeSlots(
+            salonId,
+            formattedDate,
+            serviceDuration
+          );
+
+          const formattedData = data.flatMap(
+            ({ availableSlots }) => availableSlots
+          );
+
+          const uniqueTimeSlots = formattedData.filter(
+            (slot, index, self) =>
+              index ===
+              self.findIndex(
+                (s) => s.start === slot.start && s.end === slot.end
+              )
+          );
+
+          setSalonAvailableTimeSlots({
+            allSlots: data,
+            uniqueTimeSlots,
+          });
+        } catch (error) {
+          toast.error(error);
+        } finally {
+          setLoadingTimeSlots(false);
+        }
       }
     }
     fetchAvailableTimeSlots();
@@ -205,8 +252,47 @@ export default function ModalBooking({
                   </Button>
                 ))}
               </div>
+            ) : salonAvailableTimeSlots ? (
+              <div className="flex flex-wrap gap-2">
+                {salonAvailableTimeSlots.uniqueTimeSlots.map((slot, index) => (
+                  <Button
+                    key={index}
+                    variant={
+                      timeSlotSelected.date === date &&
+                      timeSlotSelected.startTime === slot.start
+                        ? "default"
+                        : "outline"
+                    }
+                    onClick={() => {
+                      timeSlotSelected.date === date &&
+                      timeSlotSelected.startTime === slot.start
+                        ? setTimeSlotSelected({ date: null, startTime: "" })
+                        : setTimeSlotSelected({
+                            date,
+                            startTime: slot.start,
+                          });
+                      setSelectedMember();
+                    }}
+                  >
+                    {slot.start}
+                  </Button>
+                ))}
+              </div>
             ) : (
               <p> Aucune disponibilité pour ce jour.</p>
+            )}
+            {timeSlotSelected.date && timeSlotSelected.startTime && (
+              <div className="flex flex-wrap gap-2">
+                {salonAvailableTimeSlots.allSlots.map((member) => (
+                  <MemberCard
+                    key={member.memberId}
+                    member={member}
+                    selectedMember={selectedMember}
+                    setSelectedMember={setSelectedMember}
+                    timeSlotSelected={timeSlotSelected.startTime}
+                  />
+                ))}
+              </div>
             )}
           </Popover>
           <DialogFooter className="sm:justify-start">
@@ -294,8 +380,47 @@ export default function ModalBooking({
                   </Button>
                 ))}
               </div>
+            ) : salonAvailableTimeSlots ? (
+              <div className="flex flex-wrap gap-2">
+                {salonAvailableTimeSlots.uniqueTimeSlots.map((slot, index) => (
+                  <Button
+                    key={index}
+                    variant={
+                      timeSlotSelected.date === date &&
+                      timeSlotSelected.startTime === slot.start
+                        ? "default"
+                        : "outline"
+                    }
+                    onClick={() => {
+                      timeSlotSelected.date === date &&
+                      timeSlotSelected.startTime === slot.start
+                        ? setTimeSlotSelected({ date: null, startTime: "" })
+                        : setTimeSlotSelected({
+                            date,
+                            startTime: slot.start,
+                          });
+                      setSelectedMember();
+                    }}
+                  >
+                    {slot.start}
+                  </Button>
+                ))}
+              </div>
             ) : (
               <p> Aucune disponibilité pour ce jour.</p>
+            )}
+            {timeSlotSelected.date && timeSlotSelected.startTime && (
+              <div className="flex flex-wrap gap-2">
+                {salonAvailableTimeSlots.allSlots.map((member) => (
+                  <MemberCard
+                    key={member.memberId}
+                    member={member}
+                    selectedMember={selectedMember}
+                    setSelectedMember={setSelectedMember}
+                    timeSlotSelected={timeSlotSelected.startTime}
+                  />
+                ))}
+              </div>
             )}
           </div>
         </Popover>

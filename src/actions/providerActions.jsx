@@ -37,3 +37,20 @@ export async function getProviderAvailableTimeSlots(
     return { error: error.message };
   }
 }
+
+export async function getSalonAvailableTimeSlots(
+  salonId,
+  date,
+  serviceDuration
+) {
+  try {
+    const { data } = await axios.post(`/api/availabilities/salon/${salonId}`, {
+      date,
+      serviceDuration,
+    });
+    return data;
+  } catch (error) {
+    console.error(error);
+    return { error: error.message };
+  }
+}

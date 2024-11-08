@@ -21,7 +21,7 @@ export default function ProviderHeader({
     >
       <span
         className="absolute top-0 left-0 m-2 p-2 z-10"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/")}
       >
         <LeftArrow theme={"light"} size={36} />
       </span>

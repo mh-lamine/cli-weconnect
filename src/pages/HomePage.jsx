@@ -15,9 +15,9 @@ export default function HomePage() {
 
   useEffect(() => {
     async function fetchProviders() {
-      const response = await getProvidersByFilters();
-      setError(response.error);
-      setProviders(response.data);
+      const {data, error} = await getProvidersByFilters();
+      setError(error);
+      setProviders(data);
       setLoading(false);
     }
     fetchProviders();
