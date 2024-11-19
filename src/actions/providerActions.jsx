@@ -38,15 +38,11 @@ export async function getProviderAvailableTimeSlots(
   }
 }
 
-export async function getSalonAvailableTimeSlots(
-  salonId,
-  date,
-  serviceDuration
-) {
+export async function getSalonAvailableTimeSlots(salonId, date, service) {
   try {
     const { data } = await axios.post(`/api/availabilities/salon/${salonId}`, {
       date,
-      serviceDuration,
+      service,
     });
     return data;
   } catch (error) {

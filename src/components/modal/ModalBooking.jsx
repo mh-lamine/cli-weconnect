@@ -159,7 +159,7 @@ export default function ModalBooking({
           const data = await getSalonAvailableTimeSlots(
             salonId,
             formattedDate,
-            serviceDuration
+            service
           );
 
           setSalonAvailableTimeSlots(data);
