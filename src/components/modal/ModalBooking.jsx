@@ -106,7 +106,7 @@ export default function ModalBooking({
       serviceId: service.id,
       providerId: service.providerId,
       salonId: service.salonId,
-      memberId: selectedMember
+      memberId: selectedMember.memberId,
     };
 
     try {
@@ -133,6 +133,7 @@ export default function ModalBooking({
 
   useEffect(() => {
     setTimeSlotSelected({ date: null, startTime: "" });
+    setSelectedMember();
     if (!date) return;
     async function fetchAvailableTimeSlots() {
       setLoadingTimeSlots(true);
@@ -161,22 +162,7 @@ export default function ModalBooking({
             serviceDuration
           );
 
-          const formattedData = data.flatMap(
-            ({ availableSlots }) => availableSlots
-          );
-
-          const uniqueTimeSlots = formattedData.filter(
-            (slot, index, self) =>
-              index ===
-              self.findIndex(
-                (s) => s.start === slot.start && s.end === slot.end
-              )
-          );
-
-          setSalonAvailableTimeSlots({
-            allSlots: data,
-            uniqueTimeSlots,
-          });
+          setSalonAvailableTimeSlots(data);
         } catch (error) {
           toast.error(error);
         } finally {
@@ -252,9 +238,24 @@ export default function ModalBooking({
                   </Button>
                 ))}
               </div>
-            ) : salonAvailableTimeSlots ? (
+            ) : salonAvailableTimeSlots?.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {salonAvailableTimeSlots.uniqueTimeSlots.map((slot, index) => (
+                {salonAvailableTimeSlots.map((member) => (
+                  <MemberCard
+                    key={member.memberId}
+                    member={member}
+                    selectedMember={selectedMember}
+                    setSelectedMember={setSelectedMember}
+                    setTimeSlotSelected={setTimeSlotSelected}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p> Aucune disponibilité pour ce jour.</p>
+            )}
+            {selectedMember && (
+              <div className="flex flex-wrap gap-2">
+                {selectedMember.availableSlots.map((slot, index) => (
                   <Button
                     key={index}
                     variant={
@@ -271,26 +272,10 @@ export default function ModalBooking({
                             date,
                             startTime: slot.start,
                           });
-                      setSelectedMember();
                     }}
                   >
                     {slot.start}
                   </Button>
-                ))}
-              </div>
-            ) : (
-              <p> Aucune disponibilité pour ce jour.</p>
-            )}
-            {timeSlotSelected.date && timeSlotSelected.startTime && (
-              <div className="flex flex-wrap gap-2">
-                {salonAvailableTimeSlots.allSlots.map((member) => (
-                  <MemberCard
-                    key={member.memberId}
-                    member={member}
-                    selectedMember={selectedMember}
-                    setSelectedMember={setSelectedMember}
-                    timeSlotSelected={timeSlotSelected.startTime}
-                  />
                 ))}
               </div>
             )}
@@ -380,9 +365,24 @@ export default function ModalBooking({
                   </Button>
                 ))}
               </div>
-            ) : salonAvailableTimeSlots ? (
+            ) : salonAvailableTimeSlots?.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {salonAvailableTimeSlots.uniqueTimeSlots.map((slot, index) => (
+                {salonAvailableTimeSlots.map((member) => (
+                  <MemberCard
+                    key={member.memberId}
+                    member={member}
+                    selectedMember={selectedMember}
+                    setSelectedMember={setSelectedMember}
+                    setTimeSlotSelected={setTimeSlotSelected}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p> Aucune disponibilité pour ce jour.</p>
+            )}
+            {selectedMember && (
+              <div className="flex flex-wrap gap-2">
+                {selectedMember.availableSlots.map((slot, index) => (
                   <Button
                     key={index}
                     variant={
@@ -399,26 +399,10 @@ export default function ModalBooking({
                             date,
                             startTime: slot.start,
                           });
-                      setSelectedMember();
                     }}
                   >
                     {slot.start}
                   </Button>
-                ))}
-              </div>
-            ) : (
-              <p> Aucune disponibilité pour ce jour.</p>
-            )}
-            {timeSlotSelected.date && timeSlotSelected.startTime && (
-              <div className="flex flex-wrap gap-2">
-                {salonAvailableTimeSlots.allSlots.map((member) => (
-                  <MemberCard
-                    key={member.memberId}
-                    member={member}
-                    selectedMember={selectedMember}
-                    setSelectedMember={setSelectedMember}
-                    timeSlotSelected={timeSlotSelected.startTime}
-                  />
                 ))}
               </div>
             )}
