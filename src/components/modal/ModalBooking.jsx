@@ -106,7 +106,7 @@ export default function ModalBooking({
       serviceId: service.id,
       providerId: service.providerId,
       salonId: service.salonId,
-      memberId: selectedMember.memberId,
+      memberId: selectedMember?.memberId,
     };
 
     try {
