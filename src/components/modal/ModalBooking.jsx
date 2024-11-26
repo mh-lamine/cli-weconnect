@@ -240,15 +240,18 @@ export default function ModalBooking({
               </div>
             ) : salonAvailableTimeSlots?.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {salonAvailableTimeSlots.map((member) => (
-                  <MemberCard
-                    key={member.memberId}
-                    member={member}
-                    selectedMember={selectedMember}
-                    setSelectedMember={setSelectedMember}
-                    setTimeSlotSelected={setTimeSlotSelected}
-                  />
-                ))}
+                {salonAvailableTimeSlots.map(
+                  (member) =>
+                    !!member.availableSlots.length && (
+                      <MemberCard
+                        key={member.memberId}
+                        member={member}
+                        selectedMember={selectedMember}
+                        setSelectedMember={setSelectedMember}
+                        setTimeSlotSelected={setTimeSlotSelected}
+                      />
+                    )
+                )}
               </div>
             ) : (
               <p> Aucune disponibilité pour ce jour.</p>
@@ -367,15 +370,18 @@ export default function ModalBooking({
               </div>
             ) : salonAvailableTimeSlots?.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {salonAvailableTimeSlots.map((member) => (
-                  <MemberCard
-                    key={member.memberId}
-                    member={member}
-                    selectedMember={selectedMember}
-                    setSelectedMember={setSelectedMember}
-                    setTimeSlotSelected={setTimeSlotSelected}
-                  />
-                ))}
+                {salonAvailableTimeSlots.map(
+                  (member) =>
+                    !!member.availableSlots.length && (
+                      <MemberCard
+                        key={member.memberId}
+                        member={member}
+                        selectedMember={selectedMember}
+                        setSelectedMember={setSelectedMember}
+                        setTimeSlotSelected={setTimeSlotSelected}
+                      />
+                    )
+                )}
               </div>
             ) : (
               <p> Aucune disponibilité pour ce jour.</p>
