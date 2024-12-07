@@ -90,7 +90,7 @@ export default function LoginPage() {
       </Button>
       <div className="divider mb-0">Pas encore inscrit ?</div>
       <Button asChild variant="outline">
-        <Link to={"/register"}>Créer un compter</Link>
+        <Link to={"/register"}>Créer un compte</Link>
       </Button>
     </div>
   );
