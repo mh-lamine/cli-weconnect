@@ -2,7 +2,7 @@
   "name": "WeConnect",
   "short_name": "WeConnect",
   "description": "Retrouvez vos prestataires préférés en un clic.",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#E9E7EA",
   "theme_color": "#E9E7EA",
