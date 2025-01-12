@@ -4,7 +4,7 @@ import { getInitials } from "@/utils/formatting";
 import logo from "/weconnect_tinified.png";
 
 export default function ProviderCard({ provider }) {
-  const name = provider.providerName || provider.name;
+  const name = provider.name;
   return (
     <Link to={`provider/${provider.id}`} className="space-y-2">
       {provider.coverImage ? (

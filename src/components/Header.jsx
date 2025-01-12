@@ -40,32 +40,17 @@ export default function Header() {
               WeConnect
             </Link>
             <div className="flex items-center gap-2">
+              <Button asChild variant="outline">
+                <Link to={"/info"}>Ajouter mon salon</Link>
+              </Button>
               {auth ? (
-                <>
-                  {auth.isProvider ? (
-                    <Button asChild>
-                      <Link to={"https://pro.weconnect-rdv.fr"}>
-                        Tableau de bord
-                      </Link>
-                    </Button>
-                  ) : (
-                    <Button asChild>
-                      <Link to={"/pro"}>Devenir prestataire</Link>
-                    </Button>
-                  )}
-                  <Button asChild variant="outline">
-                    <Link to={"account"}>Mon compte</Link>
-                  </Button>
-                </>
+                <Button asChild>
+                  <Link to={"account"}>Mon compte</Link>
+                </Button>
               ) : (
-                <>
-                  <Button asChild variant={"outline"}>
-                    <Link to={"register"}>Créer un compte</Link>
-                  </Button>
-                  <Button asChild>
-                    <Link to={"login"}>Se connecter</Link>
-                  </Button>
-                </>
+                <Button asChild>
+                  <Link to={"login"}>Se connecter</Link>
+                </Button>
               )}
             </div>
           </div>
@@ -87,32 +72,17 @@ export default function Header() {
             <li>Estheticienne</li>
           </ul> */}
           <div className="w-full flex flex-col items-center gap-2 mt-auto">
+            <Button asChild variant="outline" className="w-full">
+              <Link to={"/info"}>Ajouter mon salon</Link>
+            </Button>
             {auth ? (
-              <>
-                {auth.isProvider ? (
-                  <Button asChild className="w-full">
-                    <Link to={"https://pro.weconnect-rdv.fr"} target="_blank" rel="noopener noreferrer">
-                      Tableau de bord
-                    </Link>
-                  </Button>
-                ) : (
-                  <Button asChild className="w-full">
-                    <Link to={"/pro"}>Devenir prestataire</Link>
-                  </Button>
-                )}
-                <Button asChild variant="outline" className="w-full">
-                  <Link to={"account"}>Mon compte</Link>
-                </Button>
-              </>
+              <Button asChild className="w-full">
+                <Link to={"account"}>Mon compte</Link>
+              </Button>
             ) : (
-              <>
-                <Button asChild variant={"outline"} className="w-full">
-                  <Link to={"register"}>Créer un compte</Link>
-                </Button>
-                <Button asChild className="w-full">
-                  <Link to={"login"}>Se connecter</Link>
-                </Button>
-              </>
+              <Button asChild className="w-full">
+                <Link to={"login"}>Se connecter</Link>
+              </Button>
             )}
           </div>
         </div>

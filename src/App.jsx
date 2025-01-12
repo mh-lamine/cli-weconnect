@@ -1,4 +1,4 @@
-import { useEffect, lazy, useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import RequireAuth from "./components/RequireAuth";
@@ -19,10 +19,8 @@ import ErrorPage from "./pages/ErrorPage";
 import logo from "/weconnect-no-bg.svg";
 import { Toaster } from "sonner";
 import { AlertCircle, CheckCircle } from "lucide-react";
-import BecomeProPage from "./pages/BecomeProPage";
-import RegisterSalon from "./pages/RegisterSalon";
-
-const Admin = lazy(() => import("./pages/Admin"));
+import LandingPage from "./pages/LandingPage";
+import SubscribePage from "./pages/SubscribePage";
 
 export default function App() {
   const { setAuth } = useAuth();
@@ -48,36 +46,34 @@ export default function App() {
 
   return (
     <>
-      <Routes>
-        {/* public routes */}
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="provider/:providerId" element={<ProviderPage />} />
-          <Route path="/entreprise" element={<RegisterSalon/>}/>
-        </Route>
+        <Routes>
+          {/* public routes */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="provider/:providerId" element={<ProviderPage />} />
+          </Route>
 
-        {/* auth routes */}
-        <Route element={<AuthLayout />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-        </Route>
+          <Route path="info" element={<LandingPage />} />
 
-        {/* protected routes */}
-        <Route element={<PersistLogin />}>
-          <Route element={<RequireAuth />}>
-            <Route element={<Layout />}>
-              <Route path="account" element={<Account />} />
-              <Route path="pro" element={<BecomeProPage />} />
+          {/* auth routes */}
+          <Route element={<AuthLayout />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+          </Route>
+          <Route path="subscribe" element={<SubscribePage />} />
+
+          {/* protected routes */}
+          <Route element={<PersistLogin />}>
+            <Route element={<RequireAuth />}>
+              <Route element={<Layout />}>
+                <Route path="account" element={<Account />} />
+              </Route>
             </Route>
           </Route>
-        </Route>
 
-        {/* admin routes */}
-        <Route path="admin" element={<Admin />} />
-
-        {/* error routes */}
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
+          {/* error routes */}
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
       <Toaster
         position="top-right"
         icons={{

@@ -87,7 +87,7 @@ export default function ProviderPage() {
       <header>
         <ProviderHeader
           loading={loading}
-          name={provider?.providerName || provider?.name}
+          name={provider?.name}
           address={provider?.address}
           profilePicture={provider?.profilePicture}
           coverImage={provider?.coverImage}

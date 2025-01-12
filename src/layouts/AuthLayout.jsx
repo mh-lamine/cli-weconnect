@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import logo from "/weconnect.png";
+import logo from "/Logo_typo.png";
 const AuthLayout = () => {
   return (
     <main className="w-screen min-h-screen flex flex-col lg:flex-row bg-light text-dark">
@@ -8,7 +8,7 @@ const AuthLayout = () => {
           <img
             src={logo}
             alt="logo weconnect"
-            className="w-60 -mt-20 lg:mt-0"
+            className="hidden lg:block w-40"
           />
         </Link>
       </div>
@@ -17,7 +17,7 @@ const AuthLayout = () => {
           <Outlet />
         </div>
         <div className="bottom-0 py-4 text-center lg:w-1/2 w-full lg:right-0 lg:absolute">
-          &copy; 2024 WeConnect Inc. Tous droits réservés.
+          &copy; 2025 WeConnect Inc. Tous droits réservés.
         </div>
       </div>
     </main>

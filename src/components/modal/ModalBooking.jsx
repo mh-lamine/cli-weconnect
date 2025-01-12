@@ -104,7 +104,7 @@ export default function ModalBooking({
       duration: service.duration,
       status: autoAccept ? "ACCEPTED" : "PENDING",
       serviceId: service.id,
-      providerId: service.providerId,
+      proId: service.proId,
       salonId: service.salonId,
       memberId: selectedMember?.memberId,
     };
@@ -137,13 +137,13 @@ export default function ModalBooking({
     if (!date) return;
     async function fetchAvailableTimeSlots() {
       setLoadingTimeSlots(true);
-      const { providerId, salonId } = service;
+      const { proId, salonId } = service;
       const formattedDate = DateTime.fromJSDate(date).toISODate();
       const serviceDuration = service.duration;
-      if (providerId) {
+      if (proId) {
         try {
           const data = await getProviderAvailableTimeSlots(
-            providerId,
+            proId,
             formattedDate,
             serviceDuration
           );

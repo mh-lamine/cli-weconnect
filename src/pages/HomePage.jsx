@@ -27,7 +27,7 @@ export default function HomePage() {
     const search = e.target.value.toLowerCase();
     const filteredProviders = providers.filter(
       (provider) =>
-        provider?.providerName?.toLowerCase().includes(search) ||
+        provider?.name?.toLowerCase().includes(search) ||
         provider.address.toLowerCase().includes(search) ||
         provider.providerCategories.some((category) =>
           category.name.toLowerCase().includes(search)

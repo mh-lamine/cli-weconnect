@@ -7,12 +7,12 @@ const ClientAppointment = ({
   cancelAppointment,
   past = false,
 }) => {
-  const {provider, salon, service, date, status} = appointment;
+  const {pro: provider, salon, service, date, status} = appointment;
   return (
     <div className={`flex flex-col gap-2 py-2 ${past && "text-muted"}`}>
       <div className="divider divider-start my-0">
         <h2 className="text-xl font-semibold">
-          {provider?.providerName || salon.name}
+          {provider?.name || salon.name}
         </h2>
       </div>
       <ContactMethods provider={provider} salon={salon} past={past} />
@@ -76,9 +76,9 @@ const ClientAppointment = ({
 export default ClientAppointment;
 
 function ContactMethods({ provider, salon, past }) {
-  const salonNumber = salon?.phoneNumber || provider?.contactMethods.phoneNumber;
+  const salonNumber = salon?.phoneNumber || provider?.phoneNumber;
   const address = salon?.address || provider?.address;
-  const instagram = provider?.contactMethods.instagram;
+  const instagram = provider?.contactMethods?.instagram;
   return (
     <div className="flex flex-col md:flex-row md:gap-4">
       {salonNumber && (
