@@ -1,23 +1,15 @@
-import { Link, Outlet } from "react-router-dom";
-import logo from "/Logo_typo.png";
+import { Outlet } from "react-router-dom";
+import RandomQuotes from "@/components/RandomQuotes";
+
 const AuthLayout = () => {
   return (
-    <main className="w-screen min-h-screen flex flex-col lg:flex-row bg-light text-dark">
-      <div className="w-full h-[50vh] lg:w-1/2 lg:h-screen bg-primary-500 grid place-items-center">
-        <Link to={"/"}>
-          <img
-            src={logo}
-            alt="logo weconnect"
-            className="hidden lg:block w-40"
-          />
-        </Link>
+    <main className="w-screen min-h-screen flex flex-col lg:flex-row bg-primary-500 text-dark">
+      <div className="h-[25vh] p-4 lg:w-1/2 max-w-[500px] mx-auto lg:h-screen grid place-items-center">
+        <RandomQuotes />
       </div>
-      <div className="w-full lg:w-1/2 grid place-items-center">
-        <div className="w-3/4 h-fit py-8 grid place-items-center bg-white rounded-xl shadow -mt-28 lg:mt-0 lg:bg-light lg:w-full lg:shadow-none">
+      <div className="bg-light flex-1 lg:flex-none lg:w-1/2 grid place-items-center rounded-t-3xl lg:rounded-3xl lg:m-4">
+        <div className="w-full lg:shadow-none grid place-items-center">
           <Outlet />
-        </div>
-        <div className="bottom-0 py-4 text-center lg:w-1/2 w-full lg:right-0 lg:absolute">
-          &copy; 2025 WeConnect Inc. Tous droits réservés.
         </div>
       </div>
     </main>
