@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import ModalAction from "@/components/modal/ModalAction";
 import { Button } from "@/components/ui/button";
 import { convertToHhMm } from "@/utils/formatting";
+import BookingWizard from "@/components/modal/BookingWizard";
 
 export default function ProviderPage() {
   const { providerId } = useParams();
@@ -137,9 +138,7 @@ export default function ProviderPage() {
                   index={index}
                   category={category}
                   services={category.services}
-                  availabilities={provider?.availabilities}
-                  specialAvailabilities={provider?.specialAvailabilities}
-                  autoAccept={provider?.autoAcceptAppointments}
+                  provider={provider}
                 />
               </div>
             ))}
@@ -150,14 +149,16 @@ export default function ProviderPage() {
   );
 }
 
-function Services({
-  index,
-  category,
-  services,
-  availabilities,
-  specialAvailabilities,
-  autoAccept,
-}) {
+function Services({ index, category, services, provider }) {
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const closeModal = () => {
+    setCurrentStep(1); // Réinitialiser l'étape
+  };
+
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+
   return (
     <Accordion
       type="single"
@@ -172,25 +173,26 @@ function Services({
         {services
           .sort((a, b) => a.name - b.name)
           .map((service, index) => (
-            <AccordionContent
-              key={index}
-              className="flex items-center justify-between"
-            >
-              <div className="w-3/4 pt-4 space-y-2">
-                <h3 className="text-lg text-left">{service.name}</h3>
-                <div className="flex text-sm">
-                  <p className="text-muted">{service.price}€</p>
-                  <div className="divider divider-horizontal"></div>
-                  <p>{convertToHhMm(service.duration)}</p>
+            <AccordionContent key={index} className="flex flex-col">
+              <div className="flex items-center justify-between">
+                <div className="w-3/4 pt-4 space-y-2">
+                  <h3 className="text-lg text-left">{service.name}</h3>
+                  <div className="flex text-sm">
+                    <p className="text-muted">{service.price}€</p>
+                    <div className="divider divider-horizontal"></div>
+                    <p>{convertToHhMm(service.duration)}</p>
+                  </div>
+                  <p>{service.description}</p>
                 </div>
-                <p>{service.description}</p>
+                <BookingWizard
+                  step={currentStep}
+                  nextStep={nextStep}
+                  prevStep={prevStep}
+                  closeModal={closeModal}
+                  service={service}
+                  provider={provider}
+                />
               </div>
-              <ModalBooking
-                service={service}
-                availabilities={availabilities}
-                specialAvailabilities={specialAvailabilities}
-                autoAccept={autoAccept}
-              />
             </AccordionContent>
           ))}
       </AccordionItem>

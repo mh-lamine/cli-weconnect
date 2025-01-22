@@ -19,8 +19,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Calendar } from "@/components/ui/calendar";
-import { useEffect, useState } from "react";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { CalendarIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -33,30 +33,26 @@ import {
 import { DateTime } from "luxon";
 import { fr } from "date-fns/locale";
 import { OneYearFromNow } from "@/utils/dateManagement";
-import {
-  getProviderAvailableTimeSlots,
-  getSalonAvailableTimeSlots,
-} from "@/actions/providerActions";
 import axiosPrivate from "@/api/axiosPrivate";
 import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
 import MemberCard from "../MemberCard";
+import useTimeSlots from "@/hooks/useTimeSlots";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import axios from "axios";
+import useAuth from "@/hooks/useAuth";
+import CheckoutForm from "../CheckoutForm";
 
 export default function BookingWizard({
   step,
   nextStep,
   prevStep,
-  closeModal,
   service,
-  availabilities,
-  specialAvailabilities,
-  autoAccept,
+  provider,
 }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
-  const [loadingTimeSlots, setLoadingTimeSlots] = useState(false);
-  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-  const [salonAvailableTimeSlots, setSalonAvailableTimeSlots] = useState();
   const [timeSlotSelected, setTimeSlotSelected] = useState({
     date: null,
     startTime: "",
@@ -65,6 +61,15 @@ export default function BookingWizard({
   const [loading, setLoading] = useState(false);
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { auth } = useAuth();
+  const { loadingTimeSlots, availableTimeSlots, salonAvailableTimeSlots } =
+    useTimeSlots(date, service, toast, setTimeSlotSelected, setSelectedMember);
+  const {
+    availabilities,
+    specialAvailabilities,
+    autoAccept,
+    stripeConnectedAccountId,
+  } = provider;
 
   const formattedAvailabilities =
     availabilities && formatAvailabilitiesByDayOfWeek(availabilities);
@@ -87,7 +92,7 @@ export default function BookingWizard({
     );
   };
 
-  async function handleCreateAppointment() {
+  function handleNextStep() {
     if (!timeSlotSelected.date || !timeSlotSelected.startTime) {
       toast.error("Sélectionnez un créneau pour réserver votre rendez-vous.");
       setLoading(false);
@@ -100,6 +105,21 @@ export default function BookingWizard({
       return;
     }
 
+    if (!auth) {
+      toast.error("Connectez-vous pour réserver un rendez-vous.");
+      return;
+    }
+
+    nextStep();
+  }
+
+  function handleCancel() {
+    setOpen(false);
+    setDate(null);
+    setTimeSlotSelected({ date: null, startTime: "" });
+  }
+
+  async function handleCreateAppointment() {
     const appointmentDate = `${DateTime.fromJSDate(
       timeSlotSelected.date
     ).toISODate()}T${timeSlotSelected.startTime}`;
@@ -123,10 +143,6 @@ export default function BookingWizard({
       );
       setOpen(false);
     } catch (error) {
-      if (error.response?.status === 403) {
-        toast.error("Connectez-vous pour réserver un rendez-vous.");
-        return;
-      }
       toast.error("Une erreur est survenue, veuillez contacter le support.");
       console.error(error);
     } finally {
@@ -135,48 +151,6 @@ export default function BookingWizard({
     setDate(null);
     setTimeSlotSelected({ date: null, startTime: "" });
   }
-
-  useEffect(() => {
-    setTimeSlotSelected({ date: null, startTime: "" });
-    setSelectedMember();
-    if (!date) return;
-    async function fetchAvailableTimeSlots() {
-      setLoadingTimeSlots(true);
-      const { proId, salonId } = service;
-      const formattedDate = DateTime.fromJSDate(date).toISODate();
-      const serviceDuration = service.duration;
-      if (proId) {
-        try {
-          const data = await getProviderAvailableTimeSlots(
-            proId,
-            formattedDate,
-            serviceDuration
-          );
-          setAvailableTimeSlots(data);
-        } catch (error) {
-          toast.error(error);
-        } finally {
-          setLoadingTimeSlots(false);
-        }
-      }
-      if (salonId) {
-        try {
-          const data = await getSalonAvailableTimeSlots(
-            salonId,
-            formattedDate,
-            service
-          );
-
-          setSalonAvailableTimeSlots(data);
-        } catch (error) {
-          toast.error(error);
-        } finally {
-          setLoadingTimeSlots(false);
-        }
-      }
-    }
-    fetchAvailableTimeSlots();
-  }, [date]);
 
   const renderStepContent = () => {
     switch (step) {
@@ -198,9 +172,17 @@ export default function BookingWizard({
           />
         );
       case 2:
-        return <Step2 />;
-      case 3:
-        return <Step3 />;
+        return (
+          <Step2
+            service={service}
+            stripeConnectedAccountId={stripeConnectedAccountId}
+            handlePrevStep={prevStep}
+            handleCreateAppointment={handleCreateAppointment}
+            loading={loading}
+            setLoading={setLoading}
+            isDesktop={isDesktop}
+          />
+        );
     }
   };
 
@@ -217,34 +199,19 @@ export default function BookingWizard({
             <DialogTitle>{service.name}</DialogTitle>
             <DialogDescription>{service.description}</DialogDescription>
           </DialogHeader>
-          {renderStepContent()}
-          <DialogFooter className="sm:justify-start">
-            <div className="w-full flex items-center justify-between">
-              {step === 1 ? (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setOpen(false);
-                    setDate(null);
-                    setTimeSlotSelected({ date: null, startTime: "" });
-                  }}
-                >
+          <div className="max-h-[50vh] space-y-4 overflow-y-scroll no-scrollbar">
+            {renderStepContent()}
+          </div>
+          {step === 1 && (
+            <DialogFooter className="sm:justify-start">
+              <div className="w-full flex items-center justify-between">
+                <Button variant="outline" onClick={handleCancel}>
                   Annuler
                 </Button>
-              ) : (
-                <Button variant="outline" onClick={prevStep}>
-                  Précédent
-                </Button>
-              )}
-              {step === 3 ? (
-                <Button disabled={loading} onClick={handleCreateAppointment}>
-                  {loading ? <Loader2 className="animate-spin" /> : "Réserver"}
-                </Button>
-              ) : (
-                <Button onClick={nextStep}>Suivant</Button>
-              )}
-            </div>
-          </DialogFooter>
+                <Button onClick={handleNextStep}>Suivant</Button>
+              </div>
+            </DialogFooter>
+          )}
         </DialogContent>
       </Dialog>
     );
@@ -260,43 +227,25 @@ export default function BookingWizard({
           <DrawerTitle>{service.name}</DrawerTitle>
           <DrawerDescription>{service.description}</DrawerDescription>
         </DrawerHeader>
-        {renderStepContent()}
-        <DrawerFooter className="pt-2">
-          <div className="space-y-2">
-            {step < 3 && (
-              <Button className="w-full" onClick={nextStep}>
+        <div className="max-h-[50vh] overflow-y-scroll no-scrollbar">
+          {renderStepContent()}
+        </div>
+        {step === 1 && (
+          <DrawerFooter className="pt-2">
+            <div className="space-y-2">
+              <Button className="w-full" onClick={handleNextStep}>
                 Suivant
               </Button>
-            )}
-            {step === 3 && (
-              <Button
-                disabled={loading}
-                onClick={handleCreateAppointment}
-                className="w-full"
-              >
-                {loading ? <Loader2 className="animate-spin" /> : "Réserver"}
-              </Button>
-            )}
-            {step === 1 && (
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => {
-                  setOpen(false);
-                  setDate(null);
-                  setTimeSlotSelected({ date: null, startTime: "" });
-                }}
+                onClick={handleCancel}
               >
                 Annuler
               </Button>
-            )}
-            {step > 1 && (
-              <Button variant="outline" className="w-full" onClick={prevStep}>
-                Précédent
-              </Button>
-            )}
-          </div>
-        </DrawerFooter>
+            </div>
+          </DrawerFooter>
+        )}
       </DrawerContent>
     </Drawer>
   );
@@ -348,26 +297,13 @@ const Step1 = ({
         ) : availableTimeSlots.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {availableTimeSlots.map((slot, index) => (
-              <Button
-                key={index}
-                variant={
-                  timeSlotSelected.date === date &&
-                  timeSlotSelected.startTime === slot.start
-                    ? "default"
-                    : "outline"
-                }
-                onClick={() => {
-                  timeSlotSelected.date === date &&
-                  timeSlotSelected.startTime === slot.start
-                    ? setTimeSlotSelected({ date: null, startTime: "" })
-                    : setTimeSlotSelected({
-                        date,
-                        startTime: slot.start,
-                      });
-                }}
-              >
-                {slot.start}
-              </Button>
+              <TimeSlotButton
+                slot={slot}
+                index={index}
+                date={date}
+                timeSlotSelected={timeSlotSelected}
+                setTimeSlotSelected={setTimeSlotSelected}
+              />
             ))}
           </div>
         ) : salonAvailableTimeSlots?.length > 0 ? (
@@ -391,26 +327,13 @@ const Step1 = ({
         {selectedMember && (
           <div className="flex flex-wrap gap-2">
             {selectedMember.availableSlots.map((slot, index) => (
-              <Button
-                key={index}
-                variant={
-                  timeSlotSelected.date === date &&
-                  timeSlotSelected.startTime === slot.start
-                    ? "default"
-                    : "outline"
-                }
-                onClick={() => {
-                  timeSlotSelected.date === date &&
-                  timeSlotSelected.startTime === slot.start
-                    ? setTimeSlotSelected({ date: null, startTime: "" })
-                    : setTimeSlotSelected({
-                        date,
-                        startTime: slot.start,
-                      });
-                }}
-              >
-                {slot.start}
-              </Button>
+              <TimeSlotButton
+                slot={slot}
+                index={index}
+                date={date}
+                timeSlotSelected={timeSlotSelected}
+                setTimeSlotSelected={setTimeSlotSelected}
+              />
             ))}
           </div>
         )}
@@ -449,26 +372,13 @@ const Step1 = ({
         ) : availableTimeSlots.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {availableTimeSlots.map((slot, index) => (
-              <Button
-                key={index}
-                variant={
-                  timeSlotSelected.date === date &&
-                  timeSlotSelected.startTime === slot.start
-                    ? "default"
-                    : "outline"
-                }
-                onClick={() => {
-                  timeSlotSelected.date === date &&
-                  timeSlotSelected.startTime === slot.start
-                    ? setTimeSlotSelected({ date: null, startTime: "" })
-                    : setTimeSlotSelected({
-                        date,
-                        startTime: slot.start,
-                      });
-                }}
-              >
-                {slot.start}
-              </Button>
+              <TimeSlotButton
+                slot={slot}
+                index={index}
+                date={date}
+                timeSlotSelected={timeSlotSelected}
+                setTimeSlotSelected={setTimeSlotSelected}
+              />
             ))}
           </div>
         ) : salonAvailableTimeSlots?.length > 0 ? (
@@ -492,26 +402,13 @@ const Step1 = ({
         {selectedMember && (
           <div className="flex flex-wrap gap-2">
             {selectedMember.availableSlots.map((slot, index) => (
-              <Button
-                key={index}
-                variant={
-                  timeSlotSelected.date === date &&
-                  timeSlotSelected.startTime === slot.start
-                    ? "default"
-                    : "outline"
-                }
-                onClick={() => {
-                  timeSlotSelected.date === date &&
-                  timeSlotSelected.startTime === slot.start
-                    ? setTimeSlotSelected({ date: null, startTime: "" })
-                    : setTimeSlotSelected({
-                        date,
-                        startTime: slot.start,
-                      });
-                }}
-              >
-                {slot.start}
-              </Button>
+              <TimeSlotButton
+                slot={slot}
+                index={index}
+                date={date}
+                timeSlotSelected={timeSlotSelected}
+                setTimeSlotSelected={setTimeSlotSelected}
+              />
             ))}
           </div>
         )}
@@ -520,10 +417,92 @@ const Step1 = ({
   );
 };
 
-const Step2 = () => {
-  return <div>Étape 2</div>;
+const Step2 = ({
+  service,
+  stripeConnectedAccountId,
+  handlePrevStep,
+  handleCreateAppointment,
+  loading,
+  setLoading,
+  isDesktop,
+}) => {
+  const [clientSecret, setClientSecret] = useState();
+
+  const stripePromise = useMemo(
+    () =>
+      loadStripe(
+        "pk_test_51PslIK1WdYqLIXrDWRI9lV4ezDDD4O0n4yJtXnNSonD88rr3tJ2ZmDARu9T2NIDr6VF8tm4ABiYa10ujuMFznauN00knJNXpfB",
+        { stripeAccount: stripeConnectedAccountId }
+      ),
+    [stripeConnectedAccountId]
+  );
+  const isRequestInProgress = useRef(false);
+
+  const getClientSecret = async () => {
+    if (isRequestInProgress.current) return; // Block multiple calls
+    isRequestInProgress.current = true;
+
+    try {
+      const { data } = await axios.post("/api/stripe/create-payment-intent", {
+        connectedAccountId: stripeConnectedAccountId,
+        amount: service.price * 100,
+      });
+      setClientSecret(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      isRequestInProgress.current = false;
+    }
+  };
+
+  useEffect(() => {
+    getClientSecret();
+  }, []);
+
+  const options = { clientSecret };
+
+  if (clientSecret) {
+    return (
+      <Elements stripe={stripePromise} options={options}>
+        <CheckoutForm
+          handlePrevStep={handlePrevStep}
+          handleCreateAppointment={handleCreateAppointment}
+          loading={loading}
+          setLoading={setLoading}
+          isDesktop={isDesktop}
+        />
+      </Elements>
+    );
+  }
 };
 
-const Step3 = () => {
-  return <div>Étape 3</div>;
+const TimeSlotButton = ({
+  slot,
+  index,
+  date,
+  timeSlotSelected,
+  setTimeSlotSelected,
+}) => {
+  return (
+    <Button
+      key={index}
+      variant={
+        timeSlotSelected.date === date &&
+        timeSlotSelected.startTime === slot.start
+          ? "default"
+          : "outline"
+      }
+      onClick={() => {
+        timeSlotSelected.date === date &&
+        timeSlotSelected.startTime === slot.start
+          ? setTimeSlotSelected({ date: null, startTime: "" })
+          : setTimeSlotSelected({
+              date,
+              startTime: slot.start,
+            });
+      }}
+    >
+      {slot.start}
+    </Button>
+  );
 };

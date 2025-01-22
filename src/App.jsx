@@ -46,34 +46,34 @@ export default function App() {
 
   return (
     <>
-        <Routes>
-          {/* public routes */}
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="provider/:providerId" element={<ProviderPage />} />
-          </Route>
+      <Routes>
+        {/* public routes */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="provider/:providerId" element={<ProviderPage />} />
+        </Route>
 
-          <Route path="info" element={<LandingPage />} />
+        <Route path="info" element={<LandingPage />} />
 
-          {/* auth routes */}
-          <Route element={<AuthLayout />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-          </Route>
-          <Route path="subscribe" element={<SubscribePage />} />
+        {/* auth routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+        </Route>
+        <Route path="subscribe" element={<SubscribePage />} />
 
-          {/* protected routes */}
-          <Route element={<PersistLogin />}>
-            <Route element={<RequireAuth />}>
-              <Route element={<Layout />}>
-                <Route path="account" element={<Account />} />
-              </Route>
+        {/* protected routes */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route element={<Layout />}>
+              <Route path="account" element={<Account />} />
             </Route>
           </Route>
+        </Route>
 
-          {/* error routes */}
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
+        {/* error routes */}
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
       <Toaster
         position="top-right"
         icons={{
