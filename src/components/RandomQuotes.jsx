@@ -10,10 +10,12 @@ export default function RandomQuotes() {
   const { type, text, author } = quoteToDisplay;
 
   return (
-    <div className="text-white text-xl flex flex-col w-full gap-4 lg:gap-8">
-      <h1 className="hidden lg:block text-4xl font-semibold">Ravi de vous revoir !</h1>
+    <div className="text-dark lg:text-white bg-white lg:bg-transparent p-4 lg:p-0 rounded-lg shadow-md lg:shadow-none text-xl flex flex-col w-full gap-4 lg:gap-8">
+      <h1 className="hidden lg:block text-4xl font-semibold">
+        Ravi de vous revoir !
+      </h1>
       <DropdownMenuSeparator className="hidden lg:block bg-white" />
-      <h2 className="text-lg font-medium lg:hidden">{type} du jour</h2>
+      <h2 className="text-lg text-primary lg:text-white font-medium lg:hidden">{type} du jour</h2>
       <p className="text-base">&quot;{text}&quot;</p>
       <span className="font-medium">{author ? author : "WeConnect"}</span>
     </div>
