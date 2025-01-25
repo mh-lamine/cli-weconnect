@@ -7,7 +7,7 @@ export default function LandingPage() {
   const navigate = useNavigate();
   return (
     <div className="w-screen min-h-screen flex flex-col bg-light text-dark">
-      <header className="relative p-8 h-screen text-center md:text-left flex flex-col md:flex-row items-center w-full gap-4 max-w-screen-2xl mx-auto">
+      <header className="relative p-8 h-screen text-center md:text-left flex flex-col justify-center md:flex-row items-center w-full gap-4 max-w-screen-2xl mx-auto">
         <div className="space-y-4 md:space-y-12">
           <h1 className="text-4xl md:text-6xl font-bold">
             Optimisez la gestion de votre emploi du temps
