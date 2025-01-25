@@ -36,52 +36,52 @@ export default function ProviderPage() {
 
   if (error) return <div className="flex-1">Error: {error}</div>;
 
-  if (provider?.isInVacancyMode) {
-    const salonNumber =
-      provider?.contactMethods?.phoneNumber || provider?.phoneNumber;
-    const instagram = provider?.contactMethods?.instagram;
+  // if (provider?.isInVacancyMode) {
+  //   const salonNumber =
+  //     provider?.contactMethods?.phoneNumber || provider?.phoneNumber;
+  //   const instagram = provider?.contactMethods?.instagram;
 
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-8">
-          <h1 className="text-3xl font-semibold text-center">
-            Votre{" "}
-            {provider.role == "USER"
-              ? "prestataire"
-              : provider.role == "SALON"
-              ? "salon"
-              : "établissement"}{" "}
-            est actuellement en vacances ! 🌴
-          </h1>
-          <p className="text-center">
-            Vous pouvez consulter ses informations de contact pour prendre
-            rendez-vous ultérieurement
-          </p>
-          <div className="flex flex-col md:flex-row md:gap-4">
-            {/* FIXME: update path to info */}
-            {salonNumber && (
-              <Button className={"w-fit py-0"}>
-                <a href={`tel:${salonNumber}`}>
-                  {salonNumber.replace(/(\d{2})(?=\d)/g, "$1 ")}
-                </a>
-              </Button>
-            )}
-            {instagram && (
-              <Button className={"w-fit py-0"}>
-                <a
-                  href={`https://www.instagram.com/${instagram.split("@")[1]}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {instagram}
-                </a>
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  //   return (
+  //     <div className="flex-1 flex items-center justify-center">
+  //       <div className="flex flex-col items-center space-y-8">
+  //         <h1 className="text-3xl font-semibold text-center">
+  //           Votre{" "}
+  //           {provider.role == "USER"
+  //             ? "prestataire"
+  //             : provider.role == "SALON"
+  //             ? "salon"
+  //             : "établissement"}{" "}
+  //           est actuellement en vacances ! 🌴
+  //         </h1>
+  //         <p className="text-center">
+  //           Vous pouvez consulter ses informations de contact pour prendre
+  //           rendez-vous ultérieurement
+  //         </p>
+  //         <div className="flex flex-col md:flex-row md:gap-4">
+  //           {/* FIXME: update path to info */}
+  //           {salonNumber && (
+  //             <Button className={"w-fit py-0"}>
+  //               <a href={`tel:${salonNumber}`}>
+  //                 {salonNumber.replace(/(\d{2})(?=\d)/g, "$1 ")}
+  //               </a>
+  //             </Button>
+  //           )}
+  //           {instagram && (
+  //             <Button className={"w-fit py-0"}>
+  //               <a
+  //                 href={`https://www.instagram.com/${instagram.split("@")[1]}`}
+  //                 target="_blank"
+  //                 rel="noopener noreferrer"
+  //               >
+  //                 {instagram}
+  //               </a>
+  //             </Button>
+  //           )}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <main className="w-full flex-1">

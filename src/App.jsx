@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import RequireAuth from "./components/RequireAuth";
@@ -6,9 +5,6 @@ import PersistLogin from "./components/PersistLogin";
 
 import AuthLayout from "./layouts/AuthLayout";
 import Layout from "./layouts/Layout";
-
-import useAuth from "./hooks/useAuth";
-import useAxiosPrivate from "./hooks/useAxiosPrivate";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -23,27 +19,6 @@ import LandingPage from "./pages/LandingPage";
 import SubscribePage from "./pages/SubscribePage";
 
 export default function App() {
-  const { setAuth } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const axiosPrivate = useAxiosPrivate();
-
-  useEffect(() => {
-    async function getUser() {
-      try {
-        const response = await axiosPrivate.get("/api/users");
-        setAuth((prev) => ({ ...prev, ...response.data }));
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    }
-    getUser();
-  }, []);
-
-  if (loading) {
-    return <PageLoader />;
-  }
-
   return (
     <>
       <Routes>
