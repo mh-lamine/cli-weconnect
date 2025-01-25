@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { handleLogin } from "@/actions/authActions";
-import { EyeOff, Loader2 } from "lucide-react";
+import { EyeOff, Loader2, MoveLeft } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
@@ -51,7 +51,7 @@ export default function LoginPage() {
   }, [persist]);
 
   return (
-    <div className="text-center flex flex-col gap-4 w-4/5 max-w-[500px]">
+    <div className="relative text-center flex flex-col gap-4 w-4/5 max-w-[500px]">
       <h1 className="text-3xl font-semibold">Se connecter</h1>
       <form className="space-y-2 py-2">
         <Input
@@ -91,6 +91,14 @@ export default function LoginPage() {
       <div className="divider mb-0">Pas encore inscrit ?</div>
       <Button asChild variant="outline">
         <Link to={"/register"}>Créer un compte</Link>
+      </Button>
+      <Button
+        variant="ghost"
+        onClick={() => navigate("/")}
+        className="absolute -bottom-16 left-0 flex items-center gap-4 text-primary lg:hidden"
+      >
+        <MoveLeft />
+        Retourner à l'accueil
       </Button>
     </div>
   );

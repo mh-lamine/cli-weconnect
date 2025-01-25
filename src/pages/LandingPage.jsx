@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Crown, Rocket } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Crown, MoveLeft } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
+  const navigate = useNavigate();
   return (
     <div className="w-screen min-h-screen flex flex-col bg-light text-dark">
-      <header className="p-8 h-screen text-center md:text-left flex flex-col md:flex-row items-center w-full gap-4 max-w-screen-2xl mx-auto">
+      <header className="relative p-8 h-screen text-center md:text-left flex flex-col md:flex-row items-center w-full gap-4 max-w-screen-2xl mx-auto">
         <div className="space-y-4 md:space-y-12">
           <h1 className="text-4xl md:text-6xl font-bold">
             Optimisez la gestion de votre emploi du temps
@@ -38,6 +39,14 @@ export default function LandingPage() {
           </div>
         </div>
         <img src="/phones_landing.png" className="md:w-1/2" />
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/")}
+          className="absolute bottom-10 left-10 flex items-center gap-4 text-primary"
+        >
+          <MoveLeft />
+          Retourner à l'accueil
+        </Button>
       </header>
       <main id="discover">
         <Tabs
