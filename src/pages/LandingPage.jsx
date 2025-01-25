@@ -150,7 +150,7 @@ export default function LandingPage() {
         <section className="hidden md:block w-full md:max-w-screen-2xl mx-auto p-8 min-h-screen">
           <div className="divider before:bg-primary after:bg-primary">
             <h2 className="text-2xl font-semibold md:text-4xl text-center">
-              Nos formules kebab
+              Nos formules
             </h2>
           </div>
           <div className="grid grid-cols-3 gap-4 p-4">
