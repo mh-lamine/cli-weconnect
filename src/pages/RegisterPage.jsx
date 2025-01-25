@@ -117,9 +117,6 @@ export default function RegisterPage() {
       <Button asChild variant="outline">
         <Link to={"/login"}>Se connecter</Link>
       </Button>
-      <Button variant="link" className="py-0">
-        <Link to={"/entreprise"}>Enregistrer mon salon</Link>
-      </Button>
     </div>
   );
 }
