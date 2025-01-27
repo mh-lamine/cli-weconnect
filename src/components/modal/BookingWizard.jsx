@@ -33,7 +33,6 @@ import {
 import { DateTime } from "luxon";
 import { fr } from "date-fns/locale";
 import { OneYearFromNow } from "@/utils/dateManagement";
-import axiosPrivate from "@/api/axiosPrivate";
 import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
 import MemberCard from "../MemberCard";
@@ -43,6 +42,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import useAuth from "@/hooks/useAuth";
 import CheckoutForm from "../CheckoutForm";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 export default function BookingWizard({
   step,
@@ -62,6 +62,7 @@ export default function BookingWizard({
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const { auth } = useAuth();
+  const axiosPrivate= useAxiosPrivate();
   const { loadingTimeSlots, availableTimeSlots, salonAvailableTimeSlots } =
     useTimeSlots(date, service, toast, setTimeSlotSelected, setSelectedMember);
   const {
@@ -233,7 +234,18 @@ export default function BookingWizard({
         {step === 1 && (
           <DrawerFooter className="pt-2">
             <div className="space-y-2">
-              <Button className="w-full" onClick={handleNextStep}>
+              <Button
+                className="w-full"
+                onClick={() => {
+                  console.log(provider.stripeConnectedAccountId)
+                  if (provider.stripeConnectedAccountId) {
+                    handleNextStep();
+                  } else {
+                    console.log("create appointment")
+                    handleCreateAppointment();
+                  }
+                }}
+              >
                 Suivant
               </Button>
               <Button
