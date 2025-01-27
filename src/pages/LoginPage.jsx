@@ -95,7 +95,7 @@ export default function LoginPage() {
       <Button
         variant="ghost"
         onClick={() => navigate("/")}
-        className="absolute -bottom-16 left-0 flex items-center gap-4 text-primary lg:hidden"
+        className="flex items-center gap-4 text-primary lg:hidden"
       >
         <MoveLeft />
         Retourner à l'accueil

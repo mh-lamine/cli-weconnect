@@ -2,7 +2,7 @@ import { handleRegister } from "@/actions/authActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useAuth from "@/hooks/useAuth";
-import { EyeOff, Loader2 } from "lucide-react";
+import { EyeOff, Loader2, MoveLeft } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -116,6 +116,14 @@ export default function RegisterPage() {
       <div className="divider mb-0">Déjà inscrit ?</div>
       <Button asChild variant="outline">
         <Link to={"/login"}>Se connecter</Link>
+      </Button>
+      <Button
+        variant="ghost"
+        onClick={() => navigate("/")}
+        className="flex items-center gap-4 text-primary lg:hidden"
+      >
+        <MoveLeft />
+        Retourner à l'accueil
       </Button>
     </div>
   );
