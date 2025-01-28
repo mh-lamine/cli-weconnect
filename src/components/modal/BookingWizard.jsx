@@ -62,7 +62,7 @@ export default function BookingWizard({
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const { auth } = useAuth();
-  const axiosPrivate= useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
   const { loadingTimeSlots, availableTimeSlots, salonAvailableTimeSlots } =
     useTimeSlots(date, service, toast, setTimeSlotSelected, setSelectedMember);
   const {
@@ -237,11 +237,9 @@ export default function BookingWizard({
               <Button
                 className="w-full"
                 onClick={() => {
-                  console.log(provider.stripeConnectedAccountId)
                   if (provider.stripeConnectedAccountId) {
                     handleNextStep();
                   } else {
-                    console.log("create appointment")
                     handleCreateAppointment();
                   }
                 }}
