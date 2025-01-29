@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/drawer";
 import { Calendar } from "@/components/ui/calendar";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -121,8 +121,10 @@ export default function BookingWizard({
   }
 
   async function handleCreateAppointment() {
+    setLoading(true);
     if (!auth) {
       toast.error("Connectez-vous pour réserver un rendez-vous.");
+      setLoading(false);
       return;
     }
 
@@ -232,7 +234,18 @@ export default function BookingWizard({
                 <Button variant="outline" onClick={handleCancel}>
                   Annuler
                 </Button>
-                <Button onClick={handleNextStep}>Suivant</Button>
+                <Button
+                  onClick={() => {
+                    if (provider.stripeConnectedAccountId) {
+                      handleNextStep();
+                    } else {
+                      handleCreateAppointment();
+                    }
+                  }}
+                  disabled={loading}
+                >
+                  {loading ? <Loader2 className="animate-spin" /> : "Réserver"}
+                </Button>
               </div>
             </DialogFooter>
           )}
@@ -266,8 +279,9 @@ export default function BookingWizard({
                     handleCreateAppointment();
                   }
                 }}
+                disabled={loading}
               >
-                Suivant
+                {loading ? <Loader2 className="animate-spin" /> : "Réserver"}
               </Button>
               <Button
                 variant="outline"
