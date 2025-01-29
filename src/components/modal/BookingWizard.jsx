@@ -121,6 +121,23 @@ export default function BookingWizard({
   }
 
   async function handleCreateAppointment() {
+    if (!auth) {
+      toast.error("Connectez-vous pour réserver un rendez-vous.");
+      return;
+    }
+
+    if (!timeSlotSelected.date || !timeSlotSelected.startTime) {
+      toast.error("Sélectionnez un créneau pour réserver votre rendez-vous.");
+      setLoading(false);
+      return;
+    }
+
+    if (salonAvailableTimeSlots && !selectedMember) {
+      toast.error("Sélectionnez un membre pour réserver votre rendez-vous.");
+      setLoading(false);
+      return;
+    }
+
     const appointmentDate = `${DateTime.fromJSDate(
       timeSlotSelected.date
     ).toISODate()}T${timeSlotSelected.startTime}`;
@@ -144,7 +161,13 @@ export default function BookingWizard({
       );
       setOpen(false);
     } catch (error) {
-      toast.error("Une erreur est survenue, veuillez contacter le support.");
+      if (error.status === 403) {
+        toast.error("Vous devez être connecté pour réserver un rendez-vous.");
+      } else if (error.status === 400) {
+        toast.error("Selectionnez un créneau pour réserver votre rendez-vous.");
+      } else {
+        toast.error("Une erreur est survenue, veuillez contacter le support.");
+      }
       console.error(error);
     } finally {
       setLoading(false);
