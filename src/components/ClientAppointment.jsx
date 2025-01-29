@@ -7,19 +7,18 @@ const ClientAppointment = ({
   cancelAppointment,
   past = false,
 }) => {
-  const {pro: provider, salon, service, date, status} = appointment;
+  const { pro: provider, salon, service, date, status } = appointment;
   return (
     <div className={`flex flex-col gap-2 py-2 ${past && "text-muted"}`}>
       <div className="divider divider-start my-0">
         <h2 className="text-xl font-semibold">
-          {provider?.name || salon.name}
+          {provider?.name || salon?.name}
         </h2>
       </div>
       <ContactMethods provider={provider} salon={salon} past={past} />
       <h3 className="text-lg">
-        Vous avez réservé{" "}
-        <span className="font-medium">{service.name}</span> <br />{" "}
-        le{" "}
+        Vous avez réservé <span className="font-medium">{service.name}</span>{" "}
+        <br /> le{" "}
         <span className="font-medium">
           {new Date(date)
             .toLocaleDateString("fr-FR", {
