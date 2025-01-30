@@ -66,6 +66,7 @@ export default function App() {
             success: "bg-success text-light",
           },
         }}
+        data-testid="toaster"
       />
     </>
   );

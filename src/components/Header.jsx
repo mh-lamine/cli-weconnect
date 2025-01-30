@@ -16,6 +16,7 @@ export default function Header() {
               htmlFor="my-drawer-3"
               aria-label="open sidebar"
               className="btn btn-square btn-ghost"
+              data-testid="drawerToggle"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -40,15 +41,15 @@ export default function Header() {
               WeConnect
             </Link>
             <div className="flex items-center gap-2">
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" data-testid="add-my-salon-lg">
                 <Link to={"/info"}>Ajouter mon salon</Link>
               </Button>
               {auth ? (
-                <Button asChild>
+                <Button asChild data-testid="account-lg">
                   <Link to={"account"}>Mon compte</Link>
                 </Button>
               ) : (
-                <Button asChild>
+                <Button asChild data-testid="login-lg">
                   <Link to={"login"}>Se connecter</Link>
                 </Button>
               )}
@@ -72,15 +73,20 @@ export default function Header() {
             <li>Estheticienne</li>
           </ul> */}
           <div className="w-full flex flex-col items-center gap-2 mt-auto">
-            <Button asChild variant="outline" className="w-full">
+            <Button
+              asChild
+              variant="outline"
+              className="w-full"
+              data-testid="add-my-salon"
+            >
               <Link to={"/info"}>Ajouter mon salon</Link>
             </Button>
             {auth ? (
-              <Button asChild className="w-full">
+              <Button asChild className="w-full" data-testid="account">
                 <Link to={"account"}>Mon compte</Link>
               </Button>
             ) : (
-              <Button asChild className="w-full">
+              <Button asChild className="w-full" data-testid="login">
                 <Link to={"login"}>Se connecter</Link>
               </Button>
             )}

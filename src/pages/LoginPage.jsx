@@ -85,17 +85,18 @@ export default function LoginPage() {
           </div>
         </div>
       </form>
-      <Button onClick={handleSubmit} disabled={loading && true}>
+      <Button onClick={handleSubmit} disabled={loading && true} testid="submit">
         {loading ? <Loader2 className="animate-spin" /> : "Se connecter"}
       </Button>
       <div className="divider mb-0">Pas encore inscrit ?</div>
-      <Button asChild variant="outline">
+      <Button asChild variant="outline" data-testid="register">
         <Link to={"/register"}>Créer un compte</Link>
       </Button>
       <Button
         variant="ghost"
         onClick={() => navigate("/")}
         className="flex items-center gap-4 text-primary lg:hidden"
+        testid="back-home"
       >
         <MoveLeft />
         Retourner à l'accueil

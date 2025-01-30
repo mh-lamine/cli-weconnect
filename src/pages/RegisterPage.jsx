@@ -73,18 +73,21 @@ export default function RegisterPage() {
           type="text"
           placeholder="Prénom"
           onChange={handleChange}
+          data-testid="firstName"
         />
         <Input
           name="lastName"
           type="text"
           placeholder="Nom"
           onChange={handleChange}
+          data-testid="lastName"
         />
         <Input
           name="phoneNumber"
           type="tel"
           placeholder="Numéro de téléphone"
           onChange={handleChange}
+          data-testid="phoneNumber"
         />
         <div className="relative flex items-center">
           <Input
@@ -92,6 +95,7 @@ export default function RegisterPage() {
             type={showPassword ? "text" : "password"}
             placeholder="Mot de passe"
             onChange={handleChange}
+            data-testid="password"
           />
           <EyeOff
             className="w-6 h-6 ml-auto absolute right-3 text-primary"
@@ -99,7 +103,11 @@ export default function RegisterPage() {
           />
         </div>
       </form>
-      <Button onClick={handleSubmit} disabled={loading && true}>
+      <Button
+        onClick={handleSubmit}
+        disabled={loading && true}
+        data-testid="submit"
+      >
         {loading ? <Loader2 className="animate-spin" /> : "Créer un compte"}
       </Button>
       <p className="text-muted text-xs font-light ">
@@ -114,13 +122,14 @@ export default function RegisterPage() {
         .
       </p>
       <div className="divider mb-0">Déjà inscrit ?</div>
-      <Button asChild variant="outline">
+      <Button asChild variant="outline" data-testid="login">
         <Link to={"/login"}>Se connecter</Link>
       </Button>
       <Button
         variant="ghost"
         onClick={() => navigate("/")}
         className="flex items-center gap-4 text-primary lg:hidden"
+        data-testid="back-home"
       >
         <MoveLeft />
         Retourner à l'accueil
