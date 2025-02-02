@@ -59,6 +59,7 @@ export default function LoginPage() {
           type="tel"
           placeholder="Numéro de téléphone"
           onChange={handleChange}
+          data-testid="phoneNumber"
         />
         <div className="relative flex items-center">
           <Input
@@ -66,6 +67,7 @@ export default function LoginPage() {
             type={showPassword ? "text" : "password"}
             placeholder="Mot de passe"
             onChange={handleChange}
+            data-testid="password"
           />
           <EyeOff
             className="w-6 h-6 ml-auto absolute right-3 text-primary"
@@ -85,7 +87,7 @@ export default function LoginPage() {
           </div>
         </div>
       </form>
-      <Button onClick={handleSubmit} disabled={loading && true} testid="submit">
+      <Button onClick={handleSubmit} disabled={loading && true} data-testid="submit">
         {loading ? <Loader2 className="animate-spin" /> : "Se connecter"}
       </Button>
       <div className="divider mb-0">Pas encore inscrit ?</div>
