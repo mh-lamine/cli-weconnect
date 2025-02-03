@@ -87,8 +87,15 @@ export default function LoginPage() {
           </div>
         </div>
       </form>
-      <Button onClick={handleSubmit} disabled={loading && true} data-testid="submit">
+      <Button
+        onClick={handleSubmit}
+        disabled={loading}
+        data-testid="submit"
+      >
         {loading ? <Loader2 className="animate-spin" /> : "Se connecter"}
+      </Button>
+      <Button variant="link" asChild data-testid="forgot-password" className="py-0 justify-start">
+        <Link to="/forgot-password">Mot de passe oublié</Link>
       </Button>
       <div className="divider mb-0">Pas encore inscrit ?</div>
       <Button asChild variant="outline" data-testid="register">

@@ -17,6 +17,8 @@ import { Toaster } from "sonner";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import LandingPage from "./pages/LandingPage";
 import SubscribePage from "./pages/SubscribePage";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 export default function App() {
   return (
@@ -26,6 +28,8 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="provider/:providerId" element={<ProviderPage />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password/:token" element={<ResetPassword />} />
         </Route>
 
         <Route path="info" element={<LandingPage />} />
