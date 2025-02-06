@@ -26,8 +26,10 @@ export default function App() {
       <Routes>
         {/* public routes */}
         <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="provider/:providerId" element={<ProviderPage />} />
+          <Route element={<PersistLogin />}>
+            <Route index element={<HomePage />} />
+            <Route path="provider/:providerId" element={<ProviderPage />} />
+          </Route>
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="reset-password/:token" element={<ResetPassword />} />
         </Route>
