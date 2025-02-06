@@ -4,7 +4,6 @@ import useAuth from "@/hooks/useAuth";
 
 export default function Header() {
   const { auth } = useAuth();
-  console.log(auth);
 
   return (
     <div className="drawer sticky top-0 z-20">
