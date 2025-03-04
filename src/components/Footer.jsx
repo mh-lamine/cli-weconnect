@@ -11,14 +11,13 @@ export default function Footer() {
             <h6 className="footer-title text-lg opacity-100">Prestations</h6>
             <Link className="link link-hover text-muted">Barber</Link>
             <Link className="link link-hover text-muted">Estheticienne</Link>
-            <Link className="link link-hover text-muted">Tresseuse</Link>
-            <Link className="link link-hover text-muted">Maquilleuse</Link>
+            <Link className="link link-hover text-muted">Nail artist</Link>
           </nav>
           <nav>
             <h6 className="footer-title text-lg opacity-100">Contact</h6>
             <Link className="link link-hover text-muted">À propos</Link>
-            <Link className="link link-hover text-muted">Nous contacter</Link>
-            <Link className="link link-hover text-muted">
+            <a href="mailto:contact@weconnect-rdv.fr" className="link link-hover text-muted">Nous contacter</a>
+            <Link to="/info" className="link link-hover text-muted">
               Devenir prestataire
             </Link>
           </nav>

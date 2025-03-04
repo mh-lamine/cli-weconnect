@@ -32,15 +32,15 @@ export default function App() {
           </Route>
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="reset-password/:token" element={<ResetPassword />} />
+          <Route path="info" element={<LandingPage />} />
         </Route>
-
-        <Route path="info" element={<LandingPage />} />
 
         {/* auth routes */}
         <Route element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
         </Route>
+
         <Route path="subscribe" element={<SubscribePage />} />
 
         {/* protected routes */}

@@ -68,7 +68,7 @@ export default function BookingWizard({
   const {
     availabilities,
     specialAvailabilities,
-    autoAccept,
+    autoAcceptAppointments,
     stripeConnectedAccountId,
   } = provider;
 
@@ -147,7 +147,7 @@ export default function BookingWizard({
     const appointment = {
       date: appointmentDate,
       duration: service.duration,
-      status: autoAccept ? "ACCEPTED" : "PENDING",
+      status: autoAcceptAppointments ? "ACCEPTED" : "PENDING",
       serviceId: service.id,
       proId: service.proId,
       salonId: service.salonId,
@@ -236,7 +236,10 @@ export default function BookingWizard({
                 </Button>
                 <Button
                   onClick={() => {
-                    if (provider.stripeConnectedAccountId) {
+                    if (
+                      provider.stripeConnectedAccountId &&
+                      service.paymentOption !== "ON_SITE"
+                    ) {
                       handleNextStep();
                     } else {
                       handleCreateAppointment();
@@ -273,7 +276,10 @@ export default function BookingWizard({
               <Button
                 className="w-full"
                 onClick={() => {
-                  if (provider.stripeConnectedAccountId) {
+                  if (
+                    provider.stripeConnectedAccountId &&
+                    service.paymentOption !== "ON_SITE"
+                  ) {
                     handleNextStep();
                   } else {
                     handleCreateAppointment();
@@ -485,6 +491,17 @@ const Step2 = ({
   );
   const isRequestInProgress = useRef(false);
 
+  const paymentInfo =
+    service.paymentOption === "FULL"
+      ? {
+          type: "Total",
+          price: service.price,
+        }
+      : {
+          type: "Acompte",
+          price: service.deposit,
+        };
+
   const getClientSecret = async () => {
     if (isRequestInProgress.current) return; // Block multiple calls
     isRequestInProgress.current = true;
@@ -492,7 +509,7 @@ const Step2 = ({
     try {
       const { data } = await axios.post("/api/stripe/create-payment-intent", {
         connectedAccountId: stripeConnectedAccountId,
-        amount: service.price * 100,
+        amount: paymentInfo.price * 100,
       });
       setClientSecret(data);
     } catch (error) {
@@ -517,6 +534,7 @@ const Step2 = ({
           loading={loading}
           setLoading={setLoading}
           isDesktop={isDesktop}
+          paymentInfo={paymentInfo}
         />
       </Elements>
     );

@@ -15,6 +15,7 @@ const CheckoutForm = ({
   loading,
   setLoading,
   isDesktop,
+  paymentInfo,
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -52,8 +53,14 @@ const CheckoutForm = ({
   };
 
   if (isDesktop) {
+    const { type, price } = paymentInfo;
     return (
       <form onSubmit={handleSubmit} className="space-y-2">
+        <div className="w-full bg-primary-300 border-y-2 border-primary text-primary-900 text-center py-2">
+          <h2 className="font-semibold text-xl tracking-wider">
+            {type}: {price}€
+          </h2>
+        </div>
         <PaymentElement />
         <DialogFooter className="sm:justify-start">
           <div className="w-full flex items-center justify-between">
@@ -70,6 +77,9 @@ const CheckoutForm = ({
   }
   return (
     <form onSubmit={handleSubmit}>
+      <h2 className="font-semibold text-xl tracking-wider px-4 mb-2">
+        {type}: {price}€
+      </h2>
       <PaymentElement className="px-4" />
       <DrawerFooter className="pt-2">
         <div className="space-y-2">
