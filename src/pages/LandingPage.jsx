@@ -1,13 +1,144 @@
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Crown, MoveLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  CalendarRange,
+  CheckCircle2,
+  Crown,
+  Loader2,
+  Rocket,
+  XCircle,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
+import { toast } from "sonner";
+import axios from "axios";
+
+const OFFERS = [
+  {
+    title: "Gestion des rendez-vous",
+    plan: "Essential",
+  },
+  {
+    title: "Gestion de 4 prestations",
+    plan: "Essential",
+  },
+  {
+    title: "Gestion des disponibilités hebdomadaires",
+    plan: "Essential",
+  },
+  {
+    title: "Gestion des disponibilités par jour",
+    plan: "Pro",
+  },
+  {
+    title: "Notifications de rendez-vous par SMS",
+    plan: "Pro",
+  },
+  {
+    title: "Terminal de paiement",
+    plan: "Pro",
+  },
+  {
+    title: "Paiement en ligne + acompte",
+    plan: "Pro",
+  },
+  {
+    title: "Ajout de photos du salon",
+    plan: "Pro",
+  },
+  {
+    title: "Avis clients",
+    plan: "Pro",
+  },
+  {
+    title: "Statistiques d’activité",
+    plan: "Pro",
+  },
+  {
+    title: "Support",
+    plan: "Pro",
+  },
+  {
+    title: "Ajout de membres affiliés",
+    plan: "Enterprise",
+  },
+  {
+    title: "Gestion des disponibilités par membre",
+    plan: "Enterprise",
+  },
+  {
+    title: "Gestion des disponibilités par prestation",
+    plan: "Enterprise",
+  },
+  {
+    title: "Acomptes personnalisés par prestation",
+    plan: "Enterprise",
+  },
+  {
+    title: "Support prioritaire",
+    plan: "Enterprise",
+  },
+];
 
 export default function LandingPage() {
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    contact: "",
+  });
+  const [contactMethod, setContactMethod] = useState("instagram");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { name, contact } = formData;
+
+    if (!name || !contact) {
+      return toast.error("Veuillez remplir tous les champs");
+    }
+
+    try {
+      setLoading(true);
+      await axios.post("/api/actions/contact-me", formData);
+      toast.success(`Merci ${name}, on vous rappelle au plus vite !`);
+    } catch (error) {
+      console.error(error);
+      return toast.error("Une erreur s'est produite. Veuillez réessayer.");
+    } finally {
+      setLoading(false);
+      setFormData({
+        name: "",
+        contact: "",
+      });
+    }
+  };
+
   return (
-    <div className="w-screen min-h-screen flex flex-col bg-light text-dark">
-      <header className="relative p-8 h-screen text-center md:text-left flex flex-col justify-center md:flex-row items-center w-full gap-4 max-w-screen-2xl mx-auto">
+    <div className="w-screen flex flex-col bg-light text-dark">
+      <header className="relative h-[calc(100vh-4em)] p-8 text-center md:text-left flex flex-col md:flex-row items-center w-full gap-4 md:gap-4 justify-around max-w-screen-2xl mx-auto">
         <div className="space-y-4 md:space-y-12">
           <h1 className="text-4xl md:text-6xl font-bold">
             Optimisez la gestion de votre emploi du temps
@@ -38,190 +169,172 @@ export default function LandingPage() {
             </Button>
           </div>
         </div>
-        <img src="/phones_landing.png" className="md:w-1/2" />
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/")}
-          className="absolute bottom-10 left-10 flex items-center gap-4 text-primary"
-        >
-          <MoveLeft />
-          Retourner à l'accueil
-        </Button>
+        <div>
+          <img src="/phones_landing_2.png" />
+        </div>
       </header>
-      <main id="discover">
-        <Tabs
-          defaultValue="pro"
-          className="space-y-8 w-full md:hidden mx-auto p-8"
-        >
-          <div className="divider before:bg-primary after:bg-primary">
-            <h2 className="text-2xl font-semibold md:text-4xl text-center">
-              Nos formules
-            </h2>
-          </div>
-          <div className="text-center">
-            <TabsList>
-              <TabsTrigger value="essential">Essentiel</TabsTrigger>
-              <TabsTrigger value="pro" className="flex gap-2">
-                Pro{" "}
-                <span>
-                  <Crown size={20} />
-                </span>
-              </TabsTrigger>
-              <TabsTrigger value="entreprise">Entreprise</TabsTrigger>
-            </TabsList>
-          </div>
-          <div className="max-w-screen-sm mx-auto">
-            <TabsContent
-              value="essential"
-              className="space-y-4 bg-gradient-to-r from-primary-50 to-primary-100 p-8 rounded-lg"
-            >
-              <div>
-                <h2 className="text-xl font-semibold">WeConnect Essentiel</h2>
-                <p className="text-muted">
-                  Pour les prestataires qui démarrent ou qui ont peu de clients.
+      <main id="discover" className="pt-16">
+        <section className="space-y-4 bg-white p-8">
+          <h2 className="text-2xl font-semibold">
+            Une solution complète pour les professionnels de beauté et soin
+          </h2>
+          <ul className="flex flex-col gap-4 text-lg">
+            <li className="flex items-center gap-2">
+              <CheckCircle2 className="text-primary" />
+              Prise de rendez-vous en ligne
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle2 className="text-primary" />
+              Gestion des prestations & disponibilités
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle2 className="text-primary" />
+              Notifications en direct par SMS
+            </li>
+          </ul>
+          <p>
+            Boostez votre activité avec notre plateforme intuitive et
+            performante.
+          </p>
+        </section>
+        <section className="bg-primary-50 p-8">
+          <h2 className="text-2xl font-semibold">
+            Trouvez la formule qui vous convient
+          </h2>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>
+                <p className="flex gap-2 text-primary">
+                  Essentiel <CalendarRange />
                 </p>
-              </div>
-              <ul className="space-y-4">
-                <li>Gestion des rendez-vous</li>
-                <li>Gestion des prestations (jusqu’a 4 prestations)</li>
-                <li>Gestion des disponibilités hebdomadaires</li>
-              </ul>
-              <Button asChild className="w-full">
-                <Link to="/subscribe?plan=essential">Choisir</Link>
-              </Button>
-            </TabsContent>
-            <TabsContent
-              value="pro"
-              className="space-y-4 bg-primary-100 p-8 rounded-lg"
-            >
-              <div>
-                <h2 className="text-xl font-semibold">WeConnect Pro</h2>
-                <p className="text-muted">
-                  Pour les prestataires qui souhaitent passer au niveau
-                  supérieur.
+              </AccordionTrigger>
+              <AccordionContent>
+                <OfferDetails currentPlan="essential" />
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>
+                <p className="flex gap-2 text-primary">
+                  Pro (le plus populaire) <Crown fill="#b361d4" />
                 </p>
-              </div>
-              <ul className="space-y-4">
-                <p className="text-primary">
-                  Inclut les fonctionnalités du plan Essentiel, plus :
+              </AccordionTrigger>
+              <AccordionContent>
+                <OfferDetails currentPlan="pro" />
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger>
+                <p className="flex gap-2 text-primary">
+                  Entreprise <Rocket />
                 </p>
-                <li>Prestations illimitées</li>
-                <li>Gestion des disponibilités sur des journées précises</li>
-                <li>Notifications des demandes rendez-vous par SMS</li>
-                <li>Validation automatique des demandes de rendez-vous</li>
-                <li>TPE pour les paiements sur place</li>
-                <li>Paiement en ligne + acompte</li>
-                <li>Ajout de photos du salon</li>
-                <li>Avis clients</li>
-                <li>Statistiques d’activité</li>
-                <li>Support</li>
-              </ul>
-              <Button asChild className="w-full">
-                <Link to="/subscribe?plan=pro">Choisir</Link>
-              </Button>
-            </TabsContent>
-            <TabsContent
-              value="entreprise"
-              className="space-y-4 bg-gradient-to-l from-primary-200 to-primary-100 p-8 rounded-lg"
-            >
-              <div>
-                <h2 className="text-xl font-semibold">WeConnect Entreprise</h2>
-                <p className="text-muted">
-                  Pour les salons de plusieurs employés qui recherchent une
-                  solution de gestion complète.
-                </p>
-              </div>
-              <ul className="space-y-4">
-                <p className="text-primary">
-                  Inclut les fonctionnalités du plan Pro, plus :
-                </p>
-                <li>Ajout de membres affiliés</li>
-                <li>Gestion des disponibilités par membre</li>
-                <li>Gestion des disponibilités par prestation</li>
-                <li>Acomptes personnalisés par prestation</li>
-                <li>Support prioritaire</li>
-              </ul>
-              <Button asChild className="w-full">
-                <Link to="/subscribe?plan=enterprise">Choisir</Link>
-              </Button>
-            </TabsContent>
-          </div>
-        </Tabs>
-        <section className="hidden md:block w-full md:max-w-screen-2xl mx-auto p-8 min-h-screen">
-          <div className="divider before:bg-primary after:bg-primary">
-            <h2 className="text-2xl font-semibold md:text-4xl text-center">
-              Nos formules
-            </h2>
-          </div>
-          <div className="grid grid-cols-3 gap-4 p-4">
-            <div className="flex flex-col gap-4 bg-gradient-to-r from-primary-50 to-primary-100 p-8 rounded-l-2xl rounded-r-sm">
-              <div>
-                <h2 className="text-xl font-semibold">WeConnect Essentiel</h2>
-                <p className="text-muted">
-                  Pour les prestataires qui démarrent ou qui ont peu de clients.
-                </p>
-              </div>
-              <ul className="space-y-4">
-                <li>Gestion des rendez-vous</li>
-                <li>Gestion des prestations (jusqu’a 4 prestations)</li>
-                <li>Gestion des disponibilités hebdomadaires</li>
-              </ul>
-              <Button asChild className="mt-auto">
-                <Link to="/subscribe?plan=essential">Choisir</Link>
-              </Button>
+              </AccordionTrigger>
+              <AccordionContent>
+                <OfferDetails currentPlan="enterprise" />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </section>
+        <section className="space-y-4 p-8 bg-white">
+          <h2 className="text-2xl font-semibold">
+            Prêt(e) à réinventer la gestion de votre salon ?
+          </h2>
+          <p className="text-muted">
+            Remplissez le formulaire de contact et notre équipe vous
+            recontactera rapidement pour créer votre salon.
+          </p>
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 p-4 border border-light/50 rounded-lg shadow-sm"
+          >
+            <h3 className="text-lg font-semibold">Parlez-nous de vous</h3>
+            <div>
+              <Label htmlFor="name">Nom du salon</Label>
+              <Input
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    name: e.target.value,
+                  })
+                }
+              />
             </div>
-            <div className="flex flex-col gap-4 bg-primary-100 p-8 rounded-sm">
-              <div>
-                <h2 className="text-xl font-semibold">WeConnect Pro</h2>
-                <p className="text-muted">
-                  Pour les prestataires qui souhaitent passer au niveau
-                  supérieur.
-                </p>
-              </div>
-              <ul className="space-y-4">
-                <p className="text-primary">
-                  Inclut les fonctionnalités du plan Essentiel, plus :
-                </p>
-                <li>Prestations illimitées</li>
-                <li>Gestion des disponibilités sur des journées précises</li>
-                <li>Notifications des demandes rendez-vous par SMS</li>
-                <li>Validation automatique des demandes de rendez-vous</li>
-                <li>TPE pour les paiements sur place</li>
-                <li>Paiement en ligne + acompte</li>
-                <li>Ajout de photos du salon</li>
-                <li>Avis clients</li>
-                <li>Statistiques d’activité</li>
-                <li>Support</li>
-              </ul>
-              <Button asChild className="mt-auto">
-                <Link to="/subscribe?plan=pro">Choisir</Link>
-              </Button>
+            <div>
+              <Label htmlFor="contactMethod">Être contacté par</Label>
+              <Select
+                id="contactMethod"
+                defaultValue={contactMethod}
+                onValueChange={(value) => setContactMethod(value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Sélectionner" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="instagram">Instagram</SelectItem>
+                    <SelectItem value="tel">Téléphone</SelectItem>
+                    <SelectItem value="email">Email</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
-            <div className="flex flex-col gap-4 bg-gradient-to-l from-primary-200 to-primary-100 p-8 rounded-r-2xl rounded-l-sm">
-              <div>
-                <h2 className="text-xl font-semibold">WeConnect Entreprise</h2>
-                <p className="text-muted">
-                  Pour les salons de plusieurs employés qui recherchent une
-                  solution de gestion complète.
-                </p>
-              </div>
-              <ul className="space-y-4">
-                <p className="text-primary">
-                  Inclut les fonctionnalités du plan Pro, plus :
-                </p>
-                <li>Ajout de membres affiliés</li>
-                <li>Gestion des disponibilités par membre</li>
-                <li>Gestion des disponibilités par prestation</li>
-                <li>Acomptes personnalisés par prestation</li>
-                <li>Support prioritaire</li>
-              </ul>
-              <Button asChild className="mt-auto">
-                <Link to="/subscribe?plan=enterprise">Choisir</Link>
-              </Button>
-            </div>
-          </div>
+            {contactMethod === "instagram" && (
+              <Input
+                name="contact"
+                type="text"
+                value={formData.contact}
+                placeholder="@weconnect_off"
+                onChange={handleChange}
+              />
+            )}
+            {contactMethod === "tel" && (
+              <Input
+                name="contact"
+                type="tel"
+                value={formData.contact}
+                placeholder="0600000000"
+                onChange={handleChange}
+              />
+            )}
+            {contactMethod === "email" && (
+              <Input
+                name="contact"
+                type="email"
+                value={formData.contact}
+                placeholder="contact@weconnect-rdv.fr"
+                onChange={handleChange}
+              />
+            )}
+            <Button type="submit" disabled={loading}>
+              {loading ? <Loader2 className="animate-spin" /> : "Envoyer"}
+            </Button>
+          </form>
         </section>
       </main>
     </div>
   );
 }
+
+const OfferDetails = ({ currentPlan }) => {
+  const PLANS = {
+    essential: ["Essential"],
+    pro: ["Pro", "Essential"],
+    enterprise: ["Enterprise", "Pro", "Essential"],
+  };
+  return (
+    <ul className="flex flex-col gap-2">
+      {OFFERS.map((feature, i) => (
+        <li index={i} className="flex items-center gap-2">
+          {PLANS[currentPlan].includes(feature.plan) ? (
+            <CheckCircle2 className="text-success" />
+          ) : (
+            <XCircle className="text-destructive" />
+          )}
+          {feature.title}
+        </li>
+      ))}
+    </ul>
+  );
+};

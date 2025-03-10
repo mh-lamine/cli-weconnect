@@ -41,7 +41,7 @@ export default function App() {
           <Route path="register" element={<RegisterPage />} />
         </Route>
 
-        <Route path="subscribe" element={<SubscribePage />} />
+        {/* <Route path="subscribe" element={<SubscribePage />} /> */}
 
         {/* protected routes */}
         <Route element={<PersistLogin />}>
