@@ -223,7 +223,7 @@ export default function BookingWizard({
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{service.name}</DialogTitle>
-            <DialogDescription>{service.description}</DialogDescription>
+            <DialogDescription className="whitespace-pre-line">{service.description}</DialogDescription>
           </DialogHeader>
           <div className="max-h-[50vh] space-y-4 overflow-y-scroll no-scrollbar">
             {renderStepContent()}

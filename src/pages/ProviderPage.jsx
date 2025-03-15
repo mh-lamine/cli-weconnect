@@ -182,7 +182,7 @@ function Services({ index, category, services, provider }) {
                     <div className="divider divider-horizontal"></div>
                     <p>{convertToHhMm(service.duration)}</p>
                   </div>
-                  <p>{service.description}</p>
+                  <p className="whitespace-pre-line">{service.description}</p>
                 </div>
                 <BookingWizard
                   step={currentStep}
