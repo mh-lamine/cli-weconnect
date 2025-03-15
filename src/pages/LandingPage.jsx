@@ -27,73 +27,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
-
-const OFFERS = [
-  {
-    title: "Gestion des rendez-vous",
-    plan: "Essential",
-  },
-  {
-    title: "Gestion de 4 prestations",
-    plan: "Essential",
-  },
-  {
-    title: "Gestion des disponibilités hebdomadaires",
-    plan: "Essential",
-  },
-  {
-    title: "Gestion des disponibilités par jour",
-    plan: "Pro",
-  },
-  {
-    title: "Notifications de rendez-vous par SMS",
-    plan: "Pro",
-  },
-  {
-    title: "Terminal de paiement",
-    plan: "Pro",
-  },
-  {
-    title: "Paiement en ligne + acompte",
-    plan: "Pro",
-  },
-  {
-    title: "Ajout de photos du salon",
-    plan: "Pro",
-  },
-  {
-    title: "Avis clients",
-    plan: "Pro",
-  },
-  {
-    title: "Statistiques d’activité",
-    plan: "Pro",
-  },
-  {
-    title: "Support",
-    plan: "Pro",
-  },
-  {
-    title: "Ajout de membres affiliés",
-    plan: "Enterprise",
-  },
-  {
-    title: "Gestion des disponibilités par membre",
-    plan: "Enterprise",
-  },
-  {
-    title: "Gestion des disponibilités par prestation",
-    plan: "Enterprise",
-  },
-  {
-    title: "Acomptes personnalisés par prestation",
-    plan: "Enterprise",
-  },
-  {
-    title: "Support prioritaire",
-    plan: "Enterprise",
-  },
-];
+import { FEATURES } from "@/utils/enum";
 
 export default function LandingPage() {
   const [formData, setFormData] = useState({
@@ -205,7 +139,7 @@ export default function LandingPage() {
             <AccordionItem value="item-1">
               <AccordionTrigger>
                 <p className="flex gap-2 text-primary">
-                  Essentiel <CalendarRange />
+                  Essentiel (le plus simple) <CalendarRange />
                 </p>
               </AccordionTrigger>
               <AccordionContent>
@@ -219,16 +153,18 @@ export default function LandingPage() {
                 </p>
               </AccordionTrigger>
               <AccordionContent>
+                <p className="pb-4 text-muted">Inclut les fonctionnalités de l'offre Essentiel, plus:</p>
                 <OfferDetails currentPlan="pro" />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
               <AccordionTrigger>
                 <p className="flex gap-2 text-primary">
-                  Entreprise <Rocket />
+                  Entreprise (le plus complet) <Rocket />
                 </p>
               </AccordionTrigger>
               <AccordionContent>
+                <p className="pb-4 text-muted">Inclut les fonctionnalités de l'offre Pro, plus:</p>
                 <OfferDetails currentPlan="enterprise" />
               </AccordionContent>
             </AccordionItem>
@@ -317,24 +253,15 @@ export default function LandingPage() {
   );
 }
 
-const OfferDetails = ({ currentPlan }) => {
-  const PLANS = {
-    essential: ["Essential"],
-    pro: ["Pro", "Essential"],
-    enterprise: ["Enterprise", "Pro", "Essential"],
-  };
-  return (
-    <ul className="flex flex-col gap-2">
-      {OFFERS.map((feature, i) => (
+const OfferDetails = ({ currentPlan }) => (
+  <ul className="flex flex-col gap-2">
+    {FEATURES
+      .filter((feature) => feature.plan === currentPlan)
+      .map((feature, i) => (
         <li index={i} className="flex items-center gap-2">
-          {PLANS[currentPlan].includes(feature.plan) ? (
             <CheckCircle2 className="text-success" />
-          ) : (
-            <XCircle className="text-destructive" />
-          )}
           {feature.title}
         </li>
-      ))}
-    </ul>
-  );
-};
+    ))}
+  </ul>
+);

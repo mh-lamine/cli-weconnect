@@ -1,0 +1,18 @@
+export const FEATURES = [
+  { title: "Gestion des rendez-vous", plan: "essential" },
+  { title: "Gestion de 4 prestations", plan: "essential" },
+  { title: "Gestion des disponibilités hebdomadaires", plan: "essential" },
+  { title: "Gestion des disponibilités par jour", plan: "pro" },
+  { title: "Notifications de rendez-vous par SMS", plan: "pro" },
+  { title: "Terminal de paiement", plan: "pro" },
+  { title: "Paiement en ligne + acompte", plan: "pro"  },
+  { title: "Ajout de photos du salon", plan: "pro" },
+  { title: "Avis clients", plan: "pro" },
+  { title: "Statistiques d’activité", plan: "pro" },
+  { title: "Support", plan: "pro" },
+  { title: "Ajout de membres affiliés", plan: "enterprise" },
+  { title: "Gestion des disponibilités par membre", plan: "enterprise" },
+  { title: "Gestion des disponibilités par prestation", plan: "enterprise" },
+  { title: "Acomptes personnalisés par prestation", plan: "enterprise" },
+  { title: "Support prioritaire", plan: "enterprise" },
+];
