@@ -153,7 +153,9 @@ export default function LandingPage() {
                 </p>
               </AccordionTrigger>
               <AccordionContent>
-                <p className="pb-4 text-muted">Inclut les fonctionnalités de l'offre Essentiel, plus:</p>
+                <p className="pb-4 text-muted">
+                  Inclut les fonctionnalités de l'offre Essentiel, plus:
+                </p>
                 <OfferDetails currentPlan="pro" />
               </AccordionContent>
             </AccordionItem>
@@ -164,7 +166,9 @@ export default function LandingPage() {
                 </p>
               </AccordionTrigger>
               <AccordionContent>
-                <p className="pb-4 text-muted">Inclut les fonctionnalités de l'offre Pro, plus:</p>
+                <p className="pb-4 text-muted">
+                  Inclut les fonctionnalités de l'offre Pro, plus:
+                </p>
                 <OfferDetails currentPlan="enterprise" />
               </AccordionContent>
             </AccordionItem>
@@ -255,13 +259,13 @@ export default function LandingPage() {
 
 const OfferDetails = ({ currentPlan }) => (
   <ul className="flex flex-col gap-2">
-    {FEATURES
-      .filter((feature) => feature.plan === currentPlan)
-      .map((feature, i) => (
+    {FEATURES.filter((feature) => feature.plan === currentPlan).map(
+      (feature, i) => (
         <li index={i} className="flex items-center gap-2">
-            <CheckCircle2 className="text-success" />
+          <CheckCircle2 className="text-success" />
           {feature.title}
         </li>
-    ))}
+      )
+    )}
   </ul>
 );

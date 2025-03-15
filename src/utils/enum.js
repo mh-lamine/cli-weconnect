@@ -5,7 +5,7 @@ export const FEATURES = [
   { title: "Gestion des disponibilités par jour", plan: "pro" },
   { title: "Notifications de rendez-vous par SMS", plan: "pro" },
   { title: "Terminal de paiement", plan: "pro" },
-  { title: "Paiement en ligne + acompte", plan: "pro"  },
+  { title: "Paiement en ligne + acompte", plan: "pro" },
   { title: "Ajout de photos du salon", plan: "pro" },
   { title: "Avis clients", plan: "pro" },
   { title: "Statistiques d’activité", plan: "pro" },
