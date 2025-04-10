@@ -21,9 +21,9 @@ export default function ResetPassword() {
     const storedToken = localStorage.getItem("resetToken");
     if (storedToken == token) {
       toast.error("Ce lien de réinitialisation a déjà été utilisé");
-      navigate("/login"); // Redirect to login after 2 seconds
+      setTimeout(() => navigate("/login"), 2000); // Redirect to login after 2 seconds
     } else {
-      localStorage.setItem("resetToken", token);
+      localStorage.setItem("resetToken", token); // Store the token in local storage
     }
   }, [token]);
 
