@@ -41,8 +41,12 @@ export default function ResetPassword() {
       );
       setTimeout(() => navigate("/login"), 2000); // Redirect to login after 2 seconds
     } catch (err) {
-      console.error(err);
-      toast.error("Une erreur est survenue, veuillez contacter le support");
+      if (err.response.status === 403) {
+        toast.error("Le lien de réinitialisation a déjà été utilisé");
+      }
+      if (err.response.status === 500) {
+        toast.error("Le lien de réinitialisation a expiré");
+      }
     } finally {
       setLoading(false);
     }
