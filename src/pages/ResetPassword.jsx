@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,16 @@ export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { token } = useParams();
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("resetToken");
+    if (storedToken == token) {
+      toast.error("Ce lien de réinitialisation a déjà été utilisé");
+      navigate("/login"); // Redirect to login after 2 seconds
+    } else {
+      localStorage.setItem("resetToken", token);
+    }
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

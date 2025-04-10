@@ -18,7 +18,6 @@ export default function ForgotPassword() {
         phoneNumber,
       });
       setMessageSent(true);
-      // localStorage.setItem("resetToken", data);
     } catch (error) {
       console.error(error);
     } finally {
