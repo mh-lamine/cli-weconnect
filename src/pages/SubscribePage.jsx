@@ -111,7 +111,7 @@ export default function SubscribePage() {
           Parlez-nous de vous !
         </h1>
         <span
-          className="absolute top-0 left-0 m-2 p-2 z-10"
+          className="fixed top-0 left-0 m-2 p-2 z-10"
           onClick={() => navigate("/info")}
         >
           <LeftArrow theme={"light"} size={36} />
