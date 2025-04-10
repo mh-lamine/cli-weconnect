@@ -14,18 +14,9 @@ export default function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [tokenAlreadyUsed, setTokenAlreadyUsed] = useState(false);
   const navigate = useNavigate();
   const { token } = useParams();
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("resetToken");
-    if (storedToken == token) {
-      toast.error("Ce lien de réinitialisation a déjà été utilisé");
-      setTimeout(() => navigate("/login"), 2000); // Redirect to login after 2 seconds
-    } else {
-      localStorage.setItem("resetToken", token); // Store the token in local storage
-    }
-  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,41 +50,63 @@ export default function ResetPassword() {
       setLoading(false);
     }
   };
+  // console.log(storedToken == token)
 
-  return (
-    <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
-      <h1 className="text-2xl font-medium">
-        Entrez votre nouveau mot de passe
-      </h1>
-      <form onSubmit={handleSubmit} className="space-y-2">
-        <div>
-          <Label>Nouveau mot de passe</Label>
-          <div className="relative flex items-center">
+  useEffect(() => {
+    const storedToken = localStorage.getItem("resetToken");
+    if (storedToken == token) {
+      setTokenAlreadyUsed(true); // Token already used
+    } else {
+      localStorage.setItem("resetToken", token); // Store the token in local storage
+    }
+  }, [token]);
+
+  if (tokenAlreadyUsed) {
+    return (
+      <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
+        <h1 className="text-2xl font-medium">
+          Ce lien a déjà été utilisé !
+        </h1>
+        <Button onClick={() => navigate("/login")}>
+          Retour à la connexion
+        </Button>
+      </main>
+    );
+  } else
+    return (
+      <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4`">
+        <h1 className="text-2xl font-medium">
+          Entrez votre nouveau mot de passe
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-2">
+          <div>
+            <Label>Nouveau mot de passe</Label>
+            <div className="relative flex items-center">
+              <Input
+                type={showPassword ? "text" : "password"}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <EyeOff
+                className="w-6 h-6 ml-auto absolute right-3 text-primary"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            </div>
+          </div>
+          <div>
+            <Label>Confirmer le nouveau mot de passe</Label>
             <Input
               type={showPassword ? "text" : "password"}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <EyeOff
-              className="w-6 h-6 ml-auto absolute right-3 text-primary"
-              onClick={() => setShowPassword(!showPassword)}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
-        </div>
-        <div>
-          <Label>Confirmer le nouveau mot de passe</Label>
-          <Input
-            type={showPassword ? "text" : "password"}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-        <Button type="submit" disabled={loading}>
-          {loading ? (
-            <Loader2 className="animate-spin" />
-          ) : (
-            "Réintialiser le mot de passe"
-          )}
-        </Button>
-      </form>
-    </main>
-  );
+          <Button type="submit" disabled={loading}>
+            {loading ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "Réintialiser le mot de passe"
+            )}
+          </Button>
+        </form>
+      </main>
+    );
 }
