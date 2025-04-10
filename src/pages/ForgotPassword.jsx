@@ -8,15 +8,17 @@ import { useState } from "react";
 export default function ForgotPassword() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
+  const [messageSent, setMessageSent] = useState(false);
 
   const sendNewPassword = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const { data } = await axios.post("/api/auth/forgot-password", {
+      await axios.post("/api/auth/forgot-password", {
         phoneNumber,
       });
-      localStorage.setItem("resetToken", data);
+      setMessageSent(true);
+      // localStorage.setItem("resetToken", data);
     } catch (error) {
       console.error(error);
     } finally {
@@ -38,8 +40,14 @@ export default function ForgotPassword() {
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
         </div>
-        <Button type="submit" disabled={loading}>
-          {loading ? <Loader2 className="animate-spin" /> : "Envoyer le lien"}
+        <Button type="submit" disabled={loading || messageSent}>
+          {loading ? (
+            <Loader2 className="animate-spin" />
+          ) : messageSent ? (
+            "Envoyé"
+          ) : (
+            "Envoyer le lien"
+          )}
         </Button>
       </form>
     </main>

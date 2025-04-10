@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -15,6 +15,7 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { token } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,16 +32,16 @@ export default function ResetPassword() {
       return;
     }
 
-    const token = localStorage.getItem("resetToken");
+    // const token = localStorage.getItem("resetToken");
 
     try {
       setLoading(true);
       await axios.post("/api/auth/reset-password", { token, newPassword });
-      localStorage.removeItem("resetToken"); // Clear the token after successful reset
+      // localStorage.removeItem("resetToken"); // Clear the token after successful reset
       toast.success(
         "Nouveau mot de passe enregistré, redirection vers la page de connexion..."
       );
-      setTimeout(() => navigate("/login"), 3000); // Redirect to login after 3 seconds
+      setTimeout(() => navigate("/login"), 2000); // Redirect to login after 2 seconds
     } catch (err) {
       console.error(err);
       toast.error("Une erreur est survenue, veuillez contacter le support");
